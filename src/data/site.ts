@@ -58,17 +58,9 @@ type RingListing = {
   inspections: { date: string; time: string }[];
 };
 
-const roleMap: Record<string, string> = {
-  "stephen-ring": "Director",
-  "luke-bull": "Sales Consultant",
-  "soozie-bice": "Property Manager",
-  "rachel-brooke": "Property Manager",
-  "toni-dalcin": "Accounting & Administration",
-};
-
 export const agents: Agent[] = (ring.agents as Agent[]).map((a) => ({
   ...a,
-  role: roleMap[a.id] ?? a.role,
+  bio: Array.isArray(a.bio) ? a.bio : [a.bio as unknown as string],
 }));
 
 const validTypes = new Set(["House", "Townhouse", "Apartment", "Land", "Villa"]);
