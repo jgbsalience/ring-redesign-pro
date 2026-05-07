@@ -39,7 +39,7 @@ export const Route = createFileRoute("/buy/$listingId")({
 });
 
 function ListingDetail() {
-  const { listing } = Route.useLoaderData();
+  const { listing } = Route.useLoaderData() as { listing: import("@/data/site").Listing };
   const agents = listing.agentIds.map(getAgent);
   const similar = listings
     .filter((l) => l.id !== listing.id && l.status === listing.status)
