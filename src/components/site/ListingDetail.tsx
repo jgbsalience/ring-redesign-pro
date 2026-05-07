@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
-import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download } from "lucide-react";
+import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 function downloadBrochure(listing: Listing, agentName: string, agentPhone: string, agentEmail: string) {
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>${listing.address}, ${listing.suburb} — Ring Real Estate</title>
@@ -253,25 +253,176 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
       <Footer />
 
       {floorplanOpen && listing.floorplan && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10 animate-fade-in"
-          onClick={() => setFloorplanOpen(false)}
-        >
+        <FloorplanLightbox
+          src={listing.floorplan}
+          alt={`Floorplan — ${listing.address}`}
+          onClose={() => setFloorplanOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  const [scale, setScale] = useState(1);
+  const [tx, setTx] = useState(0);
+  const [ty, setTy] = useState(0);
+  const dragging = useRef(false);
+  const last = useRef({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const MIN = 1;
+  const MAX = 6;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "+" || e.key === "=") setScale((s) => Math.min(MAX, s * 1.25));
+      else if (e.key === "-" || e.key === "_") setScale((s) => Math.max(MIN, s / 1.25));
+      else if (e.key === "0") { setScale(1); setTx(0); setTy(0); }
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  const clampPan = (nx: number, ny: number, s: number) => {
+    const el = containerRef.current;
+    if (!el) return { x: nx, y: ny };
+    const w = el.clientWidth;
+    const h = el.clientHeight;
+    const maxX = (w * (s - 1)) / 2;
+    const maxY = (h * (s - 1)) / 2;
+    return {
+      x: Math.max(-maxX, Math.min(maxX, nx)),
+      y: Math.max(-maxY, Math.min(maxY, ny)),
+    };
+  };
+
+  const zoomBy = (factor: number, originX?: number, originY?: number) => {
+    setScale((prev) => {
+      const next = Math.max(MIN, Math.min(MAX, prev * factor));
+      if (next === prev) return prev;
+      const el = containerRef.current;
+      if (el && originX !== undefined && originY !== undefined) {
+        const rect = el.getBoundingClientRect();
+        const cx = originX - rect.left - rect.width / 2;
+        const cy = originY - rect.top - rect.height / 2;
+        const ratio = next / prev;
+        setTx((t) => {
+          const newT = cx - (cx - t) * ratio;
+          return clampPan(newT, ty, next).x;
+        });
+        setTy((t) => {
+          const newT = cy - (cy - t) * ratio;
+          return clampPan(tx, newT, next).y;
+        });
+      } else if (next === 1) {
+        setTx(0); setTy(0);
+      }
+      return next;
+    });
+  };
+
+  const onWheel = (e: RWheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX, e.clientY);
+  };
+
+  const onPointerDown = (e: RPointerEvent<HTMLDivElement>) => {
+    if (scale <= 1) return;
+    dragging.current = true;
+    last.current = { x: e.clientX, y: e.clientY };
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove = (e: RPointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return;
+    const dx = e.clientX - last.current.x;
+    const dy = e.clientY - last.current.y;
+    last.current = { x: e.clientX, y: e.clientY };
+    const next = clampPan(tx + dx, ty + dy, scale);
+    setTx(next.x);
+    setTy(next.y);
+  };
+  const onPointerUp = () => { dragging.current = false; };
+
+  const reset = () => { setScale(1); setTx(0); setTy(0); };
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-black/95 animate-fade-in select-none">
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white/80 text-xs uppercase tracking-[0.25em] z-10">
+        <div className="hidden md:block">Drag to pan · Scroll or pinch to zoom · 0 to reset</div>
+        <div className="flex items-center gap-2 ml-auto">
           <button
-            onClick={() => setFloorplanOpen(false)}
-            className="absolute top-5 right-6 text-white/80 hover:text-white text-xs uppercase tracking-[0.25em]"
+            type="button"
+            aria-label="Zoom out"
+            onClick={() => zoomBy(1 / 1.25)}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <ZoomOut size={16} />
+          </button>
+          <div className="w-14 text-center tabular-nums text-[11px]">{Math.round(scale * 100)}%</div>
+          <button
+            type="button"
+            aria-label="Zoom in"
+            onClick={() => zoomBy(1.25)}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <ZoomIn size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label="Reset zoom"
+            onClick={reset}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors ml-2"
+          >
+            <RotateCcw size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="ml-3 px-3 h-9 inline-flex items-center bg-white/10 hover:bg-white/20 transition-colors"
           >
             Close ✕
           </button>
+        </div>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="absolute inset-0 overflow-hidden touch-none"
+        style={{ cursor: scale > 1 ? (dragging.current ? "grabbing" : "grab") : "zoom-in" }}
+        onWheel={onWheel}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onDoubleClick={(e) => {
+          if (scale > 1) reset();
+          else zoomBy(2, e.clientX, e.clientY);
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget && scale === 1) onClose();
+        }}
+      >
+        <div className="w-full h-full flex items-center justify-center">
           <img
-            src={listing.floorplan}
-            alt={`Floorplan — ${listing.address}`}
+            src={src}
+            alt={alt}
             referrerPolicy="no-referrer"
-            className="max-w-full max-h-full object-contain bg-white"
-            onClick={(e) => e.stopPropagation()}
+            draggable={false}
+            className="max-w-full max-h-full object-contain bg-white pointer-events-none"
+            style={{
+              transform: `translate(${tx}px, ${ty}px) scale(${scale})`,
+              transition: dragging.current ? "none" : "transform 120ms ease-out",
+              transformOrigin: "center center",
+            }}
           />
         </div>
-      )}
+      </div>
     </div>
   );
 }
