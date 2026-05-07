@@ -44,16 +44,16 @@ const defaultSizes: Record<AnySize, string> = {
   xs: "24px",
   sm: "40px",
   md: "56px",
-  lg: "(min-width: 1024px) 320px, (min-width: 640px) 50vw, 50vw",
-  xl: "(min-width: 1024px) 480px, 100vw",
-  "2xl": "(min-width: 1024px) 640px, 100vw",
+  lg: "(min-width: 1024px) 320px, (min-width: 640px) 320px, 90vw",
+  xl: "(min-width: 1024px) 480px, (min-width: 640px) 400px, 95vw",
+  "2xl": "(min-width: 1024px) 640px, (min-width: 640px) 480px, 95vw",
 
   "xs-sm": "(min-width: 640px) 40px, 24px",
   "sm-md": "(min-width: 768px) 56px, 40px",
   "md-lg": "(min-width: 1024px) 80px, 56px",
   avatar: "(min-width: 1024px) 56px, (min-width: 640px) 40px, 32px",
 
-  portrait: "(min-width: 1024px) 480px, (min-width: 640px) 50vw, 100vw",
+  portrait: "(min-width: 1024px) 480px, (min-width: 640px) 400px, 95vw",
 };
 
 /**
