@@ -4,7 +4,7 @@ import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
 import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "Suburbs" | "Timelines" | "About us" }[] = [
   {
