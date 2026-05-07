@@ -1,11 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { ListingCard } from "@/components/site/ListingCard";
+import { ListingsBrowser } from "@/components/site/ListingsBrowser";
 import { BannerHero } from "@/components/site/BannerHero";
-import { listings, suburbs } from "@/data/site";
+import { listings } from "@/data/site";
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
 
 const BUY_SLIDES = listings.filter((l) => l.status === "for-sale" && l.hero).slice(0, 6);
 
