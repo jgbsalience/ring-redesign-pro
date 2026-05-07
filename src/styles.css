@@ -39,6 +39,7 @@
   --color-stone-2: var(--stone-2);
   --color-ringgreen: var(--ringgreen);
   --color-ringgreen-soft: var(--ringgreen-soft);
+  --color-ringgreen-deep: var(--ringgreen-deep);
 }
 
 :root {
