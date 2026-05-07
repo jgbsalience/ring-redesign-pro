@@ -415,11 +415,13 @@ function FiltersBar({
   navigate,
   qInput,
   setQInput,
+  disabled = false,
 }: {
   search: z.infer<typeof searchSchema>;
   navigate: ReturnType<typeof Route.useNavigate>;
   qInput: string;
   setQInput: (v: string) => void;
+  disabled?: boolean;
 }) {
   const update = <K extends keyof z.infer<typeof searchSchema>>(
     key: K,
@@ -429,7 +431,14 @@ function FiltersBar({
   };
 
   return (
-    <div className="container-page mt-8">
+    <fieldset
+      disabled={disabled}
+      aria-busy={disabled}
+      className={[
+        "container-page mt-8 border-0 p-0 m-0 min-w-0 transition-opacity",
+        disabled ? "opacity-70" : "opacity-100",
+      ].join(" ")}
+    >
       {/* Status tabs */}
       <div className="flex gap-2 border-b border-border">
         {STATUSES.map((s) => (
