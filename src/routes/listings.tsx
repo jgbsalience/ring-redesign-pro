@@ -175,6 +175,7 @@ function ListingsPage() {
     search.beds,
     search.baths,
     search.q,
+    search.sort,
     search.page,
   ]);
 
