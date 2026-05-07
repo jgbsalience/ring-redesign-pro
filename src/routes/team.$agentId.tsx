@@ -52,7 +52,7 @@ function AgentPage() {
         <div className="mt-8 grid md:grid-cols-12 gap-12 items-start">
           <div className="md:col-span-5">
             <div className="aspect-[3/4] bg-stone overflow-hidden">
-              <TeamMemberImage agent={agent} size="xl" eager />
+              <TeamMemberImage agent={agent} size="xl" priority />
             </div>
           </div>
           <div className="md:col-span-7">
