@@ -35,6 +35,17 @@ const HERO = HERO_SLIDES[0]?.hero ?? "";
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
   const sold = listings.filter((l) => l.status === "sold");
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    if (HERO_SLIDES.length < 2) return;
+    const id = setInterval(() => {
+      setSlide((s) => (s + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  const current = HERO_SLIDES[slide] ?? HERO_SLIDES[0];
 
   return (
     <div className="bg-background text-foreground">
@@ -42,13 +53,19 @@ function HomePage() {
 
       {/* HERO */}
       <section className="relative min-h-[100svh] w-full overflow-hidden">
-        <img
-          src={HERO}
-          alt={HERO_LISTING?.address ?? ""}
-          referrerPolicy="no-referrer"
-          loading="eager"
-          className="absolute inset-0 w-full h-full object-cover scale-105"
-        />
+        {HERO_SLIDES.map((l, i) => (
+          <img
+            key={l.id}
+            src={l.hero}
+            alt={l.address}
+            referrerPolicy="no-referrer"
+            loading={i === 0 ? "eager" : "lazy"}
+            className={[
+              "absolute inset-0 w-full h-full object-cover scale-105 transition-opacity duration-[1500ms] ease-in-out",
+              i === slide ? "opacity-100" : "opacity-0",
+            ].join(" ")}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
 
         <div className="relative container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white">
@@ -90,8 +107,23 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-6 right-6 text-[10px] uppercase tracking-[0.25em] text-white/60">
-          {HERO_LISTING?.address} · {HERO_LISTING?.suburb}
+        <div className="absolute bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70">
+          <span className="transition-opacity duration-500">
+            {current?.address} · {current?.suburb}
+          </span>
+          <span className="hidden sm:flex items-center gap-1.5">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setSlide(i)}
+                aria-label={`Slide ${i + 1}`}
+                className={[
+                  "h-px transition-all duration-500",
+                  i === slide ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70",
+                ].join(" ")}
+              />
+            ))}
+          </span>
         </div>
       </section>
 
