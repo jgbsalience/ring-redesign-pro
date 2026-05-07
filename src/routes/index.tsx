@@ -12,16 +12,16 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Distinguished homes across metropolitan Adelaide. Sell, buy, rent and manage with a small, senior team." },
       { property: "og:title", content: "Ring Real Estate" },
       { property: "og:description", content: "Distinguished homes across metropolitan Adelaide. Since 1978." },
-      { property: "og:image", content: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80" },
+      { property: "og:image", content: listings[0]?.hero ?? "" },
     ],
   }),
   component: HomePage,
 });
 
-const HERO = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85";
+const HERO = listings[0]?.hero ?? "";
 
 function HomePage() {
-  const featured = listings.filter((l) => l.featured);
+  const featured = listings.filter((l) => l.featured).slice(0, 3);
   const sold = listings.filter((l) => l.status === "sold");
 
   return (
