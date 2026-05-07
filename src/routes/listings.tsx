@@ -152,6 +152,7 @@ function ListingsPage() {
         navigate({
           search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
           replace: true,
+          resetScroll: false,
         });
       }
     }, 350);
