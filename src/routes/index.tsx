@@ -363,7 +363,7 @@ function HomePage() {
                 <div className="aspect-[3/4] img-zoom bg-muted overflow-hidden">
                   <TeamMemberImage
                     agent={a}
-                    size="md"
+                    size="lg"
                     className="grayscale group-hover:grayscale-0 transition-all duration-700"
                   />
                 </div>
