@@ -224,7 +224,7 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
               {agents.map((a) => (
                 <div key={a.id} className="flex items-center gap-4">
                   <Link to="/team/$agentId" params={{ agentId: a.id }} className="shrink-0">
-                    <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-14 h-14 rounded-full object-cover" />
+                    <TeamMemberImage agent={a} size="md" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link to="/team/$agentId" params={{ agentId: a.id }} className="font-serif text-lg leading-tight hover:text-[var(--ringgreen)] transition-colors block truncate">
