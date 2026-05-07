@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
 import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
