@@ -73,27 +73,37 @@ function AboutPage() {
     <div className="bg-background text-foreground">
       <Header overlay />
       <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
-        <img src={listings[1]?.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={listings[1]?.hero} alt="A distinguished Adelaide home sold by Ring Real Estate" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
         <div className="relative container-page h-full flex flex-col justify-end pb-20 text-white">
           <div className="text-[10px] uppercase tracking-[0.32em] opacity-80">
-            <span className="ring-mark" /> &nbsp;Established 1978
+            <span className="ring-mark" /> &nbsp;Adelaide real estate, established 1978
           </div>
           <h1 className="font-serif text-5xl md:text-8xl tracking-tight mt-5 leading-[0.95] max-w-5xl">
-            Forty-seven years<br />of <span className="italic">the same word.</span>
+            Adelaide real estate,<br /><span className="italic">done the same way since 1978.</span>
           </h1>
+          <p className="mt-6 max-w-2xl text-base md:text-lg text-white/85 leading-relaxed">
+            Ring Real Estate is an independent Adelaide real estate agency
+            selling, leasing and managing distinguished homes across
+            Blackwood, Bellevue Heights, Glenalta, Coromandel Valley and the
+            wider southern foothills.
+          </p>
         </div>
       </section>
 
       <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our story</div>
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our story · Adelaide, since 1978</div>
         </div>
         <div className="md:col-span-7 space-y-7 text-lg leading-relaxed">
+          <h2 className="font-serif text-3xl md:text-4xl tracking-tight leading-[1.1]">
+            Adelaide's independent residential real estate agency, since 1978.
+          </h2>
           <p>
             Ring Real Estate was founded in Fullarton in 1978 by Geoffrey
-            Ring on a single, stubborn idea: that residential agency could
-            be a profession of integrity, not a profession of volume.
+            Ring on a single, stubborn idea: that residential real estate in
+            Adelaide could be a profession of integrity, not a profession of
+            volume.
           </p>
           <p>
             Nearly five decades later, the offices have moved twice and the
