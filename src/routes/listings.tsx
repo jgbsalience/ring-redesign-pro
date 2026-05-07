@@ -82,6 +82,8 @@ type Row = {
   hero: string | null;
   headline: string;
   featured: boolean;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 /* ---------------- Page ---------------- */
@@ -117,13 +119,14 @@ function ListingsPage() {
     setError(null);
 
     const dbStatuses = STATUS_TO_DB[search.status as StatusKey];
-    const from = (search.page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
+    const isMap = search.view === "map";
+    const from = isMap ? 0 : (search.page - 1) * PAGE_SIZE;
+    const to = isMap ? 499 : from + PAGE_SIZE - 1;
 
     let query = supabase
       .from("listings")
       .select(
-        "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured",
+        "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured, latitude, longitude",
         { count: "exact" },
       )
       .in("status", dbStatuses);
