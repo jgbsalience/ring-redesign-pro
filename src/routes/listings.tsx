@@ -534,6 +534,7 @@ function FiltersBar({
                 view: search.view,
                 page: 1,
               }),
+              resetScroll: false,
             })
           }
           className="bg-foreground text-background text-xs uppercase tracking-[0.2em] px-5 py-3 hover:opacity-90 transition-opacity"
