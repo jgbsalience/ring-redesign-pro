@@ -478,12 +478,14 @@ function FiltersBar({
   navigate,
   qInput,
   setQInput,
+  onSubmitQ,
   disabled = false,
 }: {
   search: z.infer<typeof searchSchema>;
   navigate: ReturnType<typeof Route.useNavigate>;
   qInput: string;
   setQInput: (v: string) => void;
+  onSubmitQ: () => void;
   disabled?: boolean;
 }) {
   const update = <K extends keyof z.infer<typeof searchSchema>>(
