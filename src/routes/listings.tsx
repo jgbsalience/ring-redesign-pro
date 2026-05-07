@@ -152,6 +152,7 @@ function ListingsPage() {
         navigate({
           search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
           replace: true,
+          resetScroll: false,
         });
       }
     }, 350);
@@ -355,7 +356,7 @@ function ActiveFilterChips({
 
   const clearOne = (patch: Partial<SearchT>) => {
     if ("q" in patch) setQInput("");
-    navigate({ search: (prev: SearchT) => ({ ...prev, ...patch, page: 1 }) });
+    navigate({ search: (prev: SearchT) => ({ ...prev, ...patch, page: 1 }), resetScroll: false });
   };
 
   const clearAll = () => {
@@ -370,6 +371,7 @@ function ActiveFilterChips({
         q: "",
         page: 1,
       }),
+      resetScroll: false,
     });
   };
 
@@ -420,7 +422,10 @@ function FiltersBar({
     key: K,
     value: z.infer<typeof searchSchema>[K],
   ) => {
-    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, [key]: value, page: 1 }) });
+    navigate({
+      search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, [key]: value, page: 1 }),
+      resetScroll: false,
+    });
   };
 
   return (
@@ -529,6 +534,7 @@ function FiltersBar({
                 view: search.view,
                 page: 1,
               }),
+              resetScroll: false,
             })
           }
           className="bg-foreground text-background text-xs uppercase tracking-[0.2em] px-5 py-3 hover:opacity-90 transition-opacity"
