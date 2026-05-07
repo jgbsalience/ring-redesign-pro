@@ -4,32 +4,60 @@ import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { listings, suburbs } from "@/data/site";
 import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/buy")({
   head: () => ({
     meta: [
-      { title: "For Sale — Ring Real Estate Adelaide" },
-      { name: "description", content: "Browse residential properties for sale across metropolitan Adelaide." },
-      { property: "og:title", content: "Properties for sale — Ring Real Estate" },
-      { property: "og:description", content: "Distinguished homes for sale across metropolitan Adelaide." },
+      { title: "Properties — Ring Real Estate Adelaide" },
+      { name: "description", content: "Browse residential properties for sale, for rent and recently sold across metropolitan Adelaide." },
+      { property: "og:title", content: "Properties — Ring Real Estate" },
+      { property: "og:description", content: "Distinguished homes for sale, for rent and recently sold across metropolitan Adelaide." },
     ],
   }),
   component: BuyPage,
 });
 
+const STATUSES = [
+  { id: "for-sale", label: "For Sale" },
+  { id: "for-rent", label: "For Rent" },
+  { id: "sold", label: "Sold" },
+] as const;
+
+type StatusId = typeof STATUSES[number]["id"];
+
 function BuyPage() {
-  const all = listings.filter((l) => l.status === "for-sale");
+  const [status, setStatus] = useState<StatusId>("for-sale");
+  const [query, setQuery] = useState("");
   const [suburb, setSuburb] = useState("All suburbs");
   const [type, setType] = useState("Any type");
   const [beds, setBeds] = useState("Any");
 
+  const counts = useMemo(() => ({
+    "for-sale": listings.filter((l) => l.status === "for-sale").length,
+    "for-rent": listings.filter((l) => l.status === "for-rent").length,
+    "sold": listings.filter((l) => l.status === "sold").length,
+  }), []);
+
   const filtered = useMemo(() => {
-    return all.filter((l) =>
+    const q = query.trim().toLowerCase();
+    return listings.filter((l) =>
+      l.status === status &&
       (suburb === "All suburbs" || l.suburb === suburb) &&
       (type === "Any type" || l.type === type) &&
-      (beds === "Any" || l.beds >= Number(beds))
+      (beds === "Any" || l.beds >= Number(beds)) &&
+      (q === "" ||
+        l.address.toLowerCase().includes(q) ||
+        l.suburb.toLowerCase().includes(q) ||
+        l.postcode.toLowerCase().includes(q))
     );
-  }, [all, suburb, type, beds]);
+  }, [status, query, suburb, type, beds]);
+
+  const heading = status === "for-sale"
+    ? { kicker: "Currently for sale", title: ["Homes worth", "the patience."] }
+    : status === "for-rent"
+    ? { kicker: "Available to rent", title: ["A home,", "well managed."] }
+    : { kicker: "Recent results", title: ["Quietly,", "exceptionally."] };
 
   return (
     <div className="bg-background text-foreground">
@@ -37,13 +65,45 @@ function BuyPage() {
       <div className="pt-28 md:pt-36">
         <div className="container-page">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-            <span className="ring-mark" /> &nbsp;Currently for sale
+            <span className="ring-mark" /> &nbsp;{heading.kicker}
           </div>
           <h1 className="font-serif text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95]">
-            Homes worth<br />the patience.
+            {heading.title[0]}<br />{heading.title[1]}
           </h1>
 
-          <div className="mt-12 md:mt-16 bg-secondary/60 p-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+          {/* Status tabs */}
+          <div className="mt-12 md:mt-14 flex items-center gap-1 border-b border-border overflow-x-auto">
+            {STATUSES.map((s) => {
+              const active = s.id === status;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => setStatus(s.id)}
+                  className={[
+                    "px-5 md:px-6 py-3 text-xs uppercase tracking-[0.22em] -mb-px border-b-2 transition-colors whitespace-nowrap",
+                    active
+                      ? "border-foreground text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground",
+                  ].join(" ")}
+                >
+                  {s.label}
+                  <span className="ml-2 text-[10px] opacity-60">{counts[s.id]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Filters */}
+          <div className="mt-6 bg-secondary/60 p-2 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_0.8fr_auto] gap-2">
+            <div className="flex items-center gap-3 px-4 py-3 bg-background">
+              <Search size={16} className="opacity-50" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
+                placeholder="Suburb, address or postcode"
+              />
+            </div>
             <select className="bg-background px-4 py-3 text-sm" value={suburb} onChange={(e) => setSuburb(e.target.value)}>
               <option>All suburbs</option>
               {suburbs.map((s) => <option key={s}>{s}</option>)}
@@ -56,9 +116,9 @@ function BuyPage() {
               <option value="Any">Any beds</option>
               <option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option>
             </select>
-            <button className="bg-foreground text-background text-xs uppercase tracking-[0.2em] px-5 py-3">
+            <div className="bg-foreground text-background text-xs uppercase tracking-[0.2em] px-5 py-3 inline-flex items-center justify-center">
               {filtered.length} {filtered.length === 1 ? "result" : "results"}
-            </button>
+            </div>
           </div>
         </div>
 
