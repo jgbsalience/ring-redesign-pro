@@ -148,19 +148,28 @@ function HomePage() {
                   : "/buy/$listingId"
               }
               params={{ listingId: current.id }}
-              className="pointer-events-auto transition-opacity duration-500 hover:text-white border-b border-white/0 hover:border-white/60 pb-0.5"
+              aria-label={`View featured property: ${current.address}, ${current.suburb}`}
+              className="pointer-events-auto transition-opacity duration-500 hover:text-white border-b border-white/0 hover:border-white/60 pb-0.5 focus:outline-none focus-visible:text-white focus-visible:border-white/80"
             >
               {current.address} · {current.suburb} →
             </Link>
           )}
-          <span className="hidden sm:flex items-center gap-1.5 pointer-events-auto">
-            {HERO_SLIDES.map((_, i) => (
+          <span
+            className="hidden sm:flex items-center gap-1.5 pointer-events-auto"
+            role="tablist"
+            aria-label="Featured property slides"
+          >
+            {HERO_SLIDES.map((s, i) => (
               <button
                 key={i}
+                type="button"
+                role="tab"
                 onClick={() => setSlide(i)}
-                aria-label={`Slide ${i + 1}`}
+                aria-label={`Show slide ${i + 1} of ${HERO_SLIDES.length}: ${s.address}, ${s.suburb}`}
+                aria-selected={i === slide}
+                aria-current={i === slide ? "true" : undefined}
                 className={[
-                  "h-px transition-all duration-500",
+                  "h-px transition-all duration-500 focus:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50",
                   i === slide ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70",
                 ].join(" ")}
               />
