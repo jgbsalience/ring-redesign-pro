@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getListing, type Listing } from "@/data/site";
 import { ListingDetailView } from "@/components/site/ListingDetail";
 
-export const Route = createFileRoute("/buy/$listingId")({
+export const Route = createFileRoute("/sold/$listingId")({
   loader: ({ params }) => {
     const l = getListing(params.listingId);
     if (!l) throw notFound();
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/buy/$listingId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.listing.address}, ${loaderData.listing.suburb} — Ring Real Estate` },
+          { title: `${loaderData.listing.address}, ${loaderData.listing.suburb} — Sold — Ring Real Estate` },
           { name: "description", content: loaderData.listing.headline },
           { property: "og:title", content: `${loaderData.listing.address}, ${loaderData.listing.suburb}` },
           { property: "og:description", content: loaderData.listing.headline },
