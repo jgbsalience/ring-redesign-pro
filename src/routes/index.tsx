@@ -91,6 +91,12 @@ function HomePage() {
             params={{ listingId: current.id }}
             aria-label={`View featured property: ${current.address}, ${current.suburb} — ${current.price}`}
             className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50"
+            onKeyDown={(e) => {
+              if (e.key === " " || e.key === "Spacebar") {
+                e.preventDefault();
+                (e.currentTarget as HTMLAnchorElement).click();
+              }
+            }}
           >
             <span className="sr-only">
               View featured property {current.address}, {current.suburb}
