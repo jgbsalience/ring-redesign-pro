@@ -66,7 +66,7 @@ function AboutPage() {
             {agents.map((a) => (
               <div key={a.id} className="grid grid-cols-[140px_1fr] md:grid-cols-[180px_1fr] gap-6">
                 <div className="aspect-[3/4] img-zoom bg-stone">
-                  <img src={a.photo} alt={a.name} className="w-full h-full object-cover grayscale" />
+                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div>
                   <div className="font-serif text-2xl">{a.name}</div>

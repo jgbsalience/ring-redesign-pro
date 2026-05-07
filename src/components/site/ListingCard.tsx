@@ -54,7 +54,7 @@ export function ListingCard({ l }: { l: Listing }) {
           </div>
         </div>
         <div className="mt-4 pt-4 border-t border-border flex items-center gap-2.5 text-xs text-muted-foreground">
-          <img src={agent.photo} alt={agent.name} className="w-6 h-6 rounded-full object-cover" />
+          <img src={agent.photo} alt={agent.name} referrerPolicy="no-referrer" loading="lazy" className="w-6 h-6 rounded-full object-cover" />
           <span>{agent.name}</span>
         </div>
       </div>
