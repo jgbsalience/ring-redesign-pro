@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
-import { ArrowRight, Plus, Minus } from "lucide-react";
+import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays } from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { useState } from "react";
 
