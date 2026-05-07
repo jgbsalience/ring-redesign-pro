@@ -76,11 +76,6 @@ const BuyListingIdRoute = BuyListingIdRouteImport.update({
   path: '/$listingId',
   getParentRoute: () => BuyRoute,
 } as any)
-const TeamAgentIdRoute = TeamAgentIdRouteImport.update({
-  id: '/team/$agentId',
-  path: '/team/$agentId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
