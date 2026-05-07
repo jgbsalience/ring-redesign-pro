@@ -140,6 +140,7 @@ export function TeamMemberImage({
   className = "",
   alt,
   eager = false,
+  priority = false,
   sizes,
   wrap = false,
   aspect = "4 / 3",
@@ -148,6 +149,7 @@ export function TeamMemberImage({
   const srcSet = buildSrcSet(agent.photo);
   const baseWidth = baseWidthFor[size];
   const src = withWidth(agent.photo, baseWidth) ?? agent.photo;
+  const isEager = eager || priority;
 
   const img = (
     <img
@@ -158,7 +160,8 @@ export function TeamMemberImage({
       width={baseWidth}
       height={Math.round((baseWidth * 3) / 4)}
       referrerPolicy="no-referrer"
-      loading={eager ? "eager" : "lazy"}
+      loading={isEager ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       decoding="async"
       draggable={false}
       className={[sizeClass[size], className].filter(Boolean).join(" ")}
