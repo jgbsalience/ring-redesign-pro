@@ -2,8 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
+
+// Mix rentals + recently leased/sold for visual variety; fall back to any with hero
+const RENT_SLIDES = (() => {
+  const rentals = listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero);
+  if (rentals.length >= 4) return rentals.slice(0, 6);
+  const filler = listings.filter((l) => l.hero && !rentals.includes(l)).slice(0, 6 - rentals.length);
+  return [...rentals, ...filler];
+})();
 
 export const Route = createFileRoute("/rent/")({
   head: () => ({
