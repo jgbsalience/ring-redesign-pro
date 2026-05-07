@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, listings, type Agent } from "@/data/site";
 import { ListingCard } from "@/components/site/ListingCard";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { ArrowRight, Mail, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/team/$agentId")({
