@@ -411,3 +411,65 @@ function AboutPage() {
     </div>
   );
 }
+
+function FaqSection() {
+  const groups = Array.from(new Set(FAQS.map((f) => f.group)));
+  const [open, setOpen] = useState<string | null>(FAQS[0]?.q ?? null);
+  return (
+    <section className="bg-secondary/40 border-t border-border">
+      <div className="container-page py-24 md:py-32">
+        <div className="grid md:grid-cols-12 gap-10 md:gap-16">
+          <div className="md:col-span-4">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Frequently asked</div>
+            <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+              Questions, <span className="italic font-light">answered honestly.</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-sm">
+              Buying or selling in Adelaide should feel considered, not rushed. If your question isn't here, ask us directly.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] border-b border-foreground pb-1"
+            >
+              Ask a question <ArrowRight size={14} />
+            </Link>
+          </div>
+          <div className="md:col-span-8 space-y-12">
+            {groups.map((group) => (
+              <div key={group}>
+                <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">{group}</div>
+                <div className="border-t border-border">
+                  {FAQS.filter((f) => f.group === group).map((f) => {
+                    const isOpen = open === f.q;
+                    return (
+                      <div key={f.q} className="border-b border-border">
+                        <button
+                          type="button"
+                          onClick={() => setOpen(isOpen ? null : f.q)}
+                          className="w-full flex items-start justify-between gap-6 py-6 text-left group"
+                          aria-expanded={isOpen}
+                        >
+                          <span className="font-serif text-xl md:text-2xl leading-snug pr-4 group-hover:text-[var(--ringgreen)] transition-colors">
+                            {f.q}
+                          </span>
+                          <span className="mt-2 shrink-0 text-muted-foreground">
+                            {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+                          </span>
+                        </button>
+                        {isOpen && (
+                          <div className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl">
+                            {f.a}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
