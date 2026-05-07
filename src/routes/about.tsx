@@ -587,11 +587,30 @@ function TestimonialsCarousel() {
 
   const story = STORIES[i];
 
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const onPointerDown = (e: React.PointerEvent) => {
+    swipeStart.current = { x: e.clientX, y: e.clientY };
+    setPaused(true);
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!swipeStart.current) return;
+    const dx = e.clientX - swipeStart.current.x;
+    const dy = e.clientY - swipeStart.current.y;
+    swipeStart.current = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) next(); else prev();
+    }
+  };
+
   return (
     <section
       className="bg-secondary/40 border-y border-border"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPointerCancel={() => { swipeStart.current = null; }}
+      style={{ touchAction: "pan-y" }}
     >
       <div className="container-page py-24 md:py-32">
         <div className="flex items-end justify-between gap-6 mb-12">
