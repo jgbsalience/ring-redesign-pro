@@ -103,8 +103,8 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
           ))}
           <div className="mt-8 pt-8 border-t border-border space-y-3 text-sm">
             <a href="tel:+61883703211" className="block">(08) 8370 3211</a>
-            <a href="mailto:hello@ring-sa.com.au" className="block opacity-70">
-              hello@ring-sa.com.au
+            <a href="mailto:ring@ring-sa.com.au" className="block opacity-70">
+              ring@ring-sa.com.au
             </a>
           </div>
           <Link
