@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
-import { Bed, Bath, Car, Maximize, MapPin, ArrowRight } from "lucide-react";
+import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler } from "lucide-react";
 
 export function ListingDetailView({ listing }: { listing: Listing }) {
   const agents = listing.agentIds.map(getAgent);
@@ -15,13 +17,25 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
     listing.status === "for-rent" || listing.status === "leased"
       ? { to: "/rent" as const, label: "For rent" }
       : listing.status === "sold"
-      ? { to: "/sold" as const, label: "Recent sales" }
+      ? { to: "/buy" as const, label: "Recent sales" }
       : { to: "/buy" as const, label: "For sale" };
 
   const enquireLabel =
     listing.status === "for-rent" ? "Enquire about this rental"
     : listing.status === "sold" ? "Discuss recent sales"
     : "Enquire about this home";
+
+  const [floorplanOpen, setFloorplanOpen] = useState(false);
+  useEffect(() => {
+    if (!floorplanOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setFloorplanOpen(false); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [floorplanOpen]);
 
   return (
     <div className="bg-background text-foreground">
@@ -44,15 +58,8 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
           )}
         </div>
 
-        <div className="container-page grid grid-cols-1 md:grid-cols-3 gap-2">
-          <div className="md:col-span-2 aspect-[4/3] md:aspect-auto md:row-span-2 bg-stone overflow-hidden">
-            <img src={listing.gallery[0]} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-          </div>
-          {listing.gallery.slice(1, 3).map((g, i) => (
-            <div key={i} className="aspect-[4/3] bg-stone overflow-hidden">
-              <img src={g} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-            </div>
-          ))}
+        <div className="container-page">
+          <Gallery images={listing.gallery} alt={listing.address} />
         </div>
       </section>
 
@@ -88,6 +95,36 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {listing.floorplan && (
+            <div className="mt-14">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Floorplan</div>
+                  <h3 className="font-serif text-2xl md:text-3xl mt-2">The layout, at a glance.</h3>
+                </div>
+                <button
+                  onClick={() => setFloorplanOpen(true)}
+                  className="text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 border-b border-foreground pb-1 hover:gap-3 transition-all"
+                >
+                  <Ruler size={14} /> Open full size
+                </button>
+              </div>
+              <button
+                onClick={() => setFloorplanOpen(true)}
+                className="mt-6 block w-full bg-secondary/50 border border-border p-6 hover:bg-secondary transition-colors"
+                aria-label="Open floorplan"
+              >
+                <img
+                  src={listing.floorplan}
+                  alt={`Floorplan — ${listing.address}`}
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  className="w-full h-auto object-contain max-h-[520px] mx-auto"
+                />
+              </button>
             </div>
           )}
 
@@ -156,6 +193,27 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
       )}
 
       <Footer />
+
+      {floorplanOpen && listing.floorplan && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10 animate-fade-in"
+          onClick={() => setFloorplanOpen(false)}
+        >
+          <button
+            onClick={() => setFloorplanOpen(false)}
+            className="absolute top-5 right-6 text-white/80 hover:text-white text-xs uppercase tracking-[0.25em]"
+          >
+            Close ✕
+          </button>
+          <img
+            src={listing.floorplan}
+            alt={`Floorplan — ${listing.address}`}
+            referrerPolicy="no-referrer"
+            className="max-w-full max-h-full object-contain bg-white"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

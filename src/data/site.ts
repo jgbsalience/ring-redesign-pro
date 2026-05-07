@@ -16,6 +16,7 @@ export type Listing = {
   type: "House" | "Townhouse" | "Apartment" | "Land" | "Villa";
   hero: string;
   gallery: string[];
+  floorplan?: string;
   headline: string;
   description: string[];
   features: string[];
