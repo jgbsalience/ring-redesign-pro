@@ -68,7 +68,7 @@ function SellPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-x-8 gap-y-14">
             {sold.map((l) => (
-              <Link key={l.id} to="/buy/$listingId" params={{ listingId: l.id }} className="hover-lift">
+              <Link key={l.id} to="/sold/$listingId" params={{ listingId: l.id }} className="hover-lift">
                 <div className="aspect-[4/3] img-zoom bg-stone">
                   <img src={l.hero} alt="" className="w-full h-full object-cover" />
                 </div>
