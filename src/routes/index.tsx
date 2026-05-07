@@ -40,6 +40,28 @@ function HomePage() {
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Search bar state
+  const navigate = useNavigate();
+  const [intent, setIntent] = useState<"buy" | "rent" | "sold">("buy");
+  const [query, setQuery] = useState("");
+  const [beds, setBeds] = useState("any");
+  const [suggestOpen, setSuggestOpen] = useState(false);
+
+  const suburbs = Array.from(new Set(listings.map((l) => l.suburb))).sort();
+  const suggestions = query.trim().length
+    ? suburbs.filter((s) => s.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 6)
+    : [];
+
+  function runSearch(q?: string) {
+    const dest = intent === "rent" ? "/rent" : intent === "sold" ? "/sold" : "/buy";
+    const params = new URLSearchParams();
+    const term = (q ?? query).trim();
+    if (term) params.set("q", term);
+    if (beds !== "any") params.set("beds", beds);
+    const search = params.toString();
+    navigate({ to: dest, search: search ? (Object.fromEntries(params) as never) : ({} as never) });
+  }
+
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -51,6 +73,7 @@ function HomePage() {
   }, [paused]);
 
   const current = HERO_SLIDES[slide] ?? HERO_SLIDES[0];
+
 
   return (
     <div className="bg-background text-foreground">
