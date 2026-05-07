@@ -2,8 +2,57 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Plus, Minus } from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
+import { useState } from "react";
+
+const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "About us" }[] = [
+  {
+    group: "Selling",
+    q: "How long does it take to sell a home in Adelaide?",
+    a: "Most well-presented Adelaide homes go under contract within 21 to 35 days of going to market. Off-market and pre-market campaigns can be quicker. We'll give you an honest, evidence-based timeline at your appraisal — not a sales pitch.",
+  },
+  {
+    group: "Selling",
+    q: "What does Ring Real Estate charge in commission?",
+    a: "Our fee is tailored to the campaign — the property, the price guide, and the marketing approach. There are no hidden costs. You'll see a fully itemised proposal at appraisal so you can compare like-for-like with any other agency.",
+  },
+  {
+    group: "Selling",
+    q: "Auction or private treaty — which is better?",
+    a: "Both work. Auction suits homes with strong buyer competition or unique appeal; private treaty suits considered, longer-decision purchases. We recommend the method that has historically delivered the best result for homes like yours in your suburb.",
+  },
+  {
+    group: "Selling",
+    q: "Do I need to renovate or stage before selling?",
+    a: "Rarely a full renovation, but presentation matters. We'll walk through your home and recommend the small, high-return improvements — paint, gardens, styling — that consistently lift the final price. We coordinate trades and stylists for you.",
+  },
+  {
+    group: "Buying",
+    q: "How do I get notified about new Ring listings first?",
+    a: "Register with us and tell us what you're looking for. We share off-market and pre-market homes with our buyer database before they appear publicly. Many of our sales never see realestate.com.au.",
+  },
+  {
+    group: "Buying",
+    q: "Can you help me buy a home that isn't listed with Ring?",
+    a: "Yes. We're happy to give you a frank, conflict-free read on any home you're considering across metropolitan Adelaide — comparable sales, likely range, and what to watch out for at building inspection.",
+  },
+  {
+    group: "Buying",
+    q: "What suburbs do you specialise in?",
+    a: "We're rooted in the southern foothills — Blackwood, Bellevue Heights, Glenalta, Coromandel Valley, Hawthorndene, Eden Hills — and sell across greater Adelaide. If you're buying in our patch, we likely already know the home and the street.",
+  },
+  {
+    group: "About us",
+    q: "Are you part of a franchise?",
+    a: "No. Ring Real Estate has been independently owned and operated since 1978. Decisions are made in our office, by the people who'll handle your sale or lease — not by a head office in another city.",
+  },
+  {
+    group: "About us",
+    q: "Do you manage rental properties as well?",
+    a: "Yes. Our property management team looks after around 460 doors across Adelaide with a 99.2% retention rate. The senior agent you meet at the appraisal is the one who manages the relationship — not a junior handover.",
+  },
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -61,6 +110,18 @@ export const Route = createFileRoute("/about")({
             addressRegion: "SA",
             addressCountry: "AU",
           },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         }),
       },
     ],
@@ -333,6 +394,8 @@ function AboutPage() {
         </div>
       </section>
 
+      <FaqSection />
+
       <section className="bg-[var(--ink)] text-[var(--bone)]">
         <div className="container-page py-24 md:py-32 flex flex-wrap items-end justify-between gap-8">
           <h2 className="font-serif text-4xl md:text-6xl tracking-tight max-w-2xl leading-[1.05]">
@@ -346,5 +409,67 @@ function AboutPage() {
 
       <Footer />
     </div>
+  );
+}
+
+function FaqSection() {
+  const groups = Array.from(new Set(FAQS.map((f) => f.group)));
+  const [open, setOpen] = useState<string | null>(FAQS[0]?.q ?? null);
+  return (
+    <section className="bg-secondary/40 border-t border-border">
+      <div className="container-page py-24 md:py-32">
+        <div className="grid md:grid-cols-12 gap-10 md:gap-16">
+          <div className="md:col-span-4">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Frequently asked</div>
+            <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+              Questions, <span className="italic font-light">answered honestly.</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-sm">
+              Buying or selling in Adelaide should feel considered, not rushed. If your question isn't here, ask us directly.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-8 inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] border-b border-foreground pb-1"
+            >
+              Ask a question <ArrowRight size={14} />
+            </Link>
+          </div>
+          <div className="md:col-span-8 space-y-12">
+            {groups.map((group) => (
+              <div key={group}>
+                <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">{group}</div>
+                <div className="border-t border-border">
+                  {FAQS.filter((f) => f.group === group).map((f) => {
+                    const isOpen = open === f.q;
+                    return (
+                      <div key={f.q} className="border-b border-border">
+                        <button
+                          type="button"
+                          onClick={() => setOpen(isOpen ? null : f.q)}
+                          className="w-full flex items-start justify-between gap-6 py-6 text-left group"
+                          aria-expanded={isOpen}
+                        >
+                          <span className="font-serif text-xl md:text-2xl leading-snug pr-4 group-hover:text-[var(--ringgreen)] transition-colors">
+                            {f.q}
+                          </span>
+                          <span className="mt-2 shrink-0 text-muted-foreground">
+                            {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+                          </span>
+                        </button>
+                        {isOpen && (
+                          <div className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl">
+                            {f.a}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
