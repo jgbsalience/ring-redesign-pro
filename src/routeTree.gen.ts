@@ -20,6 +20,7 @@ import { Route as SoldListingIdRouteImport } from './routes/sold.$listingId'
 import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
+import { Route as TeamAgentIdRouteImport } from './routes/team.$agentId'
 
 const SellRoute = SellRouteImport.update({
   id: '/sell',
@@ -295,13 +296,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
