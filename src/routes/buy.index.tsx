@@ -64,6 +64,7 @@ function BuyPage() {
 
   return (
     <div className="bg-background text-foreground">
+      <Header overlay />
       <BannerHero
         slides={BUY_SLIDES}
         kicker={heading.kicker}
