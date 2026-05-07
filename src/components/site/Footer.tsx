@@ -1,17 +1,16 @@
 import { Link } from "@tanstack/react-router";
+import logo from "@/assets/ring-logo.png";
 
 export function Footer() {
   return (
     <footer className="bg-[var(--ink)] text-[var(--bone)] mt-32">
       <div className="container-page py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
         <div className="md:col-span-5">
-          <div className="flex items-center gap-2.5">
-            <span
-              className="inline-block w-3.5 h-3.5 rounded-full border-[2.5px]"
-              style={{ borderColor: "var(--ringgreen)" }}
-            />
-            <span className="font-serif text-2xl">Ring Real Estate</span>
-          </div>
+          <img
+            src={logo}
+            alt="Ring Real Estate"
+            className="h-16 w-auto brightness-0 invert"
+          />
           <p className="mt-6 max-w-md text-sm opacity-70 leading-relaxed">
             Adelaide's independent residential agency since 1978. A small,
             senior team selling and managing distinguished properties across
