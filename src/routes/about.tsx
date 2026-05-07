@@ -82,6 +82,9 @@ const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "Suburbs" | "T
     q: "When is the best time of year to sell in Adelaide?",
     a: "Spring (September–November) and early autumn (February–March) historically draw the deepest buyer pools in Adelaide, but presentation and pricing matter more than the calendar. We've sold beautifully in July and disappointingly in October — the right campaign at the right price beats the season every time.",
   },
+  {
+    group: "About us",
+    q: "Are you part of a franchise?",
     a: "No. Ring Real Estate has been independently owned and operated since 1978. Decisions are made in our office, by the people who'll handle your sale or lease — not by a head office in another city.",
   },
   {
