@@ -28,11 +28,14 @@ export type Database = {
           features: Json
           floorplan: string | null
           gallery: Json
+          geocoded_at: string | null
           headline: string
           hero: string | null
           id: string
           inspections: Json
           land: string | null
+          latitude: number | null
+          longitude: number | null
           postcode: string | null
           price: string
           price_note: string | null
@@ -59,11 +62,14 @@ export type Database = {
           features?: Json
           floorplan?: string | null
           gallery?: Json
+          geocoded_at?: string | null
           headline?: string
           hero?: string | null
           id?: string
           inspections?: Json
           land?: string | null
+          latitude?: number | null
+          longitude?: number | null
           postcode?: string | null
           price?: string
           price_note?: string | null
@@ -90,11 +96,14 @@ export type Database = {
           features?: Json
           floorplan?: string | null
           gallery?: Json
+          geocoded_at?: string | null
           headline?: string
           hero?: string | null
           id?: string
           inspections?: Json
           land?: string | null
+          latitude?: number | null
+          longitude?: number | null
           postcode?: string | null
           price?: string
           price_note?: string | null
