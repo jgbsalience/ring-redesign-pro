@@ -18,7 +18,7 @@ export function ListingCard({ l }: { l: Listing }) {
       params={{ listingId: l.id }}
       className="group block hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
     >
-      <div className="img-zoom relative aspect-[4/3] bg-stone overflow-hidden">
+      <div className="img-zoom relative aspect-[4/3] bg-muted overflow-hidden">
         <img
           src={l.hero}
           alt={l.address}

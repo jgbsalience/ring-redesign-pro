@@ -264,7 +264,7 @@ function HomePage() {
                 params={{ listingId: l.id }}
                 className="w-[320px] md:w-[380px] shrink-0 group hover-lift"
               >
-                <div className="aspect-[4/5] img-zoom bg-stone overflow-hidden">
+                <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
                   <img
                     src={l.hero}
                     alt={l.address}
@@ -337,7 +337,7 @@ function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {agents.map((a) => (
               <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block group">
-                <div className="aspect-[3/4] img-zoom bg-stone">
+                <div className="aspect-[3/4] img-zoom bg-muted">
                   <TeamMemberImage agent={a} size="lg" className="grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="mt-4">
