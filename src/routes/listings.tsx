@@ -18,6 +18,9 @@ const STATUS_TO_DB: Record<StatusKey, string[]> = {
   sold: ["sold"],
 };
 
+const SORTS = ["featured", "newest", "price-asc", "price-desc"] as const;
+type SortKey = (typeof SORTS)[number];
+
 const searchSchema = z.object({
   status: fallback(z.enum(STATUSES), "buy").default("buy"),
   minPrice: fallback(z.number().int().min(0), 0).default(0),
@@ -25,6 +28,7 @@ const searchSchema = z.object({
   beds: fallback(z.number().int().min(0).max(10), 0).default(0),
   baths: fallback(z.number().int().min(0).max(10), 0).default(0),
   q: fallback(z.string(), "").default(""),
+  sort: fallback(z.enum(SORTS), "featured").default("featured"),
   page: fallback(z.number().int().min(1).max(500), 1).default(1),
 });
 
