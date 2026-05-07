@@ -18,7 +18,8 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const HERO = listings[0]?.hero ?? "";
+const HERO_LISTING = listings.find((l) => l.featured && l.hero) ?? listings.find((l) => l.hero) ?? listings[0];
+const HERO = HERO_LISTING?.hero ?? "";
 
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
@@ -30,7 +31,13 @@ function HomePage() {
 
       {/* HERO */}
       <section className="relative min-h-[100svh] w-full overflow-hidden">
-        <img src={HERO} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img
+          src={HERO}
+          alt={HERO_LISTING?.address ?? ""}
+          referrerPolicy="no-referrer"
+          loading="eager"
+          className="absolute inset-0 w-full h-full object-cover scale-105"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
 
         <div className="relative container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white">
@@ -73,7 +80,7 @@ function HomePage() {
         </div>
 
         <div className="absolute bottom-6 right-6 text-[10px] uppercase tracking-[0.25em] text-white/60">
-          Fergusson Avenue · Craigburn Farm
+          {HERO_LISTING?.address} · {HERO_LISTING?.suburb}
         </div>
       </section>
 
