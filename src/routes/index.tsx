@@ -259,7 +259,7 @@ function HomePage() {
             {sold.map((l) => (
               <Link
                 key={l.id}
-                to="/buy/$listingId"
+                to="/sold/$listingId"
                 params={{ listingId: l.id }}
                 className="w-[320px] md:w-[380px] shrink-0 group hover-lift"
               >
