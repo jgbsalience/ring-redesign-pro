@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { Listing } from "@/data/site";
 import { getAgent } from "@/data/site";
 import { Bed, Bath, Car } from "lucide-react";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 
 export function ListingCard({ l }: { l: Listing }) {
   const agent = getAgent(l.agentIds[0]);
