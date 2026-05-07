@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import logo from "@/assets/ring-logo.png";
+import logo from "@/assets/ring-logo-green.png";
 
 const nav = [
   { to: "/buy", label: "Buy" },
