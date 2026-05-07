@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
-import { ArrowRight, Plus, Minus } from "lucide-react";
+import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays } from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { useState } from "react";
 
@@ -397,13 +397,49 @@ function AboutPage() {
       <FaqSection />
 
       <section className="bg-[var(--ink)] text-[var(--bone)]">
-        <div className="container-page py-24 md:py-32 flex flex-wrap items-end justify-between gap-8">
-          <h2 className="font-serif text-4xl md:text-6xl tracking-tight max-w-2xl leading-[1.05]">
-            Come and meet us — coffee is on, always.
-          </h2>
-          <Link to="/contact" className="inline-flex items-center gap-3 px-7 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em]">
-            Visit the studio <ArrowRight size={14} />
-          </Link>
+        <div className="container-page py-24 md:py-32">
+          <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-end">
+            <div className="md:col-span-7">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-[var(--ringgreen)]">
+                <span className="ring-mark" /> &nbsp;Let's talk
+              </div>
+              <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-5 max-w-2xl leading-[1.05]">
+                Come and meet us — <span className="italic">coffee is on,</span> always.
+              </h2>
+              <p className="mt-6 text-[var(--bone)]/70 max-w-lg">
+                Whether you're ready to sell, just curious about the market, or looking for the right home in Adelaide — pick the way that suits you best.
+              </p>
+            </div>
+            <div className="md:col-span-5 grid gap-3">
+              <a
+                href="tel:0883703211"
+                className="group flex items-center justify-between gap-4 px-7 py-5 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:opacity-90"
+              >
+                <span className="flex items-center gap-3"><Phone size={16} /> Call (08) 8370 3211</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a
+                href="mailto:ring@ring-sa.com.au"
+                className="group flex items-center justify-between gap-4 px-7 py-5 border border-[var(--bone)]/30 text-[var(--bone)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--bone)]/5"
+              >
+                <span className="flex items-center gap-3"><Mail size={16} /> Email the team</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+              <Link
+                to="/sell/appraisal"
+                className="group flex items-center justify-between gap-4 px-7 py-5 border border-[var(--bone)]/30 text-[var(--bone)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--bone)]/5"
+              >
+                <span className="flex items-center gap-3"><CalendarDays size={16} /> Book an appraisal</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                to="/contact"
+                className="mt-2 inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-[var(--bone)]/70 hover:text-[var(--ringgreen)]"
+              >
+                Or visit the Bellevue Heights studio <ArrowRight size={12} />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
