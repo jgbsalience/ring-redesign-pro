@@ -527,15 +527,28 @@ function FiltersBar({
       </div>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_0.8fr_0.8fr_auto] gap-2 bg-secondary/60 p-2">
-        <label className="flex items-center gap-3 px-4 py-3 bg-background">
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmitQ();
+          }}
+          className="flex items-center gap-3 px-4 py-3 bg-background"
+        >
           <Search size={16} className="opacity-50" />
           <input
+            type="search"
             value={qInput}
             onChange={(e) => setQInput(e.target.value)}
             className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
             placeholder="Suburb, address, postcode, keyword"
+            aria-label="Search listings"
           />
-        </label>
+          {/* Hidden submit so Enter triggers onSubmit consistently */}
+          <button type="submit" className="sr-only">
+            Search
+          </button>
+        </form>
 
         <select
           className="bg-background px-4 py-3 text-sm"
