@@ -184,6 +184,7 @@ function ListingsPage() {
     search.baths,
     search.q,
     search.sort,
+    search.view,
     search.page,
   ]);
 
@@ -237,12 +238,21 @@ function ListingsPage() {
           <>
             <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">
               {count} {count === 1 ? "result" : "results"}
+              {search.view === "map" && rows.length < count && (
+                <span className="ml-2 normal-case tracking-normal text-[11px]">
+                  (showing first {rows.length} on map)
+                </span>
+              )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-              {rows.map((r) => (
-                <ListingDbCard key={r.id} r={r} />
-              ))}
-            </div>
+            {search.view === "map" ? (
+              <ListingsMap rows={rows} />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                {rows.map((r) => (
+                  <ListingDbCard key={r.id} r={r} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
