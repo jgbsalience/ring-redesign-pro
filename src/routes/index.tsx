@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
@@ -18,8 +19,18 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const HERO_LISTING = listings.find((l) => l.featured && l.hero) ?? listings.find((l) => l.hero) ?? listings[0];
-const HERO = HERO_LISTING?.hero ?? "";
+const HERO_SLIDES = (() => {
+  const seen = new Set<string>();
+  const pool: typeof listings = [];
+  for (const l of listings) {
+    if (!l.hero || seen.has(l.hero)) continue;
+    seen.add(l.hero);
+    pool.push(l);
+    if (pool.length === 6) break;
+  }
+  return pool;
+})();
+const HERO = HERO_SLIDES[0]?.hero ?? "";
 
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
