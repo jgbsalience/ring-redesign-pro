@@ -211,7 +211,9 @@ function ListingsPage() {
 
       <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} />
 
-      <div className="container-page mt-12 flex-1">
+      <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
+
+      <div className="container-page mt-8 flex-1">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
             {Array.from({ length: 6 }).map((_, i) => (
