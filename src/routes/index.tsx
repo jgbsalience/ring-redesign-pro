@@ -316,17 +316,17 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {agents.map((a) => (
-              <div key={a.id} className="hover-lift">
+              <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block group">
                 <div className="aspect-[3/4] img-zoom bg-stone">
-                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="mt-4">
-                  <div className="font-serif text-lg">{a.name}</div>
+                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">{a.name}</div>
                   <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
                     {a.role}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

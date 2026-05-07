@@ -64,20 +64,23 @@ function AboutPage() {
           <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">The people you'll work with.</h2>
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
             {agents.map((a) => (
-              <div key={a.id} className="grid grid-cols-[140px_1fr] md:grid-cols-[180px_1fr] gap-6">
+              <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="grid grid-cols-[140px_1fr] md:grid-cols-[180px_1fr] gap-6 group">
                 <div className="aspect-[3/4] img-zoom bg-stone">
-                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div>
-                  <div className="font-serif text-2xl">{a.name}</div>
+                  <div className="font-serif text-2xl group-hover:text-[var(--ringgreen)] transition-colors">{a.name}</div>
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">{a.role}</div>
-                  <p className="mt-4 text-muted-foreground leading-relaxed">{a.bio}</p>
+                  <p className="mt-4 text-muted-foreground leading-relaxed">{a.shortBio ?? a.bio[0]}</p>
                   <div className="mt-5 text-sm space-y-1">
-                    <div><a href={`tel:${a.phone}`} className="hover:text-[var(--ringgreen)]">{a.phone}</a></div>
-                    <div><a href={`mailto:${a.email}`} className="text-muted-foreground hover:text-[var(--ringgreen)]">{a.email}</a></div>
+                    <div><a onClick={(e) => e.stopPropagation()} href={`tel:${a.phone}`} className="hover:text-[var(--ringgreen)]">{a.phone}</a></div>
+                    <div><a onClick={(e) => e.stopPropagation()} href={`mailto:${a.email}`} className="text-muted-foreground hover:text-[var(--ringgreen)]">{a.email}</a></div>
+                  </div>
+                  <div className="mt-5 text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                    View profile <ArrowRight size={12} />
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
