@@ -498,3 +498,145 @@ function FaqSection() {
     </section>
   );
 }
+
+const STORIES = [
+  {
+    quote: "Stephen and the team made selling our family home of 30 years feel calm and considered. The result spoke for itself — well above our expectations.",
+    author: "The Whitford Family",
+    location: "Bellevue Heights",
+    context: "Sold via private treaty",
+  },
+  {
+    quote: "Luke listened, told us the truth, and then went above and beyond. We could not recommend Ring more highly to anyone selling in the foothills.",
+    author: "Daniel & Mei",
+    location: "Glenalta",
+    context: "Sold under the hammer",
+  },
+  {
+    quote: "Soozie has looked after our investment properties for years — proactive, communicative, and always on top of detail. Property management done properly.",
+    author: "P. Whitelock",
+    location: "Blackwood",
+    context: "Property management",
+  },
+  {
+    quote: "From the first appraisal to settlement day, the communication was outstanding. We always knew where we stood. A genuinely human experience.",
+    author: "The Hassell Family",
+    location: "Eden Hills",
+    context: "Sold in 18 days",
+  },
+  {
+    quote: "We interviewed four agents. Ring stood out for honesty and craft — no inflated promises, just a clear plan that delivered exactly what they said it would.",
+    author: "Andrew & Kate",
+    location: "Coromandel Valley",
+    context: "Sold off-market",
+  },
+];
+
+function TestimonialsCarousel() {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const total = STORIES.length;
+  const next = () => setI((p) => (p + 1) % total);
+  const prev = () => setI((p) => (p - 1 + total) % total);
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(next, 7000);
+    return () => clearInterval(t);
+  }, [paused, total]);
+
+  const story = STORIES[i];
+
+  return (
+    <section
+      className="bg-secondary/40 border-y border-border"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="container-page py-24 md:py-32">
+        <div className="flex items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+              <span className="ring-mark" /> &nbsp;Client stories
+            </div>
+            <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-5 leading-[1.05] max-w-3xl">
+              In their own <span className="italic">words.</span>
+            </h2>
+          </div>
+          <div className="hidden md:flex items-center gap-2">
+            <button
+              type="button"
+              onClick={prev}
+              aria-label="Previous testimonial"
+              className="w-11 h-11 inline-flex items-center justify-center border border-border bg-background hover:bg-foreground hover:text-background transition-colors"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              aria-label="Next testimonial"
+              className="w-11 h-11 inline-flex items-center justify-center border border-border bg-background hover:bg-foreground hover:text-background transition-colors"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+
+        <figure key={i} className="grid md:grid-cols-12 gap-8 md:gap-12 animate-fade-in">
+          <div className="md:col-span-1">
+            <Quote size={40} className="text-[var(--ringgreen)]" strokeWidth={1.25} />
+          </div>
+          <div className="md:col-span-11">
+            <blockquote className="font-serif text-2xl md:text-4xl leading-snug max-w-4xl">
+              {story.quote}
+            </blockquote>
+            <figcaption className="mt-10 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-xs uppercase tracking-[0.22em]">
+              <span className="text-foreground">{story.author}</span>
+              <span className="text-muted-foreground">{story.location}</span>
+              <span className="text-[var(--ringgreen)]">{story.context}</span>
+            </figcaption>
+          </div>
+        </figure>
+
+        <div className="mt-12 flex items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            {STORIES.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setI(idx)}
+                aria-label={`Story ${idx + 1}`}
+                className={[
+                  "h-1 transition-all",
+                  idx === i ? "w-10 bg-foreground" : "w-5 bg-border hover:bg-muted-foreground",
+                ].join(" ")}
+              />
+            ))}
+          </div>
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={prev}
+              aria-label="Previous"
+              className="w-10 h-10 inline-flex items-center justify-center border border-border bg-background"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              aria-label="Next"
+              className="w-10 h-10 inline-flex items-center justify-center border border-border bg-background"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+          <div className="hidden md:block text-[10px] uppercase tracking-[0.25em] text-muted-foreground tabular-nums">
+            {String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
