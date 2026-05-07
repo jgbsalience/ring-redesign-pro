@@ -82,7 +82,7 @@
   --card-foreground: var(--bone);
   --popover: oklch(0.22 0.01 250);
   --popover-foreground: var(--bone);
-  --primary: var(--bone);
+  --primary: var(--ringgreen);
   --primary-foreground: var(--ink);
   --secondary: oklch(0.27 0.01 250);
   --secondary-foreground: var(--bone);
