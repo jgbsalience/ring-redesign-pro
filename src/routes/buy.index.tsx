@@ -64,18 +64,16 @@ function BuyPage() {
 
   return (
     <div className="bg-background text-foreground">
-      <Header />
-      <div className="pt-28 md:pt-36">
+      <BannerHero
+        slides={BUY_SLIDES}
+        kicker={heading.kicker}
+        title={<>{heading.title[0]}<br /><span className="italic font-light">{heading.title[1]}</span></>}
+        subtitle="Distinguished homes across metropolitan Adelaide — curated, not collected."
+      />
+      <div className="pt-14 md:pt-20">
         <div className="container-page">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-            <span className="ring-mark" /> &nbsp;{heading.kicker}
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95]">
-            {heading.title[0]}<br />{heading.title[1]}
-          </h1>
-
           {/* Status tabs */}
-          <div className="mt-12 md:mt-14 flex items-center gap-1 border-b border-border overflow-x-auto">
+          <div className="mt-2 md:mt-4 flex items-center gap-1 border-b border-border overflow-x-auto">
             {STATUSES.map((s) => {
               const active = s.id === status;
               return (
