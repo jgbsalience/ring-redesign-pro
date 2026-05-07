@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, listings, type Agent } from "@/data/site";
 import { ListingCard } from "@/components/site/ListingCard";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { ArrowRight, Mail, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/team/$agentId")({
@@ -51,12 +52,7 @@ function AgentPage() {
         <div className="mt-8 grid md:grid-cols-12 gap-12 items-start">
           <div className="md:col-span-5">
             <div className="aspect-[3/4] bg-stone overflow-hidden">
-              <img
-                src={agent.photo}
-                alt={agent.name}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
+              <TeamMemberImage agent={agent} size="xl" eager />
             </div>
           </div>
           <div className="md:col-span-7">
@@ -124,13 +120,7 @@ function AgentPage() {
           {agents.filter((a) => a.id !== agent.id).map((a) => (
             <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block">
               <div className="aspect-[3/4] img-zoom bg-stone">
-                <img
-                  src={a.photo}
-                  alt={a.name}
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                />
+                <TeamMemberImage agent={a} size="lg" className="grayscale hover:grayscale-0 transition-all duration-700" />
               </div>
               <div className="mt-4">
                 <div className="font-serif text-lg">{a.name}</div>

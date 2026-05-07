@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { listings, agents, testimonials } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
 
@@ -337,7 +338,7 @@ function HomePage() {
             {agents.map((a) => (
               <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block group">
                 <div className="aspect-[3/4] img-zoom bg-stone">
-                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  <TeamMemberImage agent={a} size="lg" className="grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="mt-4">
                   <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">{a.name}</div>
