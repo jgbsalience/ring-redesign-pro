@@ -5,9 +5,15 @@ import { Bed, Bath, Car } from "lucide-react";
 
 export function ListingCard({ l }: { l: Listing }) {
   const agent = getAgent(l.agentIds[0]);
+  const to =
+    l.status === "for-rent" || l.status === "leased"
+      ? "/rent/$listingId"
+      : l.status === "sold"
+      ? "/sold/$listingId"
+      : "/buy/$listingId";
   return (
     <Link
-      to="/buy/$listingId"
+      to={to}
       params={{ listingId: l.id }}
       className="group block hover-lift"
     >
