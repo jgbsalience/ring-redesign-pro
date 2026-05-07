@@ -6,7 +6,7 @@ import { listings, suburbs } from "@/data/site";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 
-export const Route = createFileRoute("/buy")({
+export const Route = createFileRoute("/buy/")({
   head: () => ({
     meta: [
       { title: "Properties — Ring Real Estate Adelaide" },
