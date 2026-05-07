@@ -356,7 +356,7 @@ function ActiveFilterChips({
 
   const clearOne = (patch: Partial<SearchT>) => {
     if ("q" in patch) setQInput("");
-    navigate({ search: (prev: SearchT) => ({ ...prev, ...patch, page: 1 }) });
+    navigate({ search: (prev: SearchT) => ({ ...prev, ...patch, page: 1 }), resetScroll: false });
   };
 
   const clearAll = () => {
