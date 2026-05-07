@@ -165,6 +165,3 @@ function SoldIndex() {
     </div>
   );
 }
-
-// keep suburbs reference to avoid TS unused-import noise across editors
-void suburbs;
