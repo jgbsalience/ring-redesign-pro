@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
+
+const SELL_SLIDES = listings
+  .filter((l) => l.status === "sold" && l.hero)
+  .slice(0, 6);
 
 export const Route = createFileRoute("/sell")({
   head: () => ({
