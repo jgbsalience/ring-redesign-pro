@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SellRouteImport } from './routes/sell'
+import { Route as ListingsRouteImport } from './routes/listings'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -26,6 +27,11 @@ import { Route as ApiPublicJobsSyncListingsRouteImport } from './routes/api/publ
 const SellRoute = SellRouteImport.update({
   id: '/sell',
   path: '/sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingsRoute = ListingsRouteImport.update({
+  id: '/listings',
+  path: '/listings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/listings'
     | '/sell'
     | '/buy/$listingId'
     | '/rent/$listingId'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/listings'
     | '/sell'
     | '/buy/$listingId'
     | '/rent/$listingId'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/listings'
     | '/sell'
     | '/buy/$listingId'
     | '/rent/$listingId'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  ListingsRoute: typeof ListingsRoute
   SellRoute: typeof SellRouteWithChildren
   BuyListingIdRoute: typeof BuyListingIdRoute
   RentListingIdRoute: typeof RentListingIdRoute
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/sell'
       fullPath: '/sell'
       preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listings': {
+      id: '/listings'
+      path: '/listings'
+      fullPath: '/listings'
+      preLoaderRoute: typeof ListingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -309,6 +329,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  ListingsRoute: ListingsRoute,
   SellRoute: SellRouteWithChildren,
   BuyListingIdRoute: BuyListingIdRoute,
   RentListingIdRoute: RentListingIdRoute,
