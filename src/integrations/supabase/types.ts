@@ -14,7 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      listings: {
+        Row: {
+          address: string
+          agent_slugs: Json
+          baths: number
+          beds: number
+          cars: number
+          created_at: string
+          description: Json
+          external_id: string | null
+          featured: boolean
+          features: Json
+          floorplan: string | null
+          gallery: Json
+          headline: string
+          hero: string | null
+          id: string
+          inspections: Json
+          land: string | null
+          postcode: string | null
+          price: string
+          price_note: string | null
+          price_numeric: number | null
+          raw: Json | null
+          scraped_at: string
+          source_url: string
+          state: string
+          status: string
+          suburb: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          agent_slugs?: Json
+          baths?: number
+          beds?: number
+          cars?: number
+          created_at?: string
+          description?: Json
+          external_id?: string | null
+          featured?: boolean
+          features?: Json
+          floorplan?: string | null
+          gallery?: Json
+          headline?: string
+          hero?: string | null
+          id?: string
+          inspections?: Json
+          land?: string | null
+          postcode?: string | null
+          price?: string
+          price_note?: string | null
+          price_numeric?: number | null
+          raw?: Json | null
+          scraped_at?: string
+          source_url: string
+          state?: string
+          status: string
+          suburb: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          agent_slugs?: Json
+          baths?: number
+          beds?: number
+          cars?: number
+          created_at?: string
+          description?: Json
+          external_id?: string | null
+          featured?: boolean
+          features?: Json
+          floorplan?: string | null
+          gallery?: Json
+          headline?: string
+          hero?: string | null
+          id?: string
+          inspections?: Json
+          land?: string | null
+          postcode?: string | null
+          price?: string
+          price_note?: string | null
+          price_numeric?: number | null
+          raw?: Json | null
+          scraped_at?: string
+          source_url?: string
+          state?: string
+          status?: string
+          suburb?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
