@@ -36,6 +36,7 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
   }>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const markerRefs = useRef<Map<string, import("leaflet").Marker>>(new Map());
+  const mapRef = useRef<import("leaflet").Map | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -119,6 +120,9 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
             bounds={bounds ?? undefined}
             scrollWheelZoom
             style={{ height: "100%", width: "100%" }}
+            ref={(m) => {
+              mapRef.current = m ?? null;
+            }}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -170,11 +174,11 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
                     type="button"
                     onClick={() => {
                       setActiveId(r.id);
-                      const m = markerRefs.current.get(r.id);
-                      if (m) {
-                        m.openPopup();
-                        const ll = m.getLatLng();
-                        m._map?.flyTo(ll, Math.max(m._map.getZoom(), 14), {
+                      const marker = markerRefs.current.get(r.id);
+                      const map = mapRef.current;
+                      if (marker) marker.openPopup();
+                      if (map) {
+                        map.flyTo([r.latitude!, r.longitude!], Math.max(map.getZoom(), 14), {
                           duration: 0.6,
                         });
                       }
