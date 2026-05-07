@@ -6,7 +6,7 @@ import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays, ChevronLeft, Chevro
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { useEffect, useState } from "react";
 
-const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "About us" }[] = [
+const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "Suburbs" | "Timelines" | "About us" }[] = [
   {
     group: "Selling",
     q: "How long does it take to sell a home in Adelaide?",
