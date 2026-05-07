@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { listings, agents, testimonials } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
 
