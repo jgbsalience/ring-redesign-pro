@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Expand } from "lucide-react";
+import { useEffect, useState, useCallback, useRef, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
+import { ChevronLeft, ChevronRight, Expand, ZoomIn, ZoomOut, RotateCcw, X } from "lucide-react";
 
 export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0);
@@ -8,6 +8,21 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
 
   const next = useCallback(() => setActive((i) => (i + 1) % total), [total]);
   const prev = useCallback(() => setActive((i) => (i - 1 + total) % total), [total]);
+
+  // Swipe state for main image
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const onMainPointerDown = (e: RPointerEvent<HTMLDivElement>) => {
+    swipeStart.current = { x: e.clientX, y: e.clientY };
+  };
+  const onMainPointerUp = (e: RPointerEvent<HTMLDivElement>) => {
+    if (!swipeStart.current) return;
+    const dx = e.clientX - swipeStart.current.x;
+    const dy = e.clientY - swipeStart.current.y;
+    swipeStart.current = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) next(); else prev();
+    }
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -29,13 +44,19 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   return (
     <div>
       {/* Main */}
-      <div className="relative group bg-muted overflow-hidden aspect-[16/10] md:aspect-[16/9]">
+      <div
+        className="relative group bg-muted overflow-hidden aspect-[16/10] md:aspect-[16/9] cursor-zoom-in touch-pan-y"
+        onPointerDown={onMainPointerDown}
+        onPointerUp={onMainPointerUp}
+      >
         <img
           src={images[active]}
           alt={alt}
           referrerPolicy="no-referrer"
           loading="eager"
-          className="w-full h-full object-cover transition-opacity duration-500"
+          draggable={false}
+          onClick={() => setOpen(true)}
+          className="w-full h-full object-cover transition-opacity duration-500 select-none"
         />
         <button
           onClick={() => setOpen(true)}
@@ -47,16 +68,16 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         {total > 1 && (
           <>
             <button
-              onClick={prev}
+              onClick={(e) => { e.stopPropagation(); prev(); }}
               aria-label="Previous"
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft size={18} />
             </button>
             <button
-              onClick={next}
+              onClick={(e) => { e.stopPropagation(); next(); }}
               aria-label="Next"
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight size={18} />
             </button>
@@ -88,56 +109,216 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
 
       {/* Lightbox */}
       {open && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex flex-col animate-fade-in"
-          onClick={() => setOpen(false)}
-        >
-          <div className="flex items-center justify-between px-5 md:px-8 py-4 text-white/80 text-[10px] uppercase tracking-[0.25em]">
-            <span>{active + 1} / {total}</span>
-            <button onClick={() => setOpen(false)} className="hover:text-white">Close ✕</button>
-          </div>
-          <div className="flex-1 flex items-center justify-center px-3 md:px-12 pb-8 relative" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={images[active]}
-              alt={alt}
-              referrerPolicy="no-referrer"
-              className="max-w-full max-h-full object-contain"
-            />
-            {total > 1 && (
-              <>
-                <button
-                  onClick={prev}
-                  aria-label="Previous"
-                  className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-12 h-12 flex items-center justify-center"
-                >
-                  <ChevronLeft size={22} />
-                </button>
-                <button
-                  onClick={next}
-                  aria-label="Next"
-                  className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-12 h-12 flex items-center justify-center"
-                >
-                  <ChevronRight size={22} />
-                </button>
-              </>
-            )}
-          </div>
-          {total > 1 && (
-            <div className="px-5 md:px-8 pb-6 flex gap-2 overflow-x-auto" onClick={(e) => e.stopPropagation()}>
-              {images.map((src, i) => (
-                <button
-                  key={src + i}
-                  onClick={() => setActive(i)}
-                  className={[
-                    "h-16 w-24 shrink-0 overflow-hidden transition-opacity",
-                    i === active ? "ring-2 ring-[var(--ringgreen)] opacity-100" : "opacity-50 hover:opacity-100",
-                  ].join(" ")}
-                >
-                  <img src={src} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          )}
+        <Lightbox
+          images={images}
+          alt={alt}
+          active={active}
+          setActive={setActive}
+          onClose={() => setOpen(false)}
+          next={next}
+          prev={prev}
+        />
+      )}
+    </div>
+  );
+}
+
+function Lightbox({
+  images,
+  alt,
+  active,
+  setActive,
+  onClose,
+  next,
+  prev,
+}: {
+  images: string[];
+  alt: string;
+  active: number;
+  setActive: (i: number) => void;
+  onClose: () => void;
+  next: () => void;
+  prev: () => void;
+}) {
+  const total = images.length;
+  const [scale, setScale] = useState(1);
+  const [tx, setTx] = useState(0);
+  const [ty, setTy] = useState(0);
+  const dragging = useRef(false);
+  const last = useRef({ x: 0, y: 0 });
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const MIN = 1;
+  const MAX = 5;
+
+  const reset = useCallback(() => { setScale(1); setTx(0); setTy(0); }, []);
+
+  // Reset zoom when changing image
+  useEffect(() => { reset(); }, [active, reset]);
+
+  const clampPan = (nx: number, ny: number, s: number) => {
+    const el = containerRef.current;
+    if (!el) return { x: nx, y: ny };
+    const w = el.clientWidth;
+    const h = el.clientHeight;
+    const maxX = (w * (s - 1)) / 2;
+    const maxY = (h * (s - 1)) / 2;
+    return {
+      x: Math.max(-maxX, Math.min(maxX, nx)),
+      y: Math.max(-maxY, Math.min(maxY, ny)),
+    };
+  };
+
+  const zoomBy = (factor: number) => {
+    setScale((prev) => {
+      const n = Math.max(MIN, Math.min(MAX, prev * factor));
+      if (n === 1) { setTx(0); setTy(0); }
+      return n;
+    });
+  };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "+" || e.key === "=") zoomBy(1.25);
+      else if (e.key === "-" || e.key === "_") zoomBy(1 / 1.25);
+      else if (e.key === "0") reset();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, next, prev, reset]);
+
+  const onWheel = (e: RWheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15);
+  };
+
+  const onPointerDown = (e: RPointerEvent<HTMLDivElement>) => {
+    if (scale > 1) {
+      dragging.current = true;
+      last.current = { x: e.clientX, y: e.clientY };
+      (e.target as Element).setPointerCapture?.(e.pointerId);
+    } else {
+      swipe.current = { x: e.clientX, y: e.clientY };
+    }
+  };
+  const onPointerMove = (e: RPointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return;
+    const dx = e.clientX - last.current.x;
+    const dy = e.clientY - last.current.y;
+    last.current = { x: e.clientX, y: e.clientY };
+    const n = clampPan(tx + dx, ty + dy, scale);
+    setTx(n.x); setTy(n.y);
+  };
+  const onPointerUp = (e: RPointerEvent<HTMLDivElement>) => {
+    dragging.current = false;
+    if (swipe.current) {
+      const dx = e.clientX - swipe.current.x;
+      const dy = e.clientY - swipe.current.y;
+      swipe.current = null;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) next(); else prev();
+      }
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col animate-fade-in select-none">
+      <div className="flex items-center justify-between px-5 md:px-8 py-4 text-white/80 text-[10px] uppercase tracking-[0.25em] z-10">
+        <span>{active + 1} / {total}</span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Zoom out"
+            onClick={() => zoomBy(1 / 1.25)}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <ZoomOut size={16} />
+          </button>
+          <div className="w-12 text-center tabular-nums text-[11px] text-white/80">{Math.round(scale * 100)}%</div>
+          <button
+            type="button"
+            aria-label="Zoom in"
+            onClick={() => zoomBy(1.25)}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <ZoomIn size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label="Reset"
+            onClick={reset}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors ml-1"
+          >
+            <RotateCcw size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="w-9 h-9 inline-flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors ml-1"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="flex-1 flex items-center justify-center px-3 md:px-12 pb-4 relative overflow-hidden touch-none"
+        onWheel={onWheel}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        style={{ cursor: scale > 1 ? (dragging.current ? "grabbing" : "grab") : "default" }}
+        onDoubleClick={() => (scale > 1 ? reset() : zoomBy(2))}
+      >
+        <img
+          src={images[active]}
+          alt={alt}
+          referrerPolicy="no-referrer"
+          draggable={false}
+          className="max-w-full max-h-full object-contain transition-transform duration-100 will-change-transform"
+          style={{ transform: `translate3d(${tx}px, ${ty}px, 0) scale(${scale})` }}
+        />
+        {total > 1 && scale === 1 && (
+          <>
+            <button
+              onClick={prev}
+              aria-label="Previous"
+              className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-12 h-12 flex items-center justify-center"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next"
+              className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-12 h-12 flex items-center justify-center"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </>
+        )}
+      </div>
+
+      {total > 1 && (
+        <div className="px-5 md:px-8 pb-6 flex gap-2 overflow-x-auto">
+          {images.map((src, i) => (
+            <button
+              key={src + i}
+              onClick={() => setActive(i)}
+              className={[
+                "h-16 w-24 shrink-0 overflow-hidden transition-opacity",
+                i === active ? "ring-2 ring-[var(--ringgreen)] opacity-100" : "opacity-50 hover:opacity-100",
+              ].join(" ")}
+            >
+              <img src={src} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+            </button>
+          ))}
         </div>
       )}
     </div>
