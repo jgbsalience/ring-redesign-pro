@@ -49,9 +49,9 @@
 
   /* Editorial palette */
   --ink: oklch(0.18 0.01 250);
-  --bone: oklch(0.975 0.005 90);
-  --stone: oklch(0.93 0.008 90);
-  --stone-2: oklch(0.86 0.01 90);
+  --bone: oklch(0.975 0.012 130);
+  --stone: oklch(0.93 0.018 132);
+  --stone-2: oklch(0.86 0.022 134);
   --ringgreen: oklch(0.76 0.22 138);
   --ringgreen-soft: oklch(0.93 0.10 138);
   --ringgreen-deep: oklch(0.55 0.18 142);
