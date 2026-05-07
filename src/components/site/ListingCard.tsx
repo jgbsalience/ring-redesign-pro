@@ -16,6 +16,7 @@ export function ListingCard({ l }: { l: Listing }) {
           src={l.hero}
           alt={l.address}
           loading="lazy"
+          referrerPolicy="no-referrer"
           className="w-full h-full object-cover"
         />
         <div className="absolute top-3 left-3 flex gap-2">
