@@ -111,7 +111,7 @@ function ListingsPage() {
     setLoading(true);
     setError(null);
 
-    const dbStatuses = STATUS_TO_DB[search.status];
+    const dbStatuses = STATUS_TO_DB[search.status as StatusKey];
     const from = (search.page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
@@ -246,7 +246,7 @@ function ListingsPage() {
             disabled={search.page === 1}
             onClick={() =>
               navigate({
-                search: (p) => ({ ...p, page: Math.max(1, p.page - 1) }),
+                search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: Math.max(1, p.page - 1) }),
               })
             }
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
@@ -261,7 +261,7 @@ function ListingsPage() {
             disabled={search.page >= totalPages}
             onClick={() =>
               navigate({
-                search: (p) => ({ ...p, page: Math.min(totalPages, p.page + 1) }),
+                search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: Math.min(totalPages, p.page + 1) }),
               })
             }
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
@@ -293,7 +293,7 @@ function FiltersBar({
     key: K,
     value: z.infer<typeof searchSchema>[K],
   ) => {
-    navigate({ search: (prev) => ({ ...prev, [key]: value, page: 1 }) });
+    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, [key]: value, page: 1 }) });
   };
 
   return (
