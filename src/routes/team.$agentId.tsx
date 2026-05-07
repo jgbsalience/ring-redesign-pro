@@ -148,5 +148,3 @@ function AgentPage() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _ = getAgent;
