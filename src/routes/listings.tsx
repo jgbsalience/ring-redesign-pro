@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon } from "lucide-react";
+import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon, ArrowDown } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
