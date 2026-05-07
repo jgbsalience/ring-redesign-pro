@@ -380,19 +380,8 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="container-page py-24 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12">
-          {testimonials.slice(1).map((t) => (
-            <figure key={t.author} className="border-t border-foreground pt-8">
-              <div className="font-serif text-3xl text-[var(--ringgreen)] leading-none">"</div>
-              <blockquote className="font-serif text-2xl md:text-3xl leading-snug mt-4">{t.quote}</blockquote>
-              <figcaption className="mt-6 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                {t.author} · {t.location}
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
+      <TestimonialsCarousel />
+
 
       <FaqSection />
 
