@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import logo from "@/assets/ring-logo.png";
 
 const nav = [
   { to: "/buy", label: "Buy" },
@@ -32,16 +33,17 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
       ].join(" ")}
     >
       <div className="container-page flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-2.5 group" onClick={() => setOpen(false)}>
-          <span
-            className="inline-block w-3 h-3 rounded-full border-[2.5px]"
-            style={{ borderColor: "var(--ringgreen)" }}
+        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)} aria-label="Ring Real Estate home">
+          <img
+            src={logo}
+            alt="Ring Real Estate"
+            className={[
+              "h-10 md:h-12 w-auto transition",
+              transparent ? "brightness-0 invert" : "",
+            ].join(" ")}
           />
-          <span className="font-serif text-xl md:text-2xl tracking-tight leading-none">
-            Ring
-          </span>
-          <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] opacity-70 ml-1 mt-0.5">
-            Real Estate · Est. 1978
+          <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] opacity-70 mt-0.5">
+            Est. 1978
           </span>
         </Link>
 
