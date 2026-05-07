@@ -5,7 +5,36 @@ import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
-import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler } from "lucide-react";
+import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download } from "lucide-react";
+
+function downloadBrochure(listing: Listing, agentName: string, agentPhone: string, agentEmail: string) {
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>${listing.address}, ${listing.suburb} — Ring Real Estate</title>
+<style>body{font-family:Georgia,serif;max-width:780px;margin:40px auto;padding:0 24px;color:#111;line-height:1.6}
+h1{font-size:32px;margin:0 0 8px}h2{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#666;margin-top:32px}
+.kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#666}
+.price{font-size:24px;margin:16px 0}.specs{display:flex;gap:24px;margin:16px 0;font-size:14px}
+img{max-width:100%;margin:8px 0}.agent{border-top:1px solid #ddd;margin-top:32px;padding-top:16px;font-size:14px}</style></head><body>
+<div class="kicker">Ring Real Estate · Adelaide · Since 1978</div>
+<h1>${listing.address}, ${listing.suburb} ${listing.state} ${listing.postcode}</h1>
+<div class="price">${listing.price}</div>
+<div class="specs"><span>${listing.beds} bed</span><span>${listing.baths} bath</span><span>${listing.cars} car</span>${listing.land ? `<span>${listing.land}</span>` : ""}</div>
+${listing.hero ? `<img src="${listing.hero}" alt="">` : ""}
+${listing.headline ? `<p><em>${listing.headline}</em></p>` : ""}
+<h2>About this property</h2>
+${listing.description.map((p) => `<p>${p}</p>`).join("")}
+${listing.features.length ? `<h2>Features</h2><ul>${listing.features.map((f) => `<li>${f}</li>`).join("")}</ul>` : ""}
+<div class="agent"><strong>${agentName}</strong><br>${agentPhone} · ${agentEmail}<br>140 Shepherds Hill Road, Bellevue Heights SA 5050</div>
+</body></html>`;
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `ring-${listing.id}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 export function ListingDetailView({ listing }: { listing: Listing }) {
   const agents = listing.agentIds.map(getAgent);
@@ -151,9 +180,34 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
               <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
                 <MapPin size={14} /> {listing.address}, {listing.suburb} {listing.state} {listing.postcode}
               </div>
+
+              {/* Primary CTAs */}
+              <div className="mt-6 grid grid-cols-1 gap-2">
+                <a
+                  href="#enquire"
+                  className="bg-foreground text-background py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90"
+                >
+                  <Mail size={14} /> Enquire now
+                </a>
+                <div className="grid grid-cols-2 gap-2">
+                  <a
+                    href={`tel:${(agents[0]?.phone ?? "+61883703211").replace(/\s+/g, "")}`}
+                    className="bg-[var(--ringgreen)] text-[var(--ink)] py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:opacity-90"
+                  >
+                    <Phone size={14} /> Call agent
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => downloadBrochure(listing, agents[0]?.name ?? "Ring Real Estate", agents[0]?.phone ?? "(08) 8370 3211", agents[0]?.email ?? "ring@ring-sa.com.au")}
+                    className="border border-foreground text-foreground py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-colors"
+                  >
+                    <Download size={14} /> Brochure
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <form className="bg-background border border-border p-8 space-y-4">
+            <form id="enquire" className="bg-background border border-border p-8 space-y-4 scroll-mt-28">
               <div className="font-serif text-2xl">{enquireLabel}</div>
               <input className="w-full bg-secondary px-4 py-3 text-sm outline-none" placeholder="Full name" />
               <input className="w-full bg-secondary px-4 py-3 text-sm outline-none" placeholder="Email" type="email" />
