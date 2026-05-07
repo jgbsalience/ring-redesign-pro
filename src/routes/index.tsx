@@ -66,10 +66,25 @@ function HomePage() {
             ].join(" ")}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70 pointer-events-none" />
 
-        <div className="relative container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white">
-          <div className="max-w-4xl">
+        {current && (
+          <Link
+            to={
+              current.status === "for-rent" || current.status === "leased"
+                ? "/rent/$listingId"
+                : current.status === "sold"
+                ? "/sold/$listingId"
+                : "/buy/$listingId"
+            }
+            params={{ listingId: current.id }}
+            aria-label={`View ${current.address}, ${current.suburb}`}
+            className="absolute inset-0 z-10"
+          />
+        )}
+
+        <div className="relative z-20 container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white pointer-events-none">
+          <div className="max-w-4xl pointer-events-auto">
             <div className="text-[10px] uppercase tracking-[0.32em] opacity-80 reveal">
               <span className="ring-mark" /> &nbsp;Adelaide · Established 1978
             </div>
@@ -107,11 +122,23 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70">
-          <span className="transition-opacity duration-500">
-            {current?.address} · {current?.suburb}
-          </span>
-          <span className="hidden sm:flex items-center gap-1.5">
+        <div className="absolute z-20 bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70 pointer-events-none">
+          {current && (
+            <Link
+              to={
+                current.status === "for-rent" || current.status === "leased"
+                  ? "/rent/$listingId"
+                  : current.status === "sold"
+                  ? "/sold/$listingId"
+                  : "/buy/$listingId"
+              }
+              params={{ listingId: current.id }}
+              className="pointer-events-auto transition-opacity duration-500 hover:text-white border-b border-white/0 hover:border-white/60 pb-0.5"
+            >
+              {current.address} · {current.suburb} →
+            </Link>
+          )}
+          <span className="hidden sm:flex items-center gap-1.5 pointer-events-auto">
             {HERO_SLIDES.map((_, i) => (
               <button
                 key={i}
