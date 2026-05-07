@@ -2,9 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { BannerHero } from "@/components/site/BannerHero";
 import { listings, suburbs } from "@/data/site";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
+
+const BUY_SLIDES = listings.filter((l) => l.status === "for-sale" && l.hero).slice(0, 6);
 
 export const Route = createFileRoute("/buy/")({
   head: () => ({
@@ -61,18 +64,17 @@ function BuyPage() {
 
   return (
     <div className="bg-background text-foreground">
-      <Header />
-      <div className="pt-28 md:pt-36">
+      <Header overlay />
+      <BannerHero
+        slides={BUY_SLIDES}
+        kicker={heading.kicker}
+        title={<>{heading.title[0]}<br /><span className="italic font-light">{heading.title[1]}</span></>}
+        subtitle="Distinguished homes across metropolitan Adelaide — curated, not collected."
+      />
+      <div className="pt-14 md:pt-20">
         <div className="container-page">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-            <span className="ring-mark" /> &nbsp;{heading.kicker}
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95]">
-            {heading.title[0]}<br />{heading.title[1]}
-          </h1>
-
           {/* Status tabs */}
-          <div className="mt-12 md:mt-14 flex items-center gap-1 border-b border-border overflow-x-auto">
+          <div className="mt-2 md:mt-4 flex items-center gap-1 border-b border-border overflow-x-auto">
             {STATUSES.map((s) => {
               const active = s.id === status;
               return (

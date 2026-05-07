@@ -2,8 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
+
+// Mix rentals + recently leased/sold for visual variety; fall back to any with hero
+const RENT_SLIDES = (() => {
+  const rentals = listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero);
+  if (rentals.length >= 4) return rentals.slice(0, 6);
+  const filler = listings.filter((l) => l.hero && !rentals.includes(l)).slice(0, 6 - rentals.length);
+  return [...rentals, ...filler];
+})();
 
 export const Route = createFileRoute("/rent/")({
   head: () => ({
@@ -21,27 +30,22 @@ function RentPage() {
   const rentals = listings.filter((l) => l.status === "for-rent");
   return (
     <div className="bg-background text-foreground">
-      <Header />
-      <div className="pt-28 md:pt-36 container-page">
-        <div className="grid md:grid-cols-12 gap-10 items-end">
-          <div className="md:col-span-8">
-            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-              <span className="ring-mark" /> &nbsp;Property management
-            </div>
-            <h1 className="font-serif text-5xl md:text-7xl tracking-tight mt-5 leading-[0.95]">
-              Rentals, <span className="italic">managed by people</span><br />who answer their phone.
-            </h1>
-          </div>
-          <div className="md:col-span-4 text-muted-foreground">
-            460 doors. A 99.2% retention rate. The award-winning property team
-            you actually know by name.
-            <a
-              href="https://www.landlords.com.au/auth/login/1274"
-              className="mt-6 inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 text-foreground"
-            >
-              Landlord login <ArrowRight size={14} />
-            </a>
-          </div>
+      <Header overlay />
+      <BannerHero
+        slides={RENT_SLIDES}
+        kicker="Property management"
+        title={<>Rentals, <span className="italic font-light">managed by people</span><br />who answer their phone.</>}
+        subtitle="460 doors. A 99.2% retention rate. The award-winning property team you actually know by name."
+        
+      />
+      <div className="pt-16 md:pt-20 container-page">
+        <div className="flex justify-end -mt-4">
+          <a
+            href="https://www.landlords.com.au/auth/login/1274"
+            className="inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 text-foreground"
+          >
+            Landlord login <ArrowRight size={14} />
+          </a>
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">

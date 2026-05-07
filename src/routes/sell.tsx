@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
+
+const SELL_SLIDES = listings
+  .filter((l) => l.status === "sold" && l.hero)
+  .slice(0, 6);
 
 export const Route = createFileRoute("/sell")({
   head: () => ({
@@ -20,20 +25,14 @@ function SellPage() {
   const sold = listings.filter((l) => l.status === "sold");
   return (
     <div className="bg-background text-foreground">
-      <Header />
-      <section className="pt-28 md:pt-36 container-page">
-        <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-          <span className="ring-mark" /> &nbsp;Selling with Ring
-        </div>
-        <h1 className="font-serif text-5xl md:text-8xl tracking-tight mt-5 leading-[0.92] max-w-5xl">
-          A campaign as<br /><span className="italic font-light">considered</span> as the home.
-        </h1>
-        <p className="mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-          Photography by the people the architects use. Copy that reads like
-          a magazine, not a brochure. Negotiation by a senior agent who has
-          done this for two decades — not a junior reading from a script.
-        </p>
-      </section>
+      <Header overlay />
+      <BannerHero
+        slides={SELL_SLIDES}
+        kicker="Selling with Ring"
+        title={<>A campaign as<br /><span className="italic font-light">considered</span> as the home.</>}
+        subtitle="Photography by the people the architects use. Copy that reads like a magazine, not a brochure. Negotiation by a senior agent who has done this for two decades."
+        cta={{ label: "Request an appraisal", to: "/contact" }}
+      />
 
       {/* Methods */}
       <section className="container-page py-24 md:py-32">
