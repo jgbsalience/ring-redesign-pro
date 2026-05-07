@@ -51,7 +51,7 @@ function AgentPage() {
         </div>
         <div className="mt-8 grid md:grid-cols-12 gap-12 items-start">
           <div className="md:col-span-5">
-            <div className="aspect-[3/4] bg-stone overflow-hidden">
+            <div className="aspect-[3/4] bg-muted overflow-hidden">
               <TeamMemberImage agent={agent} size="xl" priority />
             </div>
           </div>
@@ -119,7 +119,7 @@ function AgentPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {agents.filter((a) => a.id !== agent.id).map((a) => (
             <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block">
-              <div className="aspect-[3/4] img-zoom bg-stone">
+              <div className="aspect-[3/4] img-zoom bg-muted">
                 <TeamMemberImage agent={a} size="lg" className="grayscale hover:grayscale-0 transition-all duration-700" />
               </div>
               <div className="mt-4">

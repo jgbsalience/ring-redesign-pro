@@ -66,7 +66,7 @@ function AboutPage() {
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
             {agents.map((a) => (
               <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="grid grid-cols-[140px_1fr] md:grid-cols-[180px_1fr] gap-6 group">
-                <div className="aspect-[3/4] img-zoom bg-stone">
+                <div className="aspect-[3/4] img-zoom bg-muted">
                   <TeamMemberImage agent={a} size="lg" className="grayscale group-hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div>

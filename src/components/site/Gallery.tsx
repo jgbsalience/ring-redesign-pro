@@ -29,7 +29,7 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   return (
     <div>
       {/* Main */}
-      <div className="relative group bg-stone overflow-hidden aspect-[16/10] md:aspect-[16/9]">
+      <div className="relative group bg-muted overflow-hidden aspect-[16/10] md:aspect-[16/9]">
         <img
           src={images[active]}
           alt={alt}
@@ -75,7 +75,7 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
               key={src + i}
               onClick={() => setActive(i)}
               className={[
-                "aspect-[4/3] overflow-hidden bg-stone transition-all",
+                "aspect-[4/3] overflow-hidden bg-muted transition-all",
                 i === active ? "ring-2 ring-[var(--ringgreen)] opacity-100" : "opacity-60 hover:opacity-100",
               ].join(" ")}
               aria-label={`Image ${i + 1}`}
