@@ -20,7 +20,6 @@ import { Route as SoldListingIdRouteImport } from './routes/sold.$listingId'
 import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
-import { Route as TeamAgentIdRouteImport } from './routes/team.$agentId'
 
 const SellRoute = SellRouteImport.update({
   id: '/sell',
@@ -76,6 +75,11 @@ const BuyListingIdRoute = BuyListingIdRouteImport.update({
   id: '/$listingId',
   path: '/$listingId',
   getParentRoute: () => BuyRoute,
+} as any)
+const TeamAgentIdRoute = TeamAgentIdRouteImport.update({
+  id: '/team/$agentId',
+  path: '/team/$agentId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
