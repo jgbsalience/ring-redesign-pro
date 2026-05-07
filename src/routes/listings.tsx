@@ -121,10 +121,25 @@ function ListingsPage() {
         "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured",
         { count: "exact" },
       )
-      .in("status", dbStatuses)
-      .order("featured", { ascending: false })
-      .order("scraped_at", { ascending: false })
-      .range(from, to);
+      .in("status", dbStatuses);
+
+    if (search.sort === "featured") {
+      query = query
+        .order("featured", { ascending: false })
+        .order("scraped_at", { ascending: false });
+    } else if (search.sort === "newest") {
+      query = query.order("scraped_at", { ascending: false });
+    } else if (search.sort === "price-asc") {
+      query = query
+        .order("price_numeric", { ascending: true, nullsFirst: false })
+        .order("scraped_at", { ascending: false });
+    } else if (search.sort === "price-desc") {
+      query = query
+        .order("price_numeric", { ascending: false, nullsFirst: false })
+        .order("scraped_at", { ascending: false });
+    }
+
+    query = query.range(from, to);
 
     if (search.minPrice > 0) query = query.gte("price_numeric", search.minPrice);
     if (search.maxPrice > 0) query = query.lte("price_numeric", search.maxPrice);
