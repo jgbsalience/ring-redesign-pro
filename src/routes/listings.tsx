@@ -591,6 +591,8 @@ function FiltersBar({
         </div>
       </div>
     </fieldset>
+  );
+}
 
 function priceOptions(status: StatusKey): number[] {
   if (status === "rent") {
