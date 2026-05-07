@@ -49,8 +49,9 @@
   --bone: oklch(0.975 0.005 90);
   --stone: oklch(0.93 0.008 90);
   --stone-2: oklch(0.86 0.01 90);
-  --ringgreen: oklch(0.78 0.18 135);
-  --ringgreen-soft: oklch(0.92 0.08 135);
+  --ringgreen: oklch(0.74 0.18 138);
+  --ringgreen-soft: oklch(0.92 0.08 138);
+  --ringgreen-deep: oklch(0.58 0.16 142);
 
   --background: var(--bone);
   --foreground: var(--ink);
