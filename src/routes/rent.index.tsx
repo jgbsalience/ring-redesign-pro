@@ -5,7 +5,7 @@ import { ListingCard } from "@/components/site/ListingCard";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/rent")({
+export const Route = createFileRoute("/rent/")({
   head: () => ({
     meta: [
       { title: "Rentals — Ring Real Estate Adelaide" },
