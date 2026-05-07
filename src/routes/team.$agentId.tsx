@@ -120,13 +120,7 @@ function AgentPage() {
           {agents.filter((a) => a.id !== agent.id).map((a) => (
             <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block">
               <div className="aspect-[3/4] img-zoom bg-stone">
-                <img
-                  src={a.photo}
-                  alt={a.name}
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                />
+                <TeamMemberImage agent={a} size="lg" className="grayscale hover:grayscale-0 transition-all duration-700" />
               </div>
               <div className="mt-4">
                 <div className="font-serif text-lg">{a.name}</div>
