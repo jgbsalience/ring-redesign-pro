@@ -6,7 +6,7 @@ import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays, ChevronLeft, Chevro
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { useEffect, useState } from "react";
 
-const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "About us" }[] = [
+const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "Suburbs" | "Timelines" | "About us" }[] = [
   {
     group: "Selling",
     q: "How long does it take to sell a home in Adelaide?",
@@ -41,6 +41,46 @@ const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "About us" }[]
     group: "Buying",
     q: "What suburbs do you specialise in?",
     a: "We're rooted in the southern foothills — Blackwood, Bellevue Heights, Glenalta, Coromandel Valley, Hawthorndene, Eden Hills — and sell across greater Adelaide. If you're buying in our patch, we likely already know the home and the street.",
+  },
+  {
+    group: "Buying",
+    q: "How much deposit do I need to buy a home in Adelaide?",
+    a: "Most lenders want a 10–20% deposit, plus around 5% for stamp duty, conveyancing and government fees. South Australian first-home buyers may qualify for stamp duty relief on new builds and the First Home Owner Grant — talk to a broker early so you know your true buying ceiling before you start inspecting.",
+  },
+  {
+    group: "Buying",
+    q: "Should I get a building and pest inspection before bidding?",
+    a: "Always — particularly on Adelaide's older stone and brick character homes where rising damp, salt damp and stumps are common. We recommend independent inspectors (never one suggested by the selling agent) and we're happy to introduce you to a few we trust.",
+  },
+  {
+    group: "Suburbs",
+    q: "Which Adelaide suburbs does Ring Real Estate cover?",
+    a: "We're rooted in the southern foothills — Blackwood, Bellevue Heights, Glenalta, Coromandel Valley, Hawthorndene, Eden Hills, Belair and Aberfoyle Park — and we list and sell across metropolitan Adelaide, including Unley, Mitcham, Hyde Park, Glenelg and the inner east.",
+  },
+  {
+    group: "Suburbs",
+    q: "What are the best Adelaide suburbs to buy a family home in 2026?",
+    a: "For value-with-lifestyle in 2026, the southern foothills (Blackwood, Bellevue Heights, Coromandel Valley) still offer leafy blocks within 25 minutes of the CBD. The inner south (Mitcham, Daw Park, Colonel Light Gardens) suits buyers chasing character homes near schools. We're happy to put together a tailored shortlist based on your budget and brief.",
+  },
+  {
+    group: "Suburbs",
+    q: "Is the Adelaide property market still growing?",
+    a: "Adelaide has been one of Australia's most resilient capital markets for the past five years, with sustained price growth driven by interstate migration and limited stock in established suburbs. Growth has moderated from the 2022–23 peak but well-located family homes are still seeing strong, multi-buyer competition at every campaign we run.",
+  },
+  {
+    group: "Timelines",
+    q: "How long does it take to sell a home in Adelaide from listing to settlement?",
+    a: "From the day we go to market, plan on 21–35 days to an accepted contract for well-presented homes, then a 30–60 day settlement period (60 is standard in SA). End-to-end — appraisal to settlement — most Ring campaigns wrap inside 90 days.",
+  },
+  {
+    group: "Timelines",
+    q: "How long should I prepare before listing my Adelaide home for sale?",
+    a: "Two to four weeks is the sweet spot for most homes — long enough to handle styling, photography, copywriting and a small-improvements list, short enough that the campaign feels deliberate rather than dragged out. We'll map a week-by-week plan at your appraisal.",
+  },
+  {
+    group: "Timelines",
+    q: "When is the best time of year to sell in Adelaide?",
+    a: "Spring (September–November) and early autumn (February–March) historically draw the deepest buyer pools in Adelaide, but presentation and pricing matter more than the calendar. We've sold beautifully in July and disappointingly in October — the right campaign at the right price beats the season every time.",
   },
   {
     group: "About us",
