@@ -18,6 +18,9 @@ const STATUS_TO_DB: Record<StatusKey, string[]> = {
   sold: ["sold"],
 };
 
+const SORTS = ["featured", "newest", "price-asc", "price-desc"] as const;
+type SortKey = (typeof SORTS)[number];
+
 const searchSchema = z.object({
   status: fallback(z.enum(STATUSES), "buy").default("buy"),
   minPrice: fallback(z.number().int().min(0), 0).default(0),
@@ -25,6 +28,7 @@ const searchSchema = z.object({
   beds: fallback(z.number().int().min(0).max(10), 0).default(0),
   baths: fallback(z.number().int().min(0).max(10), 0).default(0),
   q: fallback(z.string(), "").default(""),
+  sort: fallback(z.enum(SORTS), "featured").default("featured"),
   page: fallback(z.number().int().min(1).max(500), 1).default(1),
 });
 
@@ -117,10 +121,25 @@ function ListingsPage() {
         "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured",
         { count: "exact" },
       )
-      .in("status", dbStatuses)
-      .order("featured", { ascending: false })
-      .order("scraped_at", { ascending: false })
-      .range(from, to);
+      .in("status", dbStatuses);
+
+    if (search.sort === "featured") {
+      query = query
+        .order("featured", { ascending: false })
+        .order("scraped_at", { ascending: false });
+    } else if (search.sort === "newest") {
+      query = query.order("scraped_at", { ascending: false });
+    } else if (search.sort === "price-asc") {
+      query = query
+        .order("price_numeric", { ascending: true, nullsFirst: false })
+        .order("scraped_at", { ascending: false });
+    } else if (search.sort === "price-desc") {
+      query = query
+        .order("price_numeric", { ascending: false, nullsFirst: false })
+        .order("scraped_at", { ascending: false });
+    }
+
+    query = query.range(from, to);
 
     if (search.minPrice > 0) query = query.gte("price_numeric", search.minPrice);
     if (search.maxPrice > 0) query = query.lte("price_numeric", search.maxPrice);
@@ -156,6 +175,7 @@ function ListingsPage() {
     search.beds,
     search.baths,
     search.q,
+    search.sort,
     search.page,
   ]);
 
@@ -371,6 +391,7 @@ function FiltersBar({
                 beds: 0,
                 baths: 0,
                 q: "",
+                sort: "featured",
                 page: 1,
               }),
             })
@@ -379,6 +400,22 @@ function FiltersBar({
         >
           Reset
         </button>
+      </div>
+
+      <div className="mt-4 flex items-center justify-end gap-3">
+        <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Sort by
+        </label>
+        <select
+          className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.18em]"
+          value={search.sort}
+          onChange={(e) => update("sort", e.target.value as SortKey)}
+        >
+          <option value="featured">Featured</option>
+          <option value="newest">Newest</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
       </div>
     </div>
   );
