@@ -246,7 +246,7 @@ function ListingsPage() {
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
-      <div className="container-page mt-8 flex-1">
+      <div ref={resultsRef} className="container-page mt-8 flex-1 scroll-mt-24">
         {error ? (
           <div className="text-center py-32 text-destructive">
             Couldn't load listings: {error.message}
