@@ -296,6 +296,95 @@ function ListingsPage() {
   );
 }
 
+/* ---------------- Active filter chips ---------------- */
+
+type SearchT = z.infer<typeof searchSchema>;
+
+function ActiveFilterChips({
+  search,
+  navigate,
+  setQInput,
+}: {
+  search: SearchT;
+  navigate: ReturnType<typeof Route.useNavigate>;
+  setQInput: (v: string) => void;
+}) {
+  const chips: { key: string; label: string; reset: Partial<SearchT> }[] = [];
+
+  if (search.q.trim()) {
+    chips.push({ key: "q", label: `“${search.q.trim()}”`, reset: { q: "" } });
+  }
+  if (search.minPrice > 0) {
+    chips.push({
+      key: "minPrice",
+      label: `Min ${formatShortPrice(search.minPrice)}`,
+      reset: { minPrice: 0 },
+    });
+  }
+  if (search.maxPrice > 0) {
+    chips.push({
+      key: "maxPrice",
+      label: `Max ${formatShortPrice(search.maxPrice)}`,
+      reset: { maxPrice: 0 },
+    });
+  }
+  if (search.beds > 0) {
+    chips.push({ key: "beds", label: `${search.beds}+ beds`, reset: { beds: 0 } });
+  }
+  if (search.baths > 0) {
+    chips.push({ key: "baths", label: `${search.baths}+ baths`, reset: { baths: 0 } });
+  }
+
+  if (chips.length === 0) return null;
+
+  const clearOne = (patch: Partial<SearchT>) => {
+    if ("q" in patch) setQInput("");
+    navigate({ search: (prev: SearchT) => ({ ...prev, ...patch, page: 1 }) });
+  };
+
+  const clearAll = () => {
+    setQInput("");
+    navigate({
+      search: (prev: SearchT) => ({
+        ...prev,
+        minPrice: 0,
+        maxPrice: 0,
+        beds: 0,
+        baths: 0,
+        q: "",
+        page: 1,
+      }),
+    });
+  };
+
+  return (
+    <div className="container-page mt-4 flex flex-wrap items-center gap-2">
+      <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mr-1">
+        Filters
+      </span>
+      {chips.map((c) => (
+        <button
+          key={c.key}
+          type="button"
+          onClick={() => clearOne(c.reset)}
+          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs border border-border bg-background hover:bg-secondary transition-colors"
+          aria-label={`Remove filter ${c.label}`}
+        >
+          <span>{c.label}</span>
+          <span aria-hidden="true" className="opacity-60">×</span>
+        </button>
+      ))}
+      <button
+        type="button"
+        onClick={clearAll}
+        className="ml-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+      >
+        Clear all
+      </button>
+    </div>
+  );
+}
+
 /* ---------------- Filters ---------------- */
 
 function FiltersBar({
