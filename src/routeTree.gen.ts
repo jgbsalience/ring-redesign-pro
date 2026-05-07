@@ -21,6 +21,7 @@ import { Route as SoldListingIdRouteImport } from './routes/sold.$listingId'
 import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
+import { Route as ApiPublicJobsSyncListingsRouteImport } from './routes/api/public/jobs/sync-listings'
 
 const SellRoute = SellRouteImport.update({
   id: '/sell',
@@ -82,6 +83,12 @@ const BuyListingIdRoute = BuyListingIdRouteImport.update({
   path: '/buy/$listingId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicJobsSyncListingsRoute =
+  ApiPublicJobsSyncListingsRouteImport.update({
+    id: '/api/public/jobs/sync-listings',
+    path: '/api/public/jobs/sync-listings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
   '/sold/': typeof SoldIndexRoute
+  '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +118,7 @@ export interface FileRoutesByTo {
   '/buy': typeof BuyIndexRoute
   '/rent': typeof RentIndexRoute
   '/sold': typeof SoldIndexRoute
+  '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +134,7 @@ export interface FileRoutesById {
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
   '/sold/': typeof SoldIndexRoute
+  '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/buy/'
     | '/rent/'
     | '/sold/'
+    | '/api/public/jobs/sync-listings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/buy'
     | '/rent'
     | '/sold'
+    | '/api/public/jobs/sync-listings'
   id:
     | '__root__'
     | '/'
@@ -169,6 +181,7 @@ export interface FileRouteTypes {
     | '/buy/'
     | '/rent/'
     | '/sold/'
+    | '/api/public/jobs/sync-listings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -183,6 +196,7 @@ export interface RootRouteChildren {
   BuyIndexRoute: typeof BuyIndexRoute
   RentIndexRoute: typeof RentIndexRoute
   SoldIndexRoute: typeof SoldIndexRoute
+  ApiPublicJobsSyncListingsRoute: typeof ApiPublicJobsSyncListingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -271,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuyListingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/sync-listings': {
+      id: '/api/public/jobs/sync-listings'
+      path: '/api/public/jobs/sync-listings'
+      fullPath: '/api/public/jobs/sync-listings'
+      preLoaderRoute: typeof ApiPublicJobsSyncListingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -296,6 +317,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuyIndexRoute: BuyIndexRoute,
   RentIndexRoute: RentIndexRoute,
   SoldIndexRoute: SoldIndexRoute,
+  ApiPublicJobsSyncListingsRoute: ApiPublicJobsSyncListingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
