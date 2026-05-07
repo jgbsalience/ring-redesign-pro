@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
+import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
