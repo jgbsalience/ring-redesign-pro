@@ -196,6 +196,51 @@ function HomePage() {
         </div>
       </section>
 
+      {/* TEAM STRIP — directly below hero */}
+      <section className="border-b border-border bg-background">
+        <div className="container-page py-14 md:py-20">
+          <div className="flex items-end justify-between flex-wrap gap-6 mb-10">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                <span className="ring-mark" /> &nbsp;The team
+              </div>
+              <h2 className="font-serif text-3xl md:text-5xl mt-3 tracking-tight">
+                Senior agents, by name.
+              </h2>
+            </div>
+            <Link to="/about" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+              Meet the team <ArrowUpRight size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+            {agents.map((a) => (
+              <Link
+                key={a.id}
+                to="/team/$agentId"
+                params={{ agentId: a.id }}
+                className="block group hover-lift"
+              >
+                <div className="aspect-[3/4] img-zoom bg-muted overflow-hidden">
+                  <TeamMemberImage
+                    agent={a}
+                    size="md"
+                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </div>
+                <div className="mt-3">
+                  <div className="font-serif text-base md:text-lg leading-tight group-hover:text-[var(--ringgreen)] transition-colors">
+                    {a.name}
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
+                    {a.role}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* INTEGRITY EDITORIAL */}
       <section className="container-page py-28 md:py-44">
         <div className="grid md:grid-cols-12 gap-10 md:gap-16">
