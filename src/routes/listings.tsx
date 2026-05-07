@@ -202,16 +202,16 @@ function ListingsPage() {
         </div>
       </section>
 
-      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} disabled={loading} />
+      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} disabled={isFetching} />
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
       <div className="container-page mt-8 flex-1">
         {error ? (
           <div className="text-center py-32 text-destructive">
-            Couldn't load listings: {error}
+            Couldn't load listings: {error.message}
           </div>
-        ) : loading && rows.length === 0 ? (
+        ) : showInitialSkeleton ? (
           <>
             <div className="h-3 w-24 bg-muted animate-pulse mb-8" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
@@ -225,7 +225,7 @@ function ListingsPage() {
               ))}
             </div>
           </>
-        ) : !loading && rows.length === 0 ? (
+        ) : rows.length === 0 ? (
           <div className="text-center py-32 text-muted-foreground">
             No matches for those filters.{" "}
             <Link to="/contact" className="underline">
@@ -244,7 +244,7 @@ function ListingsPage() {
                   </span>
                 )}
               </span>
-              {loading && (
+              {isRefetching && (
                 <span
                   aria-live="polite"
                   className="inline-flex items-center gap-2 normal-case tracking-normal text-[11px] text-muted-foreground"
@@ -255,10 +255,10 @@ function ListingsPage() {
               )}
             </div>
             <div
-              aria-busy={loading}
+              aria-busy={isRefetching}
               className={[
-                "transition-opacity",
-                loading ? "opacity-50 pointer-events-none" : "opacity-100",
+                "transition-opacity duration-200",
+                isRefetching ? "opacity-50 pointer-events-none" : "opacity-100",
               ].join(" ")}
             >
               {search.view === "map" ? (
@@ -275,7 +275,7 @@ function ListingsPage() {
         )}
       </div>
 
-      {totalPages > 1 && !loading && search.view !== "map" && (
+      {totalPages > 1 && !showInitialSkeleton && search.view !== "map" && (
         <div className="container-page mt-14 mb-20 flex items-center justify-center gap-2">
           <button
             type="button"
