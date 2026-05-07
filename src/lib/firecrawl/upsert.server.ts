@@ -169,7 +169,8 @@ export async function upsertFirecrawlListings(
       const chunk = toUpsert.slice(i, i + CHUNK);
       const { error } = await supabaseAdmin
         .from("listings")
-        .upsert(chunk, { onConflict: "source_url", ignoreDuplicates: false });
+        // Cast: ListingRow's jsonb fields are typed loosely; the DB schema accepts them as Json.
+        .upsert(chunk as unknown as never, { onConflict: "source_url", ignoreDuplicates: false });
 
       if (error) {
         // Don't lose the whole batch — record per-chunk failure and continue
