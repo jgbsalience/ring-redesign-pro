@@ -2,9 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useEffect, useMemo, useState } from "react";
-import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { ListingsMap } from "@/components/site/ListingsMap";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ---------------- Search params ---------------- */
@@ -21,6 +22,9 @@ const STATUS_TO_DB: Record<StatusKey, string[]> = {
 const SORTS = ["featured", "newest", "price-asc", "price-desc"] as const;
 type SortKey = (typeof SORTS)[number];
 
+const VIEWS = ["grid", "map"] as const;
+type ViewKey = (typeof VIEWS)[number];
+
 const searchSchema = z.object({
   status: fallback(z.enum(STATUSES), "buy").default("buy"),
   minPrice: fallback(z.number().int().min(0), 0).default(0),
@@ -29,6 +33,7 @@ const searchSchema = z.object({
   baths: fallback(z.number().int().min(0).max(10), 0).default(0),
   q: fallback(z.string(), "").default(""),
   sort: fallback(z.enum(SORTS), "featured").default("featured"),
+  view: fallback(z.enum(VIEWS), "grid").default("grid"),
   page: fallback(z.number().int().min(1).max(500), 1).default(1),
 });
 
@@ -77,6 +82,8 @@ type Row = {
   hero: string | null;
   headline: string;
   featured: boolean;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 /* ---------------- Page ---------------- */
@@ -112,13 +119,14 @@ function ListingsPage() {
     setError(null);
 
     const dbStatuses = STATUS_TO_DB[search.status as StatusKey];
-    const from = (search.page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
+    const isMap = search.view === "map";
+    const from = isMap ? 0 : (search.page - 1) * PAGE_SIZE;
+    const to = isMap ? 499 : from + PAGE_SIZE - 1;
 
     let query = supabase
       .from("listings")
       .select(
-        "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured",
+        "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured, latitude, longitude",
         { count: "exact" },
       )
       .in("status", dbStatuses);
@@ -176,6 +184,7 @@ function ListingsPage() {
     search.baths,
     search.q,
     search.sort,
+    search.view,
     search.page,
   ]);
 
@@ -229,17 +238,26 @@ function ListingsPage() {
           <>
             <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">
               {count} {count === 1 ? "result" : "results"}
+              {search.view === "map" && rows.length < count && (
+                <span className="ml-2 normal-case tracking-normal text-[11px]">
+                  (showing first {rows.length} on map)
+                </span>
+              )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-              {rows.map((r) => (
-                <ListingDbCard key={r.id} r={r} />
-              ))}
-            </div>
+            {search.view === "map" ? (
+              <ListingsMap rows={rows} />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                {rows.map((r) => (
+                  <ListingDbCard key={r.id} r={r} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
 
-      {totalPages > 1 && !loading && (
+      {totalPages > 1 && !loading && search.view !== "map" && (
         <div className="container-page mt-14 mb-20 flex items-center justify-center gap-2">
           <button
             type="button"
@@ -392,6 +410,7 @@ function FiltersBar({
                 baths: 0,
                 q: "",
                 sort: "featured",
+                view: search.view,
                 page: 1,
               }),
             })
@@ -402,7 +421,37 @@ function FiltersBar({
         </button>
       </div>
 
-      <div className="mt-4 flex items-center justify-end gap-3">
+      <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+        <div className="inline-flex border border-border">
+          <button
+            type="button"
+            onClick={() => update("view", "grid")}
+            aria-pressed={search.view === "grid"}
+            className={[
+              "inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.2em] transition-colors",
+              search.view === "grid"
+                ? "bg-foreground text-background"
+                : "bg-background hover:bg-secondary",
+            ].join(" ")}
+          >
+            <LayoutGrid size={14} /> Grid
+          </button>
+          <button
+            type="button"
+            onClick={() => update("view", "map")}
+            aria-pressed={search.view === "map"}
+            className={[
+              "inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.2em] border-l border-border transition-colors",
+              search.view === "map"
+                ? "bg-foreground text-background"
+                : "bg-background hover:bg-secondary",
+            ].join(" ")}
+          >
+            <MapIcon size={14} /> Map
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
         <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           Sort by
         </label>
@@ -416,6 +465,7 @@ function FiltersBar({
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
         </select>
+        </div>
       </div>
     </div>
   );
