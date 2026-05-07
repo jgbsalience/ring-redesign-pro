@@ -38,6 +38,9 @@ function HomePage() {
   const sold = listings.filter((l) => l.status === "sold");
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (HERO_SLIDES.length < 2 || paused) return;
@@ -131,12 +134,20 @@ function HomePage() {
                   placeholder="Suburb, postcode or street"
                 />
               </div>
-              <select className="bg-secondary px-4 py-3 text-sm outline-none">
-                <option>For sale</option><option>For rent</option><option>Sold</option>
-              </select>
-              <select className="bg-secondary px-4 py-3 text-sm outline-none">
-                <option>Any beds</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option>
-              </select>
+              {mounted ? (
+                <select className="bg-secondary px-4 py-3 text-sm outline-none">
+                  <option>For sale</option><option>For rent</option><option>Sold</option>
+                </select>
+              ) : (
+                <div className="bg-secondary px-4 py-3 text-sm" aria-hidden="true">For sale</div>
+              )}
+              {mounted ? (
+                <select className="bg-secondary px-4 py-3 text-sm outline-none">
+                  <option>Any beds</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option>
+                </select>
+              ) : (
+                <div className="bg-secondary px-4 py-3 text-sm" aria-hidden="true">Any beds</div>
+              )}
               <Link to="/buy" className="bg-foreground text-background px-6 py-3 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90">
                 Search <ArrowRight size={14} />
               </Link>
