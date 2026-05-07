@@ -157,6 +157,80 @@ function AboutPage() {
         </div>
       </section>
 
+      {/* Leadership */}
+      <section className="bg-background py-24 md:py-32 border-t border-border">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                <span className="ring-mark" /> &nbsp;Leadership
+              </div>
+              <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4 leading-[1.05]">
+                The principals<br /><span className="italic">behind every campaign.</span>
+              </h2>
+            </div>
+            <p className="max-w-md text-muted-foreground leading-relaxed">
+              Two senior agents lead every sale and every property under
+              management. They are the names on the listing, and the names
+              you'll deal with from first appraisal to settlement.
+            </p>
+          </div>
+
+          <div className="mt-16 grid md:grid-cols-2 gap-x-12 gap-y-20">
+            {agents
+              .filter((a) => ["stephen-ring", "luke-bull"].includes(a.id))
+              .map((a) => (
+                <article key={a.id} className="group">
+                  <Link to="/team/$agentId" params={{ agentId: a.id }} className="block">
+                    <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
+                      <TeamMemberImage
+                        agent={a}
+                        size="lg"
+                        className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                      />
+                    </div>
+                    <div className="mt-6 flex items-baseline justify-between gap-4">
+                      <h3 className="font-serif text-3xl group-hover:text-[var(--ringgreen)] transition-colors">
+                        {a.name}
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground shrink-0">
+                        {a.role}
+                      </span>
+                    </div>
+                  </Link>
+
+                  <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+                    {(a.bio.length ? a.bio : [a.shortBio ?? ""]).slice(0, 2).map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                    <a href={`tel:${a.phone}`} className="hover:text-[var(--ringgreen)]">
+                      {a.phone}
+                    </a>
+                    <a
+                      href={`mailto:${a.email}`}
+                      className="text-muted-foreground hover:text-[var(--ringgreen)]"
+                    >
+                      {a.email}
+                    </a>
+                  </div>
+
+                  <Link
+                    to="/team/$agentId"
+                    params={{ agentId: a.id }}
+                    className="mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] hover:gap-3 transition-all hover:text-[var(--ringgreen)]"
+                  >
+                    Read full profile <ArrowRight size={12} />
+                  </Link>
+                </article>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Full team */}
       <section className="bg-secondary/50 py-24 md:py-32">
         <div className="container-page">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our inner circle</div>
