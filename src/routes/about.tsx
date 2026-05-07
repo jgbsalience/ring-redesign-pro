@@ -59,6 +59,104 @@ function AboutPage() {
         </div>
       </section>
 
+      {/* By the numbers */}
+      <section className="border-y border-border bg-background">
+        <div className="container-page py-20 md:py-28 grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8">
+          {[
+            { n: "47", l: "Years in Adelaide" },
+            { n: "1,800+", l: "Homes sold by hand" },
+            { n: "$2.4B", l: "In transactions, lifetime" },
+            { n: "92%", l: "Repeat & referral business" },
+          ].map((s) => (
+            <div key={s.l} className="text-center md:text-left">
+              <div className="font-serif text-5xl md:text-6xl text-[var(--ringgreen)] leading-none">{s.n}</div>
+              <div className="mt-3 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Principles */}
+      <section className="container-page py-24 md:py-32">
+        <div className="grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-4">
+            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">What we hold to</div>
+            <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+              Four principles,<br /><span className="italic">unmoved since 1978.</span>
+            </h2>
+          </div>
+          <div className="md:col-span-8 grid sm:grid-cols-2 gap-x-10 gap-y-12">
+            {[
+              { t: "Senior, always", b: "No juniors learning on your home. Every campaign is led, listed and negotiated by a principal with twenty years or more in the business." },
+              { t: "Small by design", b: "We cap our rolls. A team that takes on too much cannot give attention to any of it — and attention is the work." },
+              { t: "Quiet first", b: "Off-market introductions before public campaigns. Many of Adelaide's finest homes change hands without a sign on the lawn." },
+              { t: "Plain language", b: "No jargon, no theatre, no inflated appraisals to win the listing. We tell you what we believe, then we earn it." },
+            ].map((p, i) => (
+              <div key={p.t} className="border-t border-foreground pt-6">
+                <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">0{i + 1}</div>
+                <h3 className="font-serif text-2xl mt-3">{p.t}</h3>
+                <p className="mt-4 text-muted-foreground leading-relaxed">{p.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="bg-secondary/40 py-24 md:py-32">
+        <div className="container-page">
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">A short history</div>
+          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">Forty-seven years, in moments.</h2>
+          <ol className="mt-16 relative border-l border-border pl-8 md:pl-12 space-y-12">
+            {[
+              { y: "1978", t: "Founded in Fullarton", d: "Geoffrey Ring opens a single-room office on Fisher Street with two listings and a borrowed typewriter." },
+              { y: "1986", t: "Property management begins", d: "A handful of long-term landlords ask us to manage what we sold them. The rent roll is born." },
+              { y: "1997", t: "The studio on Unley Road", d: "We move to the building we still occupy today — restored, not renovated." },
+              { y: "2008", t: "Through the downturn", d: "We do not retrench. The team that started the GFC together finishes it together." },
+              { y: "2019", t: "Second generation", d: "Geoffrey's children join the principal team, carrying the same standards forward." },
+              { y: "2025", t: "Still independent", d: "No franchise, no investors, no targets that override the client's interest. As it began." },
+            ].map((m) => (
+              <li key={m.y} className="relative">
+                <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-secondary/40" />
+                <div className="font-serif text-3xl md:text-4xl text-[var(--ringgreen)]">{m.y}</div>
+                <h3 className="font-serif text-xl md:text-2xl mt-2">{m.t}</h3>
+                <p className="mt-2 text-muted-foreground max-w-2xl leading-relaxed">{m.d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* What makes us different */}
+      <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
+        <div className="md:col-span-5">
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">The difference</div>
+          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+            What you'll notice<br /><span className="italic">in the first week.</span>
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Most of our clients come to us after a campaign elsewhere that
+            felt rushed, generic, or transactional. Here is what changes.
+          </p>
+        </div>
+        <div className="md:col-span-7 space-y-8">
+          {[
+            { t: "Your agent answers the phone", b: "Not a junior, not a call centre. The person whose name is on your listing." },
+            { t: "We see the home before we price it", b: "Often twice. We will not put a number to a property we have walked through once at dusk." },
+            { t: "Photography is commissioned, not templated", b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra." },
+            { t: "We tell you what isn't working", b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end." },
+          ].map((d) => (
+            <div key={d.t} className="flex gap-6 border-b border-border pb-8">
+              <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
+              <div>
+                <h3 className="font-serif text-xl">{d.t}</h3>
+                <p className="mt-2 text-muted-foreground leading-relaxed">{d.b}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="bg-secondary/50 py-24 md:py-32">
         <div className="container-page">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our inner circle</div>
