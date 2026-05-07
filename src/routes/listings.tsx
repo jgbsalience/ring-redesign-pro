@@ -422,7 +422,10 @@ function FiltersBar({
     key: K,
     value: z.infer<typeof searchSchema>[K],
   ) => {
-    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, [key]: value, page: 1 }) });
+    navigate({
+      search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, [key]: value, page: 1 }),
+      resetScroll: false,
+    });
   };
 
   return (
