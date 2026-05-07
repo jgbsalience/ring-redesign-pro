@@ -391,6 +391,7 @@ function FiltersBar({
                 beds: 0,
                 baths: 0,
                 q: "",
+                sort: "featured",
                 page: 1,
               }),
             })
@@ -399,6 +400,22 @@ function FiltersBar({
         >
           Reset
         </button>
+      </div>
+
+      <div className="mt-4 flex items-center justify-end gap-3">
+        <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Sort by
+        </label>
+        <select
+          className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.18em]"
+          value={search.sort}
+          onChange={(e) => update("sort", e.target.value as SortKey)}
+        >
+          <option value="featured">Featured</option>
+          <option value="newest">Newest</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
       </div>
     </div>
   );
