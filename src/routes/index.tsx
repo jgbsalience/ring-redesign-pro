@@ -89,9 +89,13 @@ function HomePage() {
                 : "/buy/$listingId"
             }
             params={{ listingId: current.id }}
-            aria-label={`View ${current.address}, ${current.suburb}`}
-            className="absolute inset-0 z-10"
-          />
+            aria-label={`View featured property: ${current.address}, ${current.suburb} — ${current.price}`}
+            className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50"
+          >
+            <span className="sr-only">
+              View featured property {current.address}, {current.suburb}
+            </span>
+          </Link>
         )}
 
         <div className="relative z-20 container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white pointer-events-none">
