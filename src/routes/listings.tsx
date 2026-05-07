@@ -371,6 +371,7 @@ function ActiveFilterChips({
         q: "",
         page: 1,
       }),
+      resetScroll: false,
     });
   };
 
