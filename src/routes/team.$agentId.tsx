@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { agents, listings, getAgent, type Agent } from "@/data/site";
+import { agents, listings, type Agent } from "@/data/site";
 import { ListingCard } from "@/components/site/ListingCard";
 import { ArrowRight, Mail, Phone } from "lucide-react";
 
