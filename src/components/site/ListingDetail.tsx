@@ -222,10 +222,14 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
               <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Listing agents</div>
               {agents.map((a) => (
                 <div key={a.id} className="flex items-center gap-4">
-                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-14 h-14 rounded-full object-cover" />
-                  <div className="flex-1">
-                    <div className="font-serif text-lg leading-tight">{a.name}</div>
-                    <div className="text-xs text-muted-foreground">{a.role}</div>
+                  <Link to="/team/$agentId" params={{ agentId: a.id }} className="shrink-0">
+                    <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-14 h-14 rounded-full object-cover" />
+                  </Link>
+                  <div className="flex-1 min-w-0">
+                    <Link to="/team/$agentId" params={{ agentId: a.id }} className="font-serif text-lg leading-tight hover:text-[var(--ringgreen)] transition-colors block truncate">
+                      {a.name}
+                    </Link>
+                    <div className="text-xs text-muted-foreground truncate">{a.role}</div>
                   </div>
                   <a href={`tel:${a.phone}`} className="text-xs underline">{a.phone}</a>
                 </div>
