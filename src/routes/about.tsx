@@ -394,6 +394,8 @@ function AboutPage() {
         </div>
       </section>
 
+      <FaqSection />
+
       <section className="bg-[var(--ink)] text-[var(--bone)]">
         <div className="container-page py-24 md:py-32 flex flex-wrap items-end justify-between gap-8">
           <h2 className="font-serif text-4xl md:text-6xl tracking-tight max-w-2xl leading-[1.05]">
