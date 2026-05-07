@@ -97,7 +97,7 @@ function ListingsPage() {
     const t = setTimeout(() => {
       if (qInput !== search.q) {
         navigate({
-          search: (prev) => ({ ...prev, q: qInput, page: 1 }),
+          search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, q: qInput, page: 1 }),
           replace: true,
         });
       }
