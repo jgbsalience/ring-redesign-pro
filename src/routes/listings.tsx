@@ -89,14 +89,59 @@ type Row = {
 
 /* ---------------- Page ---------------- */
 
-function ListingsPage() {
-  const search: z.infer<typeof searchSchema> = Route.useSearch();
-  const navigate = Route.useNavigate();
+type SearchParams = z.infer<typeof searchSchema>;
 
-  const [rows, setRows] = useState<Row[]>([]);
-  const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchListings(search: SearchParams): Promise<{ rows: Row[]; count: number }> {
+  const dbStatuses = STATUS_TO_DB[search.status as StatusKey];
+  const isMap = search.view === "map";
+  const from = isMap ? 0 : (search.page - 1) * PAGE_SIZE;
+  const to = isMap ? 499 : from + PAGE_SIZE - 1;
+
+  let query = supabase
+    .from("listings")
+    .select(
+      "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured, latitude, longitude",
+      { count: "exact" },
+    )
+    .in("status", dbStatuses);
+
+  if (search.sort === "featured") {
+    query = query
+      .order("featured", { ascending: false })
+      .order("scraped_at", { ascending: false });
+  } else if (search.sort === "newest") {
+    query = query.order("scraped_at", { ascending: false });
+  } else if (search.sort === "price-asc") {
+    query = query
+      .order("price_numeric", { ascending: true, nullsFirst: false })
+      .order("scraped_at", { ascending: false });
+  } else if (search.sort === "price-desc") {
+    query = query
+      .order("price_numeric", { ascending: false, nullsFirst: false })
+      .order("scraped_at", { ascending: false });
+  }
+
+  query = query.range(from, to);
+
+  if (search.minPrice > 0) query = query.gte("price_numeric", search.minPrice);
+  if (search.maxPrice > 0) query = query.lte("price_numeric", search.maxPrice);
+  if (search.beds > 0) query = query.gte("beds", search.beds);
+  if (search.baths > 0) query = query.gte("baths", search.baths);
+  if (search.q.trim()) {
+    const term = `%${search.q.trim()}%`;
+    query = query.or(
+      `address.ilike.${term},suburb.ilike.${term},postcode.ilike.${term},headline.ilike.${term}`,
+    );
+  }
+
+  const { data, count, error } = await query;
+  if (error) throw new Error(error.message);
+  return { rows: (data ?? []) as Row[], count: count ?? 0 };
+}
+
+function ListingsPage() {
+  const search: SearchParams = Route.useSearch();
+  const navigate = Route.useNavigate();
 
   // local input state for the search box (debounced into URL)
   const [qInput, setQInput] = useState(search.q);
@@ -105,7 +150,7 @@ function ListingsPage() {
     const t = setTimeout(() => {
       if (qInput !== search.q) {
         navigate({
-          search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, q: qInput, page: 1 }),
+          search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
           replace: true,
         });
       }
@@ -114,81 +159,28 @@ function ListingsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qInput]);
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+  const { data, error, isPending, isFetching, isPlaceholderData } = useQuery({
+    queryKey: [
+      "listings",
+      search.status,
+      search.minPrice,
+      search.maxPrice,
+      search.beds,
+      search.baths,
+      search.q,
+      search.sort,
+      search.view,
+      search.page,
+    ],
+    queryFn: () => fetchListings(search),
+    placeholderData: keepPreviousData,
+    staleTime: 30_000,
+  });
 
-    const dbStatuses = STATUS_TO_DB[search.status as StatusKey];
-    const isMap = search.view === "map";
-    const from = isMap ? 0 : (search.page - 1) * PAGE_SIZE;
-    const to = isMap ? 499 : from + PAGE_SIZE - 1;
-
-    let query = supabase
-      .from("listings")
-      .select(
-        "id, source_url, status, address, suburb, state, postcode, price, price_numeric, beds, baths, cars, type, hero, headline, featured, latitude, longitude",
-        { count: "exact" },
-      )
-      .in("status", dbStatuses);
-
-    if (search.sort === "featured") {
-      query = query
-        .order("featured", { ascending: false })
-        .order("scraped_at", { ascending: false });
-    } else if (search.sort === "newest") {
-      query = query.order("scraped_at", { ascending: false });
-    } else if (search.sort === "price-asc") {
-      query = query
-        .order("price_numeric", { ascending: true, nullsFirst: false })
-        .order("scraped_at", { ascending: false });
-    } else if (search.sort === "price-desc") {
-      query = query
-        .order("price_numeric", { ascending: false, nullsFirst: false })
-        .order("scraped_at", { ascending: false });
-    }
-
-    query = query.range(from, to);
-
-    if (search.minPrice > 0) query = query.gte("price_numeric", search.minPrice);
-    if (search.maxPrice > 0) query = query.lte("price_numeric", search.maxPrice);
-    if (search.beds > 0) query = query.gte("beds", search.beds);
-    if (search.baths > 0) query = query.gte("baths", search.baths);
-    if (search.q.trim()) {
-      const term = `%${search.q.trim()}%`;
-      query = query.or(
-        `address.ilike.${term},suburb.ilike.${term},postcode.ilike.${term},headline.ilike.${term}`,
-      );
-    }
-
-    query.then(({ data, count: c, error: err }) => {
-      if (cancelled) return;
-      if (err) {
-        setError(err.message);
-        setRows([]);
-        setCount(0);
-      } else {
-        setRows((data ?? []) as Row[]);
-        setCount(c ?? 0);
-      }
-      setLoading(false);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    search.status,
-    search.minPrice,
-    search.maxPrice,
-    search.beds,
-    search.baths,
-    search.q,
-    search.sort,
-    search.view,
-    search.page,
-  ]);
-
+  const rows = data?.rows ?? [];
+  const count = data?.count ?? 0;
+  const showInitialSkeleton = isPending;
+  const isRefetching = isFetching && (isPlaceholderData || !isPending);
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
   return (
