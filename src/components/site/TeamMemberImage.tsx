@@ -99,7 +99,26 @@ type Props = {
   eager?: boolean;
   /** Override the default `sizes` hint for this size preset. */
   sizes?: string;
+  /**
+   * When true, wraps the image in a div that applies the correct
+   * aspect-ratio box. Use this for `lg` / `xl` / `2xl` / `portrait`
+   * presets when there is no existing aspect-ratio container around
+   * the image. Defaults to false (legacy behaviour) so existing
+   * call-sites that already provide their own aspect container are
+   * unaffected.
+   */
+  wrap?: boolean;
+  /** Override the wrapper's aspect ratio. Defaults to "4/3" (CDN native). */
+  aspect?: string;
+  /** Class names applied to the wrapper element when `wrap` is true. */
+  wrapperClassName?: string;
 };
+
+/** Avatar/round presets size themselves; no wrapper needed. */
+const ROUND_PRESETS = new Set<AnySize>([
+  "xs", "sm", "md",
+  "xs-sm", "sm-md", "md-lg", "avatar",
+]);
 
 /**
  * Reusable team member photo. Centralises:
@@ -110,6 +129,8 @@ type Props = {
  * - responsive presets (xs-sm, sm-md, md-lg, avatar, portrait) that scale
  *   cleanly across breakpoints with no layout shift
  * - responsive srcset / sizes with width-rewritten CDN URLs
+ * - optional `wrap` mode that supplies an aspect-ratio container so
+ *   fill presets (lg/xl/2xl/portrait) can be dropped in anywhere
  */
 export function TeamMemberImage({
   agent,
@@ -118,12 +139,15 @@ export function TeamMemberImage({
   alt,
   eager = false,
   sizes,
+  wrap = false,
+  aspect = "4 / 3",
+  wrapperClassName = "",
 }: Props) {
   const srcSet = buildSrcSet(agent.photo);
   const baseWidth = baseWidthFor[size];
   const src = withWidth(agent.photo, baseWidth) ?? agent.photo;
 
-  return (
+  const img = (
     <img
       src={src}
       srcSet={srcSet}
@@ -138,4 +162,17 @@ export function TeamMemberImage({
       className={[sizeClass[size], className].filter(Boolean).join(" ")}
     />
   );
+
+  // Round/avatar presets are intrinsically sized — wrapping is a no-op.
+  if (!wrap || ROUND_PRESETS.has(size)) return img;
+
+  return (
+    <div
+      className={["relative w-full overflow-hidden bg-stone", wrapperClassName].filter(Boolean).join(" ")}
+      style={{ aspectRatio: aspect }}
+    >
+      {img}
+    </div>
+  );
 }
+
