@@ -23,6 +23,7 @@ import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
 import { Route as ApiPublicJobsSyncListingsRouteImport } from './routes/api/public/jobs/sync-listings'
+import { Route as ApiPublicJobsGeocodeListingsRouteImport } from './routes/api/public/jobs/geocode-listings'
 
 const SellRoute = SellRouteImport.update({
   id: '/sell',
@@ -95,6 +96,12 @@ const ApiPublicJobsSyncListingsRoute =
     path: '/api/public/jobs/sync-listings',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicJobsGeocodeListingsRoute =
+  ApiPublicJobsGeocodeListingsRouteImport.update({
+    id: '/api/public/jobs/geocode-listings',
+    path: '/api/public/jobs/geocode-listings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
   '/sold/': typeof SoldIndexRoute
+  '/api/public/jobs/geocode-listings': typeof ApiPublicJobsGeocodeListingsRoute
   '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRoutesByTo {
@@ -126,6 +134,7 @@ export interface FileRoutesByTo {
   '/buy': typeof BuyIndexRoute
   '/rent': typeof RentIndexRoute
   '/sold': typeof SoldIndexRoute
+  '/api/public/jobs/geocode-listings': typeof ApiPublicJobsGeocodeListingsRoute
   '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRoutesById {
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
   '/sold/': typeof SoldIndexRoute
+  '/api/public/jobs/geocode-listings': typeof ApiPublicJobsGeocodeListingsRoute
   '/api/public/jobs/sync-listings': typeof ApiPublicJobsSyncListingsRoute
 }
 export interface FileRouteTypes {
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/buy/'
     | '/rent/'
     | '/sold/'
+    | '/api/public/jobs/geocode-listings'
     | '/api/public/jobs/sync-listings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/buy'
     | '/rent'
     | '/sold'
+    | '/api/public/jobs/geocode-listings'
     | '/api/public/jobs/sync-listings'
   id:
     | '__root__'
@@ -193,6 +205,7 @@ export interface FileRouteTypes {
     | '/buy/'
     | '/rent/'
     | '/sold/'
+    | '/api/public/jobs/geocode-listings'
     | '/api/public/jobs/sync-listings'
   fileRoutesById: FileRoutesById
 }
@@ -209,6 +222,7 @@ export interface RootRouteChildren {
   BuyIndexRoute: typeof BuyIndexRoute
   RentIndexRoute: typeof RentIndexRoute
   SoldIndexRoute: typeof SoldIndexRoute
+  ApiPublicJobsGeocodeListingsRoute: typeof ApiPublicJobsGeocodeListingsRoute
   ApiPublicJobsSyncListingsRoute: typeof ApiPublicJobsSyncListingsRoute
 }
 
@@ -312,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicJobsSyncListingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/geocode-listings': {
+      id: '/api/public/jobs/geocode-listings'
+      path: '/api/public/jobs/geocode-listings'
+      fullPath: '/api/public/jobs/geocode-listings'
+      preLoaderRoute: typeof ApiPublicJobsGeocodeListingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -338,8 +359,19 @@ const rootRouteChildren: RootRouteChildren = {
   BuyIndexRoute: BuyIndexRoute,
   RentIndexRoute: RentIndexRoute,
   SoldIndexRoute: SoldIndexRoute,
+  ApiPublicJobsGeocodeListingsRoute: ApiPublicJobsGeocodeListingsRoute,
   ApiPublicJobsSyncListingsRoute: ApiPublicJobsSyncListingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
