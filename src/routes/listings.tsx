@@ -348,6 +348,24 @@ function ListingsPage() {
       )}
 
       <Footer />
+
+      <button
+        type="button"
+        onClick={jumpToResults}
+        aria-hidden={!showJumpButton}
+        tabIndex={showJumpButton ? 0 : -1}
+        className={[
+          "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
+          "inline-flex items-center gap-2 px-5 py-3",
+          "bg-foreground text-background text-[11px] uppercase tracking-[0.2em]",
+          "shadow-lg hover:opacity-90 transition-all duration-300",
+          showJumpButton
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-4 pointer-events-none",
+        ].join(" ")}
+      >
+        <ArrowDown size={14} /> Jump to results
+      </button>
     </div>
   );
 }
