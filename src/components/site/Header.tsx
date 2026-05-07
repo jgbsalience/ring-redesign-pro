@@ -5,6 +5,7 @@ import logo from "@/assets/ring-logo.png";
 const nav = [
   { to: "/buy", label: "Buy" },
   { to: "/rent", label: "Rent" },
+  { to: "/sold", label: "Sold" },
   { to: "/sell", label: "Sell" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
