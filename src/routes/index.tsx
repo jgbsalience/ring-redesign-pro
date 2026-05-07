@@ -251,7 +251,7 @@ function HomePage() {
               Quietly, exceptionally.
             </h2>
           </div>
-          <Link to="/sell" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+          <Link to="/sold" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>

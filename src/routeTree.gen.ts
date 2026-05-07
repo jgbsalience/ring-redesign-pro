@@ -13,6 +13,7 @@ import { Route as SellRouteImport } from './routes/sell'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SoldIndexRouteImport } from './routes/sold.index'
 import { Route as RentIndexRouteImport } from './routes/rent.index'
 import { Route as BuyIndexRouteImport } from './routes/buy.index'
 import { Route as TeamAgentIdRouteImport } from './routes/team.$agentId'
@@ -39,6 +40,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoldIndexRoute = SoldIndexRouteImport.update({
+  id: '/sold/',
+  path: '/sold/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RentIndexRoute = RentIndexRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
+  '/sold/': typeof SoldIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy': typeof BuyIndexRoute
   '/rent': typeof RentIndexRoute
+  '/sold': typeof SoldIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy/': typeof BuyIndexRoute
   '/rent/': typeof RentIndexRoute
+  '/sold/': typeof SoldIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/team/$agentId'
     | '/buy/'
     | '/rent/'
+    | '/sold/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/team/$agentId'
     | '/buy'
     | '/rent'
+    | '/sold'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/team/$agentId'
     | '/buy/'
     | '/rent/'
+    | '/sold/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   TeamAgentIdRoute: typeof TeamAgentIdRoute
   BuyIndexRoute: typeof BuyIndexRoute
   RentIndexRoute: typeof RentIndexRoute
+  SoldIndexRoute: typeof SoldIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -200,6 +213,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sold/': {
+      id: '/sold/'
+      path: '/sold'
+      fullPath: '/sold/'
+      preLoaderRoute: typeof SoldIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rent/': {
@@ -275,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeamAgentIdRoute: TeamAgentIdRoute,
   BuyIndexRoute: BuyIndexRoute,
   RentIndexRoute: RentIndexRoute,
+  SoldIndexRoute: SoldIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
