@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
-import { listings, suburbs } from "@/data/site";
+import { listings } from "@/data/site";
 import { useMemo, useState } from "react";
 import { Search, ArrowUpRight } from "lucide-react";
 
