@@ -8,11 +8,61 @@ import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Ring Real Estate, Adelaide since 1978" },
-      { name: "description", content: "A small, senior team selling and managing distinguished Adelaide homes for nearly five decades." },
-      { property: "og:title", content: "About Ring Real Estate" },
-      { property: "og:description", content: "Adelaide's independent residential agency, since 1978." },
+      { title: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978" },
+      {
+        name: "description",
+        content:
+          "Ring Real Estate is an independent Adelaide real estate agency selling, leasing and managing homes across the southern foothills and metropolitan Adelaide since 1978.",
+      },
+      {
+        name: "keywords",
+        content:
+          "Adelaide real estate, Adelaide real estate agents, Adelaide real estate agency, residential real estate Adelaide, Blackwood real estate, Bellevue Heights real estate, Glenalta real estate, Coromandel Valley real estate",
+      },
+      { property: "og:title", content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978" },
+      {
+        property: "og:description",
+        content:
+          "An independent Adelaide real estate agency. A small, senior team selling and managing distinguished homes across metropolitan Adelaide for nearly five decades.",
+      },
+      { property: "og:type", content: "website" },
       { property: "og:image", content: listings[1]?.hero ?? "" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978" },
+      {
+        name: "twitter:description",
+        content:
+          "Independent Adelaide real estate agency. Senior agents, selling and managing distinguished homes since 1978.",
+      },
+      { name: "twitter:image", content: listings[1]?.hero ?? "" },
+    ],
+    links: [{ rel: "canonical", href: "https://ring-sa.com.au/about" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "RealEstateAgent",
+          name: "Ring Real Estate",
+          description:
+            "Independent Adelaide real estate agency selling, leasing and managing residential homes across metropolitan Adelaide since 1978.",
+          url: "https://ring-sa.com.au/about",
+          foundingDate: "1978",
+          areaServed: [
+            { "@type": "City", name: "Adelaide" },
+            { "@type": "Place", name: "Blackwood, South Australia" },
+            { "@type": "Place", name: "Bellevue Heights, South Australia" },
+            { "@type": "Place", name: "Glenalta, South Australia" },
+            { "@type": "Place", name: "Coromandel Valley, South Australia" },
+          ],
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Adelaide",
+            addressRegion: "SA",
+            addressCountry: "AU",
+          },
+        }),
+      },
     ],
   }),
   component: AboutPage,
