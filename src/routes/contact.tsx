@@ -2,14 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArrowRight, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { listings } from "@/data/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Ring Real Estate Adelaide" },
-      { name: "description", content: "Visit our Fullarton studio, or send us a message. We respond within the business day." },
+      { name: "description", content: "Visit our Bellevue Heights office, or send us a message. We respond within the business day." },
       { property: "og:title", content: "Contact Ring Real Estate" },
-      { property: "og:description", content: "Visit our Fullarton studio, or send us a message." },
+      { property: "og:description", content: "Visit our Bellevue Heights office, or send us a message." },
     ],
   }),
   component: ContactPage,
@@ -29,14 +30,14 @@ function ContactPage() {
 
         <div className="mt-20 grid md:grid-cols-12 gap-12 lg:gap-20">
           <div className="md:col-span-5 space-y-10">
-            <Item Icon={MapPin} title="Studio" lines={["Level 1, 14 Wattle Street", "Fullarton SA 5063"]} />
+            <Item Icon={MapPin} title="Office" lines={["140 Shepherds Hill Road", "Bellevue Heights SA 5050"]} />
             <Item Icon={Phone} title="Telephone" lines={["(08) 8370 3211"]} />
-            <Item Icon={Mail} title="Email" lines={["hello@ring-sa.com.au"]} />
+            <Item Icon={Mail} title="Email" lines={["ring@ring-sa.com.au"]} />
             <Item Icon={Clock} title="Hours" lines={["Mon – Fri · 8:30 – 5:30", "Sat · By appointment"]} />
 
             <div className="aspect-[4/3] bg-secondary overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+                src={listings[4]?.hero}
                 alt="Ring Real Estate studio"
                 className="w-full h-full object-cover grayscale"
               />
