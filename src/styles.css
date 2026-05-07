@@ -169,7 +169,17 @@
     width: 0.7em;
     height: 0.7em;
     border-radius: 9999px;
-    border: 0.14em solid var(--ringgreen);
+    border: 0.18em solid var(--ringgreen);
+    background: var(--ringgreen-tint);
     vertical-align: -0.05em;
+  }
+
+  .bg-green-tint { background-color: var(--ringgreen-tint); }
+  .bg-green-soft { background-color: var(--ringgreen-soft); }
+  .text-green { color: var(--ringgreen-deep); }
+  .border-green { border-color: var(--ringgreen-line); }
+  .divider-green {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ringgreen-line), transparent);
   }
 }
