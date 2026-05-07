@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon } from "lucide-react";
+import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon, ArrowDown } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
@@ -163,6 +163,42 @@ function ListingsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQ]);
 
+  // Floating "Jump to results" button: shows when filters/sort change
+  // while the user has scrolled past the results section.
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+  const [resultsOffscreen, setResultsOffscreen] = useState(false);
+  const [filtersChanged, setFiltersChanged] = useState(false);
+
+  // Track when filter/sort/view/page changes happen (any URL change other than
+  // initial mount). If results are off-screen, surface the FAB.
+  const filterKey = `${search.status}|${search.minPrice}|${search.maxPrice}|${search.beds}|${search.baths}|${search.q}|${search.sort}|${search.view}|${search.page}`;
+  const firstFilterRef = useRef(true);
+  useEffect(() => {
+    if (firstFilterRef.current) {
+      firstFilterRef.current = false;
+      return;
+    }
+    setFiltersChanged(true);
+  }, [filterKey]);
+
+  // Observe whether the results section is in the viewport.
+  useEffect(() => {
+    const el = resultsRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setResultsOffscreen(!entry.isIntersecting),
+      { rootMargin: "-80px 0px 0px 0px", threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const showJumpButton = filtersChanged && resultsOffscreen;
+  const jumpToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setFiltersChanged(false);
+  };
+
   const { data, error, isPending, isFetching, isPlaceholderData } = useQuery({
     queryKey: [
       "listings",
@@ -210,7 +246,7 @@ function ListingsPage() {
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
-      <div className="container-page mt-8 flex-1">
+      <div ref={resultsRef} className="container-page mt-8 flex-1 scroll-mt-24">
         {error ? (
           <div className="text-center py-32 text-destructive">
             Couldn't load listings: {error.message}
@@ -312,6 +348,24 @@ function ListingsPage() {
       )}
 
       <Footer />
+
+      <button
+        type="button"
+        onClick={jumpToResults}
+        aria-hidden={!showJumpButton}
+        tabIndex={showJumpButton ? 0 : -1}
+        className={[
+          "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
+          "inline-flex items-center gap-2 px-5 py-3",
+          "bg-foreground text-background text-[11px] uppercase tracking-[0.2em]",
+          "shadow-lg hover:opacity-90 transition-all duration-300",
+          showJumpButton
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-4 pointer-events-none",
+        ].join(" ")}
+      >
+        <ArrowDown size={14} /> Jump to results
+      </button>
     </div>
   );
 }
