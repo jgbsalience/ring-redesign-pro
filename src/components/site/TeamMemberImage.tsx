@@ -164,7 +164,12 @@ export function TeamMemberImage({
       fetchPriority={priority ? "high" : "auto"}
       decoding="async"
       draggable={false}
-      className={[sizeClass[size], className].filter(Boolean).join(" ")}
+      className={[
+        wrap && !ROUND_PRESETS.has(size)
+          ? "absolute inset-0 w-full h-full object-cover"
+          : sizeClass[size],
+        className,
+      ].filter(Boolean).join(" ")}
     />
   );
 
@@ -173,8 +178,11 @@ export function TeamMemberImage({
 
   return (
     <div
-      className={["relative w-full overflow-hidden bg-stone", wrapperClassName].filter(Boolean).join(" ")}
-      style={{ aspectRatio: aspect }}
+      className={[
+        "relative block w-full overflow-hidden bg-muted",
+        wrapperClassName,
+      ].filter(Boolean).join(" ")}
+      style={{ aspectRatio: aspect, contain: "layout paint" }}
     >
       {img}
     </div>
