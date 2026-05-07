@@ -307,7 +307,7 @@ function HomePage() {
             {agents.map((a) => (
               <div key={a.id} className="hover-lift">
                 <div className="aspect-[3/4] img-zoom bg-stone">
-                  <img src={a.photo} alt={a.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img src={a.photo} alt={a.name} referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="mt-4">
                   <div className="font-serif text-lg">{a.name}</div>
