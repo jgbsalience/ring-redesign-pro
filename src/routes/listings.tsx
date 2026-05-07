@@ -82,7 +82,7 @@ type Row = {
 /* ---------------- Page ---------------- */
 
 function ListingsPage() {
-  const search = Route.useSearch();
+  const search: z.infer<typeof searchSchema> = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const [rows, setRows] = useState<Row[]>([]);
