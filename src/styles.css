@@ -59,8 +59,8 @@
   --card-foreground: var(--ink);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: var(--bone);
+  --primary: var(--ringgreen-deep);
+  --primary-foreground: oklch(0.99 0 0);
   --secondary: var(--stone);
   --secondary-foreground: var(--ink);
   --muted: var(--stone);
