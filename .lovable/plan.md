@@ -1,76 +1,32 @@
-# Ring Real Estate — Modernised Redesign
+# Replace all imagery with real Ring Real Estate assets
 
-A vastly enhanced, design-forward rebuild of ring-sa.com.au (Adelaide-based residential agency, est. 1978). Keeps the brand essence (the green "ring" mark, "Integrity" promise, est. 1978 heritage) but replaces the dated template look with an editorial, premium real-estate experience comparable to The Agency / Belle Property / Sotheby's Realty.
+Strip every Unsplash placeholder and rebuild the dataset using real photos and people from ring-sa.com.au.
 
-## Brand direction
+## What's on the source site
 
-- **Aesthetic**: Editorial, confident, residential-luxury. Generous white space, large hero imagery, refined serif display type paired with a clean grotesque, subtle motion.
-- **Palette**: Deep ink near-black, warm off-white, muted stone, and the existing Ring green (#7BC242-ish) used sparingly as a precision accent — not as flat fills across buttons and headings like today.
-- **Typography**: Display serif (e.g. Fraunces / Canela-style) for headlines, Inter for UI/body. Big editorial scale, tight tracking on headings.
-- **Motion**: Subtle parallax on hero, fade/slide-up on scroll, hover lifts on property cards. Nothing gimmicky.
+- **Team (Inner Circle)** — 5 real members with photos already captured:
+  Stephen Ring (Director), Luke Bull (Sales Consultant), Soozie Bice (Property Manager), Rachel Brooke (Property Manager), Toni Dalcin (Accounting/Admin).
+  Photo pattern: `https://img.multiarray.com/realestatemanagerpm/<acct>/<id>/crop-rect-400x300.jpg`
+- **Listings** — listing index pages only show blank placeholders; the real photos live on each detail page in carousel items (`cp-rect-1920x1440.pg`, served as `image/jpeg`). I confirmed they fetch with a normal browser User-Agent.
+- **Listing slugs already collected** from /buy/residential-for-sale (e.g. `house-1-menura-avenue-glenalta-sa-1127412251`, `house-4-college-avenue-bellevue-heights-sa-...`, plus 6 more for sale and 1 rental). I'll also collect the /sell/recent-sales and /rent/residential-for-rent slugs.
+- **Office address**: 140 Shepherds Hill Road, Bellevue Heights SA 5050 — phone (08) 8370 3211, email ring@ring-sa.com.au. Update footer/contact to match.
 
-## Pages (separate TanStack routes — not hash anchors)
+## Approach
 
-1. `/` Home — hero, integrity statement, property search, featured listings, recent sales strip, agent intro, testimonials, CTA.
-2. `/buy` — listings grid with filters (suburb, price, beds, baths, type), map toggle, OFI strip.
-3. `/buy/$listingId` — full listing detail (gallery, specs, agent, inspection times, enquiry form).
-4. `/rent` — rental listings + landlord login link.
-5. `/sell` — methods of sale, target price range explainer, recent sales, appraisal CTA.
-6. `/sell/appraisal` — appraisal request form.
-7. `/about` — story (est. 1978), team grid ("Inner Circle"), community.
-8. `/contact` — contact form, office details, map.
+1. **Scrape script** (`/tmp/scrape_ring.ts`, run once with `bun`):
+   - Fetch each listing index page (buy, recent-sales, rent) to get the canonical slug + url + price + address + bed/bath/car counts already in the markdown I have.
+   - For each detail page, pull the carousel `data-src` URLs (gallery) and the headline/description block.
+   - Emit a single `src/data/ring.json` containing all listings + agents.
+2. **Typed data layer** — keep `src/data/site.ts` API (`listings`, `agents`, `getAgent`, `getListing`) but populate it from the scraped JSON. Map listing → agent via the agent name shown on each detail page.
+3. **Agents rewrite** — replace the 4 fictional agents with the 5 real Ring staff, real phones/emails. Update every `agentIds` reference (cards, listing details, similar-properties).
+4. **Hero & editorial images** — replace the Unsplash hero on `/` and `/about` with the strongest real Ring listing photo (likely 4 College Avenue or 58 Brighton Parade). Replace the Unsplash "studio" shot on `/contact` with a Ring listing exterior.
+5. **Image loader hardening** — `img.multiarray.com` 404s without a normal UA but works fine in browsers. No proxy needed; just use the URLs directly. I'll add `referrerPolicy="no-referrer"` and `loading="lazy"` to be safe, plus an `onError` swap to a sibling listing image so a single dead URL never leaves a blank tile.
+6. **Cleanup** — delete every `images.unsplash.com` URL from the codebase. Delete the `suburbs` mock list and rebuild it from the real listings' suburbs (Glenalta, Bellevue Heights, Blackwood, Clarence Gardens, Pasadena, Sellicks Beach, North Adelaide, …).
+7. **QA** — load `/`, `/buy`, `/buy/$listingId` for two listings, `/rent`, `/sell`, `/about`, `/contact` in the preview and confirm no broken images, no Unsplash calls in the network tab.
 
-## Home page structure
+## Out of scope
 
-```text
-┌─────────────────────────────────────────────┐
-│  Slim transparent nav · logo · phone · CTA   │
-├─────────────────────────────────────────────┤
-│  Full-bleed hero image                       │
-│  Oversized serif headline + Integrity mark   │
-│  Inline property search bar (buy/rent/sold)  │
-├─────────────────────────────────────────────┤
-│  "Since 1978" editorial intro (2-col)        │
-├─────────────────────────────────────────────┤
-│  Featured listings — 3-up cards, hover lift  │
-├─────────────────────────────────────────────┤
-│  Recent sales — horizontal scroll strip      │
-├─────────────────────────────────────────────┤
-│  Methods of sale — 3 tiles w/ illustrations  │
-├─────────────────────────────────────────────┤
-│  Agent / Inner Circle preview                │
-├─────────────────────────────────────────────┤
-│  Testimonial — large pull-quote              │
-├─────────────────────────────────────────────┤
-│  Appraisal CTA band (dark, full-bleed)       │
-├─────────────────────────────────────────────┤
-│  Footer — sitemap, contact, socials, ABN     │
-└─────────────────────────────────────────────┘
-```
+- I won't copy long property descriptions verbatim — I'll use the Ring headline + a short factual blurb to avoid mirroring their copywriting. Address, suburb, price, beds/baths/cars, and photos are factual data, used as-is.
+- Sold prices on the sell page will use whatever Ring publishes on /sell/recent-sales (often "Sold" without a figure); no invented numbers.
 
-## Listing card pattern
-
-Image (4:3) with price overlay on hover · address · suburb · beds/baths/cars icons · agent avatar + name · subtle border, lifts on hover.
-
-## Listing detail
-
-Sticky enquiry sidebar, full-width gallery with lightbox, specs grid, inspection times, agent card, similar properties.
-
-## Technical notes
-
-- TanStack Start with file-based routes under `src/routes/`. One file per page (no hash-anchor SPA).
-- Design tokens added to `src/styles.css` (oklch): `--ink`, `--bone`, `--stone`, `--ring-green`, plus serif/sans font families. Tailwind classes via semantic tokens only.
-- Fonts via Google Fonts `<link>` in `__root.tsx` head (Fraunces + Inter).
-- Per-route `head()` with unique title/description/og for SEO.
-- All listings/agents/testimonials seeded as typed mock data in `src/data/` so the UI is fully populated without a backend. No Lovable Cloud unless you later want real listings + appraisal form submissions.
-- Imagery: high-quality Adelaide/residential stock via Unsplash URLs (no AI image generation needed for v1).
-- Mobile-first; nav collapses to a full-screen sheet menu.
-- Note: "using gemini 3.1 pro" — Gemini 3.1 Pro is the model powering this design generation; no AI gateway integration is being added to the app itself. Let me know if you actually want an in-app AI feature (e.g. AI property concierge) and I'll add it.
-
-## Out of scope for v1
-
-- Real listings feed / CRM integration (REA, Domain, Console).
-- Auth, landlord portal (link out to existing landlords.com.au as today).
-- Appraisal/contact form backend submission (forms render but don't submit until Cloud is enabled).
-
-Approve and I'll build it.
+Approve and I'll run the scrape + rewire the dataset.
