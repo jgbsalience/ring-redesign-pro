@@ -67,14 +67,14 @@ const SellAppraisalRoute = SellAppraisalRouteImport.update({
   getParentRoute: () => SellRoute,
 } as any)
 const RentListingIdRoute = RentListingIdRouteImport.update({
-  id: '/$listingId',
-  path: '/$listingId',
-  getParentRoute: () => RentRoute,
+  id: '/rent/$listingId',
+  path: '/rent/$listingId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BuyListingIdRoute = BuyListingIdRouteImport.update({
-  id: '/$listingId',
-  path: '/$listingId',
-  getParentRoute: () => BuyRoute,
+  id: '/buy/$listingId',
+  path: '/buy/$listingId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -164,6 +164,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   SellRoute: typeof SellRouteWithChildren
+  BuyListingIdRoute: typeof BuyListingIdRoute
+  RentListingIdRoute: typeof RentListingIdRoute
   SoldListingIdRoute: typeof SoldListingIdRoute
   TeamAgentIdRoute: typeof TeamAgentIdRoute
   BuyIndexRoute: typeof BuyIndexRoute
@@ -237,17 +239,17 @@ declare module '@tanstack/react-router' {
     }
     '/rent/$listingId': {
       id: '/rent/$listingId'
-      path: '/$listingId'
+      path: '/rent/$listingId'
       fullPath: '/rent/$listingId'
       preLoaderRoute: typeof RentListingIdRouteImport
-      parentRoute: typeof RentRoute
+      parentRoute: typeof rootRouteImport
     }
     '/buy/$listingId': {
       id: '/buy/$listingId'
-      path: '/$listingId'
+      path: '/buy/$listingId'
       fullPath: '/buy/$listingId'
       preLoaderRoute: typeof BuyListingIdRouteImport
-      parentRoute: typeof BuyRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -267,6 +269,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   SellRoute: SellRouteWithChildren,
+  BuyListingIdRoute: BuyListingIdRoute,
+  RentListingIdRoute: RentListingIdRoute,
   SoldListingIdRoute: SoldListingIdRoute,
   TeamAgentIdRoute: TeamAgentIdRoute,
   BuyIndexRoute: BuyIndexRoute,
@@ -275,13 +279,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
