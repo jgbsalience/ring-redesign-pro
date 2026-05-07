@@ -253,24 +253,12 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
       <Footer />
 
       {floorplanOpen && listing.floorplan && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10 animate-fade-in"
-          onClick={() => setFloorplanOpen(false)}
-        >
-          <button
-            onClick={() => setFloorplanOpen(false)}
-            className="absolute top-5 right-6 text-white/80 hover:text-white text-xs uppercase tracking-[0.25em]"
-          >
-            Close ✕
-          </button>
-          <img
-            src={listing.floorplan}
-            alt={`Floorplan — ${listing.address}`}
-            referrerPolicy="no-referrer"
-            className="max-w-full max-h-full object-contain bg-white"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
+        <FloorplanLightbox
+          src={listing.floorplan}
+          alt={`Floorplan — ${listing.address}`}
+          onClose={() => setFloorplanOpen(false)}
+        />
+      )}
       )}
     </div>
   );
