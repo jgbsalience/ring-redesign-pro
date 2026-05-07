@@ -152,7 +152,7 @@ function ListingsPage() {
   // sync external URL changes (back/forward, reset, chip remove) into the input
   useEffect(() => setQInput(search.q), [search.q]);
 
-  // push debounced input into the URL
+  // push debounced input into the URL (preserves scroll)
   useEffect(() => {
     if (debouncedQ === search.q) return;
     navigate({
@@ -162,6 +162,17 @@ function ListingsPage() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQ]);
+
+  // Explicit submit (Enter on the search input). Flush immediately with the
+  // SAME scroll behavior as debounced typing — never jump to the top.
+  const submitQ = () => {
+    if (qInput === search.q) return;
+    navigate({
+      search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
+      replace: true,
+      resetScroll: false,
+    });
+  };
 
   // Floating "Jump to results" button: shows when filters/sort change
   // while the user has scrolled past the results section.
@@ -242,7 +253,7 @@ function ListingsPage() {
         </div>
       </section>
 
-      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} disabled={isFetching} />
+      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} onSubmitQ={submitQ} disabled={isFetching} />
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
@@ -467,12 +478,14 @@ function FiltersBar({
   navigate,
   qInput,
   setQInput,
+  onSubmitQ,
   disabled = false,
 }: {
   search: z.infer<typeof searchSchema>;
   navigate: ReturnType<typeof Route.useNavigate>;
   qInput: string;
   setQInput: (v: string) => void;
+  onSubmitQ: () => void;
   disabled?: boolean;
 }) {
   const update = <K extends keyof z.infer<typeof searchSchema>>(
@@ -514,15 +527,28 @@ function FiltersBar({
       </div>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_0.8fr_0.8fr_auto] gap-2 bg-secondary/60 p-2">
-        <label className="flex items-center gap-3 px-4 py-3 bg-background">
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmitQ();
+          }}
+          className="flex items-center gap-3 px-4 py-3 bg-background"
+        >
           <Search size={16} className="opacity-50" />
           <input
+            type="search"
             value={qInput}
             onChange={(e) => setQInput(e.target.value)}
             className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
             placeholder="Suburb, address, postcode, keyword"
+            aria-label="Search listings"
           />
-        </label>
+          {/* Hidden submit so Enter triggers onSubmit consistently */}
+          <button type="submit" className="sr-only">
+            Search
+          </button>
+        </form>
 
         <select
           className="bg-background px-4 py-3 text-sm"
