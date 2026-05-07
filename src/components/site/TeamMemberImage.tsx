@@ -53,11 +53,13 @@ const defaultSizes: Record<AnySize, string> = {
   "md-lg": "(min-width: 1024px) 80px, 56px",
   avatar: "(min-width: 1024px) 56px, (min-width: 640px) 40px, 32px",
 
-  // Portrait renders inside a 3:4 (vertical) box, so the rendered width is
-  // ~75% of the box's height-driven sizing. Keep hints tight so the browser
-  // picks the 400w variant on mobile and 400w on desktop (480w only when
-  // the box truly needs it on wide layouts).
-  portrait: "(min-width: 1024px) 360px, (min-width: 640px) 320px, 75vw",
+  // Portrait wraps the image in a 3:4 (vertical) container while the CDN
+  // serves landscape 4:3 source images. With `object-cover` the rendered
+  // image width is ~16/9 (~1.78×) the container width, so the `sizes` hint
+  // must be the *rendered* image width — otherwise the browser undersizes.
+  // Container widths: ~360px (mobile, 95vw), ~360px (tablet), 360px (desktop)
+  // Rendered widths : ~640px,                ~640px,             ~640px
+  portrait: "(min-width: 1024px) 640px, (min-width: 640px) 640px, 100vw",
 };
 
 /**
