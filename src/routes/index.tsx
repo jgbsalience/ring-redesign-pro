@@ -38,6 +38,9 @@ function HomePage() {
   const sold = listings.filter((l) => l.status === "sold");
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (HERO_SLIDES.length < 2 || paused) return;
