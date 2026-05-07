@@ -2,8 +2,57 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Plus, Minus } from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
+import { useState } from "react";
+
+const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "About us" }[] = [
+  {
+    group: "Selling",
+    q: "How long does it take to sell a home in Adelaide?",
+    a: "Most well-presented Adelaide homes go under contract within 21 to 35 days of going to market. Off-market and pre-market campaigns can be quicker. We'll give you an honest, evidence-based timeline at your appraisal — not a sales pitch.",
+  },
+  {
+    group: "Selling",
+    q: "What does Ring Real Estate charge in commission?",
+    a: "Our fee is tailored to the campaign — the property, the price guide, and the marketing approach. There are no hidden costs. You'll see a fully itemised proposal at appraisal so you can compare like-for-like with any other agency.",
+  },
+  {
+    group: "Selling",
+    q: "Auction or private treaty — which is better?",
+    a: "Both work. Auction suits homes with strong buyer competition or unique appeal; private treaty suits considered, longer-decision purchases. We recommend the method that has historically delivered the best result for homes like yours in your suburb.",
+  },
+  {
+    group: "Selling",
+    q: "Do I need to renovate or stage before selling?",
+    a: "Rarely a full renovation, but presentation matters. We'll walk through your home and recommend the small, high-return improvements — paint, gardens, styling — that consistently lift the final price. We coordinate trades and stylists for you.",
+  },
+  {
+    group: "Buying",
+    q: "How do I get notified about new Ring listings first?",
+    a: "Register with us and tell us what you're looking for. We share off-market and pre-market homes with our buyer database before they appear publicly. Many of our sales never see realestate.com.au.",
+  },
+  {
+    group: "Buying",
+    q: "Can you help me buy a home that isn't listed with Ring?",
+    a: "Yes. We're happy to give you a frank, conflict-free read on any home you're considering across metropolitan Adelaide — comparable sales, likely range, and what to watch out for at building inspection.",
+  },
+  {
+    group: "Buying",
+    q: "What suburbs do you specialise in?",
+    a: "We're rooted in the southern foothills — Blackwood, Bellevue Heights, Glenalta, Coromandel Valley, Hawthorndene, Eden Hills — and sell across greater Adelaide. If you're buying in our patch, we likely already know the home and the street.",
+  },
+  {
+    group: "About us",
+    q: "Are you part of a franchise?",
+    a: "No. Ring Real Estate has been independently owned and operated since 1978. Decisions are made in our office, by the people who'll handle your sale or lease — not by a head office in another city.",
+  },
+  {
+    group: "About us",
+    q: "Do you manage rental properties as well?",
+    a: "Yes. Our property management team looks after around 460 doors across Adelaide with a 99.2% retention rate. The senior agent you meet at the appraisal is the one who manages the relationship — not a junior handover.",
+  },
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
