@@ -8,6 +8,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
 import { supabase } from "@/integrations/supabase/client";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 /* ---------------- Search params ---------------- */
 
@@ -143,22 +144,24 @@ function ListingsPage() {
   const search: SearchParams = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  // local input state for the search box (debounced into URL)
+  // local input state for the search box, debounced into the URL so
+  // rapid typing doesn't trigger a refetch on every keystroke
   const [qInput, setQInput] = useState(search.q);
+  const debouncedQ = useDebouncedValue(qInput, 400);
+
+  // sync external URL changes (back/forward, reset, chip remove) into the input
   useEffect(() => setQInput(search.q), [search.q]);
+
+  // push debounced input into the URL
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (qInput !== search.q) {
-        navigate({
-          search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
-          replace: true,
-          resetScroll: false,
-        });
-      }
-    }, 350);
-    return () => clearTimeout(t);
+    if (debouncedQ === search.q) return;
+    navigate({
+      search: (prev: SearchParams) => ({ ...prev, q: debouncedQ, page: 1 }),
+      replace: true,
+      resetScroll: false,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qInput]);
+  }, [debouncedQ]);
 
   const { data, error, isPending, isFetching, isPlaceholderData } = useQuery({
     queryKey: [
