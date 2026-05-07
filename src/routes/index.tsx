@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { listings, agents, testimonials } from "@/data/site";
-import { ArrowRight, ArrowUpRight, Search } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Search, ChevronDown, MapPin, BedDouble } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,6 +40,28 @@ function HomePage() {
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Search bar state
+  const navigate = useNavigate();
+  const [intent, setIntent] = useState<"buy" | "rent" | "sold">("buy");
+  const [query, setQuery] = useState("");
+  const [beds, setBeds] = useState("any");
+  const [suggestOpen, setSuggestOpen] = useState(false);
+
+  const suburbs = Array.from(new Set(listings.map((l) => l.suburb))).sort();
+  const suggestions = query.trim().length
+    ? suburbs.filter((s) => s.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 6)
+    : [];
+
+  function runSearch(q?: string) {
+    const dest = intent === "rent" ? "/rent" : intent === "sold" ? "/sold" : "/buy";
+    const params = new URLSearchParams();
+    const term = (q ?? query).trim();
+    if (term) params.set("q", term);
+    if (beds !== "any") params.set("beds", beds);
+    const search = params.toString();
+    navigate({ to: dest, search: search ? (Object.fromEntries(params) as never) : ({} as never) });
+  }
+
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -51,6 +73,7 @@ function HomePage() {
   }, [paused]);
 
   const current = HERO_SLIDES[slide] ?? HERO_SLIDES[0];
+
 
   return (
     <div className="bg-background text-foreground">
@@ -125,34 +148,151 @@ function HomePage() {
           </div>
 
           {/* Search bar */}
-          <div className="mt-14 reveal reveal-4">
-            <div className="bg-background/95 backdrop-blur text-foreground p-2 md:p-3 grid grid-cols-1 md:grid-cols-[1fr_auto_auto_auto] gap-2 max-w-4xl">
-              <div className="flex items-center gap-3 px-4 py-3">
-                <Search size={16} className="opacity-50" />
-                <input
-                  className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
-                  placeholder="Suburb, postcode or street"
-                />
+          <div className="mt-14 reveal reveal-4 max-w-4xl">
+            {/* Intent tabs */}
+            <div role="tablist" aria-label="Search type" className="inline-flex gap-px bg-white/15 backdrop-blur p-px">
+              {([
+                { id: "buy", label: "For sale" },
+                { id: "rent", label: "For rent" },
+                { id: "sold", label: "Sold" },
+              ] as const).map((t) => {
+                const active = intent === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setIntent(t.id)}
+                    className={[
+                      "px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
+                      active
+                        ? "bg-background text-foreground"
+                        : "text-white/85 hover:text-white hover:bg-white/10",
+                    ].join(" ")}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <form
+              role="search"
+              onSubmit={(e) => { e.preventDefault(); setSuggestOpen(false); runSearch(); }}
+              className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)]"
+            >
+              {/* Query */}
+              <div className="relative">
+                <label className="flex items-center gap-3 px-5 py-4">
+                  <MapPin size={16} className="text-muted-foreground shrink-0" aria-hidden="true" />
+                  <span className="sr-only">Where</span>
+                  <input
+                    value={query}
+                    onChange={(e) => { setQuery(e.target.value); setSuggestOpen(true); }}
+                    onFocus={() => setSuggestOpen(true)}
+                    onBlur={() => setTimeout(() => setSuggestOpen(false), 150)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") setSuggestOpen(false);
+                    }}
+                    className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
+                    placeholder="Suburb, postcode or street"
+                    aria-label="Search by suburb, postcode or street"
+                    autoComplete="off"
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      onClick={() => { setQuery(""); setSuggestOpen(false); }}
+                      className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+                      aria-label="Clear search"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </label>
+                {mounted && suggestOpen && suggestions.length > 0 && (
+                  <ul
+                    role="listbox"
+                    className="absolute z-30 left-0 right-0 top-full mt-1 bg-background border border-border shadow-xl max-h-72 overflow-auto"
+                  >
+                    {suggestions.map((s) => (
+                      <li key={s}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => { setQuery(s); setSuggestOpen(false); runSearch(s); }}
+                          className="w-full text-left px-5 py-3 text-sm hover:bg-secondary flex items-center gap-3"
+                        >
+                          <MapPin size={14} className="text-muted-foreground" />
+                          {s}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              {mounted ? (
-                <select className="bg-secondary px-4 py-3 text-sm outline-none">
-                  <option>For sale</option><option>For rent</option><option>Sold</option>
-                </select>
-              ) : (
-                <div className="bg-secondary px-4 py-3 text-sm" aria-hidden="true">For sale</div>
-              )}
-              {mounted ? (
-                <select className="bg-secondary px-4 py-3 text-sm outline-none">
-                  <option>Any beds</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option>
-                </select>
-              ) : (
-                <div className="bg-secondary px-4 py-3 text-sm" aria-hidden="true">Any beds</div>
-              )}
-              <Link to="/buy" className="bg-foreground text-background px-6 py-3 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90">
-                Search <ArrowRight size={14} />
+
+              {/* Beds */}
+              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-colors cursor-pointer">
+                <BedDouble size={16} className="text-muted-foreground" aria-hidden="true" />
+                <span className="sr-only">Beds</span>
+                {mounted ? (
+                  <>
+                    <select
+                      value={beds}
+                      onChange={(e) => setBeds(e.target.value)}
+                      className="bg-transparent appearance-none pr-6 text-sm outline-none cursor-pointer"
+                      aria-label="Minimum bedrooms"
+                    >
+                      <option value="any">Any beds</option>
+                      <option value="1">1+ beds</option>
+                      <option value="2">2+ beds</option>
+                      <option value="3">3+ beds</option>
+                      <option value="4">4+ beds</option>
+                      <option value="5">5+ beds</option>
+                    </select>
+                    <ChevronDown size={14} className="text-muted-foreground absolute right-4 pointer-events-none" />
+                  </>
+                ) : (
+                  <span className="text-sm pr-6" aria-hidden="true">Any beds</span>
+                )}
+              </label>
+
+              {/* Browse all */}
+              <Link
+                to={intent === "rent" ? "/rent" : intent === "sold" ? "/sold" : "/buy"}
+                className="hidden md:inline-flex items-center justify-center px-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Browse all
               </Link>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="bg-foreground text-background px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)] hover:text-[var(--ink)] transition-colors group"
+              >
+                <Search size={14} className="md:hidden" />
+                Search
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </button>
+            </form>
+
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] uppercase tracking-[0.22em] text-white/70">
+              <span className="opacity-70">Popular:</span>
+              {["Bellevue Heights", "Coromandel Valley", "Blackwood", "Glenalta"].map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => { setQuery(s); runSearch(s); }}
+                  className="hover:text-white border-b border-transparent hover:border-white/60 pb-0.5 transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
             </div>
           </div>
+
         </div>
 
         <div className="absolute z-20 bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70 pointer-events-none">
