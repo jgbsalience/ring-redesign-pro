@@ -8,6 +8,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
 import { supabase } from "@/integrations/supabase/client";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
 /* ---------------- Search params ---------------- */
 
