@@ -253,7 +253,7 @@ function ListingsPage() {
         </div>
       </section>
 
-      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} disabled={isFetching} />
+      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} onSubmitQ={submitQ} disabled={isFetching} />
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
