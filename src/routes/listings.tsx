@@ -152,7 +152,7 @@ function ListingsPage() {
   // sync external URL changes (back/forward, reset, chip remove) into the input
   useEffect(() => setQInput(search.q), [search.q]);
 
-  // push debounced input into the URL
+  // push debounced input into the URL (preserves scroll)
   useEffect(() => {
     if (debouncedQ === search.q) return;
     navigate({
@@ -162,6 +162,17 @@ function ListingsPage() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQ]);
+
+  // Explicit submit (Enter on the search input). Flush immediately with the
+  // SAME scroll behavior as debounced typing — never jump to the top.
+  const submitQ = () => {
+    if (qInput === search.q) return;
+    navigate({
+      search: (prev: SearchParams) => ({ ...prev, q: qInput, page: 1 }),
+      replace: true,
+      resetScroll: false,
+    });
+  };
 
   // Floating "Jump to results" button: shows when filters/sort change
   // while the user has scrolled past the results section.
