@@ -30,8 +30,10 @@ export type Agent = {
   name: string;
   role: string;
   phone: string;
+  office?: string;
   email: string;
-  bio: string;
+  bio: string[];
+  shortBio?: string;
   photo: string;
 };
 
