@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
-import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download } from "lucide-react";
+import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 function downloadBrochure(listing: Listing, agentName: string, agentPhone: string, agentEmail: string) {
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>${listing.address}, ${listing.suburb} — Ring Real Estate</title>
