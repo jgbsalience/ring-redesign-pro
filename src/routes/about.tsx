@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { agents, testimonials } from "@/data/site";
+import { agents, testimonials, listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "A small, senior team selling and managing distinguished Adelaide homes for nearly five decades." },
       { property: "og:title", content: "About Ring Real Estate" },
       { property: "og:description", content: "Adelaide's independent residential agency, since 1978." },
-      { property: "og:image", content: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80" },
+      { property: "og:image", content: listings[1]?.hero ?? "" },
     ],
   }),
   component: AboutPage,
@@ -22,7 +22,7 @@ function AboutPage() {
     <div className="bg-background text-foreground">
       <Header overlay />
       <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2400&q=85" alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={listings[1]?.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
         <div className="relative container-page h-full flex flex-col justify-end pb-20 text-white">
           <div className="text-[10px] uppercase tracking-[0.32em] opacity-80">

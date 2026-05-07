@@ -36,7 +36,7 @@ function ContactPage() {
 
             <div className="aspect-[4/3] bg-secondary overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
+                src={listings[4]?.hero}
                 alt="Ring Real Estate studio"
                 className="w-full h-full object-cover grayscale"
               />
