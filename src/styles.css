@@ -40,6 +40,8 @@
   --color-ringgreen: var(--ringgreen);
   --color-ringgreen-soft: var(--ringgreen-soft);
   --color-ringgreen-deep: var(--ringgreen-deep);
+  --color-ringgreen-tint: var(--ringgreen-tint);
+  --color-ringgreen-line: var(--ringgreen-line);
 }
 
 :root {
@@ -47,12 +49,14 @@
 
   /* Editorial palette */
   --ink: oklch(0.18 0.01 250);
-  --bone: oklch(0.975 0.005 90);
-  --stone: oklch(0.93 0.008 90);
-  --stone-2: oklch(0.86 0.01 90);
-  --ringgreen: oklch(0.74 0.18 138);
-  --ringgreen-soft: oklch(0.92 0.08 138);
-  --ringgreen-deep: oklch(0.58 0.16 142);
+  --bone: oklch(0.975 0.012 130);
+  --stone: oklch(0.93 0.018 132);
+  --stone-2: oklch(0.86 0.022 134);
+  --ringgreen: oklch(0.76 0.22 138);
+  --ringgreen-soft: oklch(0.93 0.10 138);
+  --ringgreen-deep: oklch(0.55 0.18 142);
+  --ringgreen-tint: oklch(0.975 0.035 138);
+  --ringgreen-line: oklch(0.86 0.13 138);
 
   --background: var(--bone);
   --foreground: var(--ink);
@@ -165,7 +169,17 @@
     width: 0.7em;
     height: 0.7em;
     border-radius: 9999px;
-    border: 0.14em solid var(--ringgreen);
+    border: 0.18em solid var(--ringgreen);
+    background: var(--ringgreen-tint);
     vertical-align: -0.05em;
+  }
+
+  .bg-green-tint { background-color: var(--ringgreen-tint); }
+  .bg-green-soft { background-color: var(--ringgreen-soft); }
+  .text-green { color: var(--ringgreen-deep); }
+  .border-green { border-color: var(--ringgreen-line); }
+  .divider-green {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ringgreen-line), transparent);
   }
 }
