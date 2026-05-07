@@ -66,10 +66,25 @@ function HomePage() {
             ].join(" ")}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70 pointer-events-none" />
 
-        <div className="relative container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white">
-          <div className="max-w-4xl">
+        {current && (
+          <Link
+            to={
+              current.status === "for-rent" || current.status === "leased"
+                ? "/rent/$listingId"
+                : current.status === "sold"
+                ? "/sold/$listingId"
+                : "/buy/$listingId"
+            }
+            params={{ listingId: current.id }}
+            aria-label={`View ${current.address}, ${current.suburb}`}
+            className="absolute inset-0 z-10"
+          />
+        )}
+
+        <div className="relative z-20 container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white pointer-events-none">
+          <div className="max-w-4xl pointer-events-auto">
             <div className="text-[10px] uppercase tracking-[0.32em] opacity-80 reveal">
               <span className="ring-mark" /> &nbsp;Adelaide · Established 1978
             </div>
