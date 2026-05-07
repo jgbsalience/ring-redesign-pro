@@ -36,14 +36,15 @@ function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
   const sold = listings.filter((l) => l.status === "sold");
   const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (HERO_SLIDES.length < 2) return;
+    if (HERO_SLIDES.length < 2 || paused) return;
     const id = setInterval(() => {
       setSlide((s) => (s + 1) % HERO_SLIDES.length);
     }, 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
 
   const current = HERO_SLIDES[slide] ?? HERO_SLIDES[0];
 
@@ -52,7 +53,17 @@ function HomePage() {
       <Header overlay />
 
       {/* HERO */}
-      <section className="relative min-h-[100svh] w-full overflow-hidden">
+      <section
+        className="relative min-h-[100svh] w-full overflow-hidden group/hero"
+        aria-roledescription="carousel"
+        aria-label="Featured properties"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false);
+        }}
+      >
         {HERO_SLIDES.map((l, i) => (
           <img
             key={l.id}
