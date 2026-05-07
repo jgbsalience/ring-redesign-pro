@@ -97,6 +97,8 @@ type Props = {
   className?: string;
   alt?: string;
   eager?: boolean;
+  /** Set fetchpriority="high" — use for the LCP image only. Implies eager. */
+  priority?: boolean;
   /** Override the default `sizes` hint for this size preset. */
   sizes?: string;
   /**
