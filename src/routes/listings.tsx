@@ -163,6 +163,42 @@ function ListingsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQ]);
 
+  // Floating "Jump to results" button: shows when filters/sort change
+  // while the user has scrolled past the results section.
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+  const [resultsOffscreen, setResultsOffscreen] = useState(false);
+  const [filtersChanged, setFiltersChanged] = useState(false);
+
+  // Track when filter/sort/view/page changes happen (any URL change other than
+  // initial mount). If results are off-screen, surface the FAB.
+  const filterKey = `${search.status}|${search.minPrice}|${search.maxPrice}|${search.beds}|${search.baths}|${search.q}|${search.sort}|${search.view}|${search.page}`;
+  const firstFilterRef = useRef(true);
+  useEffect(() => {
+    if (firstFilterRef.current) {
+      firstFilterRef.current = false;
+      return;
+    }
+    setFiltersChanged(true);
+  }, [filterKey]);
+
+  // Observe whether the results section is in the viewport.
+  useEffect(() => {
+    const el = resultsRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setResultsOffscreen(!entry.isIntersecting),
+      { rootMargin: "-80px 0px 0px 0px", threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const showJumpButton = filtersChanged && resultsOffscreen;
+  const jumpToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setFiltersChanged(false);
+  };
+
   const { data, error, isPending, isFetching, isPlaceholderData } = useQuery({
     queryKey: [
       "listings",
