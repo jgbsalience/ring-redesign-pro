@@ -53,7 +53,11 @@ const defaultSizes: Record<AnySize, string> = {
   "md-lg": "(min-width: 1024px) 80px, 56px",
   avatar: "(min-width: 1024px) 56px, (min-width: 640px) 40px, 32px",
 
-  portrait: "(min-width: 1024px) 480px, (min-width: 640px) 400px, 95vw",
+  // Portrait renders inside a 3:4 (vertical) box, so the rendered width is
+  // ~75% of the box's height-driven sizing. Keep hints tight so the browser
+  // picks the 400w variant on mobile and 400w on desktop (480w only when
+  // the box truly needs it on wide layouts).
+  portrait: "(min-width: 1024px) 360px, (min-width: 640px) 320px, 75vw",
 };
 
 /**
