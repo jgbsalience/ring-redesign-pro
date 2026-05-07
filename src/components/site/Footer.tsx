@@ -44,13 +44,13 @@ export function Footer() {
         </div>
 
         <div className="md:col-span-3">
-          <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-5">Studio</h4>
+          <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-5">Office</h4>
           <address className="not-italic text-sm space-y-2 opacity-90">
-            <div>Level 1, 14 Wattle Street</div>
-            <div>Fullarton SA 5063</div>
+            <div>140 Shepherds Hill Road</div>
+            <div>Bellevue Heights SA 5050</div>
             <div className="pt-3">
               <a href="tel:+61883703211" className="block hover:text-[var(--ringgreen)]">(08) 8370 3211</a>
-              <a href="mailto:hello@ring-sa.com.au" className="block hover:text-[var(--ringgreen)]">hello@ring-sa.com.au</a>
+              <a href="mailto:ring@ring-sa.com.au" className="block hover:text-[var(--ringgreen)]">ring@ring-sa.com.au</a>
             </div>
           </address>
         </div>
