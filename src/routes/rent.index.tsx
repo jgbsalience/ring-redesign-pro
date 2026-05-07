@@ -36,7 +36,7 @@ function RentPage() {
         kicker="Property management"
         title={<>Rentals, <span className="italic font-light">managed by people</span><br />who answer their phone.</>}
         subtitle="460 doors. A 99.2% retention rate. The award-winning property team you actually know by name."
-        cta={{ label: "Landlord login", to: "/contact" }}
+        
       />
       <div className="pt-16 md:pt-20 container-page">
         <div className="flex justify-end -mt-4">
