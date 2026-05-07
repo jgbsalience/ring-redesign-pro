@@ -209,26 +209,30 @@ function ListingsPage() {
         </div>
       </section>
 
-      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} />
+      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} disabled={loading} />
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
       <div className="container-page mt-8 flex-1">
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="aspect-[4/3] bg-muted" />
-                <div className="h-4 bg-muted mt-5 w-1/3" />
-                <div className="h-6 bg-muted mt-3 w-2/3" />
-              </div>
-            ))}
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="text-center py-32 text-destructive">
             Couldn't load listings: {error}
           </div>
-        ) : rows.length === 0 ? (
+        ) : loading && rows.length === 0 ? (
+          <>
+            <div className="h-3 w-24 bg-muted animate-pulse mb-8" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[4/3] bg-muted" />
+                  <div className="h-4 bg-muted mt-5 w-1/3" />
+                  <div className="h-6 bg-muted mt-3 w-2/3" />
+                  <div className="h-4 bg-muted mt-3 w-1/2" />
+                </div>
+              ))}
+            </div>
+          </>
+        ) : !loading && rows.length === 0 ? (
           <div className="text-center py-32 text-muted-foreground">
             No matches for those filters.{" "}
             <Link to="/contact" className="underline">
@@ -238,23 +242,42 @@ function ListingsPage() {
           </div>
         ) : (
           <>
-            <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">
-              {count} {count === 1 ? "result" : "results"}
-              {search.view === "map" && rows.length < count && (
-                <span className="ml-2 normal-case tracking-normal text-[11px]">
-                  (showing first {rows.length} on map)
+            <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8 flex items-center gap-3">
+              <span>
+                {count} {count === 1 ? "result" : "results"}
+                {search.view === "map" && rows.length < count && (
+                  <span className="ml-2 normal-case tracking-normal text-[11px]">
+                    (showing first {rows.length} on map)
+                  </span>
+                )}
+              </span>
+              {loading && (
+                <span
+                  aria-live="polite"
+                  className="inline-flex items-center gap-2 normal-case tracking-normal text-[11px] text-muted-foreground"
+                >
+                  <span className="h-3 w-3 rounded-full border-2 border-muted-foreground/30 border-t-foreground animate-spin" />
+                  Updating…
                 </span>
               )}
             </div>
-            {search.view === "map" ? (
-              <ListingsMap rows={rows} />
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-                {rows.map((r) => (
-                  <ListingDbCard key={r.id} r={r} />
-                ))}
-              </div>
-            )}
+            <div
+              aria-busy={loading}
+              className={[
+                "transition-opacity",
+                loading ? "opacity-50 pointer-events-none" : "opacity-100",
+              ].join(" ")}
+            >
+              {search.view === "map" ? (
+                <ListingsMap rows={rows} />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                  {rows.map((r) => (
+                    <ListingDbCard key={r.id} r={r} />
+                  ))}
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
