@@ -13,6 +13,9 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
+    // Cache scroll per pathname + search string so visiting the same
+    // filtered/sorted URL again restores its scroll position.
+    getScrollRestorationKey: (location) => location.pathname + location.searchStr,
     defaultPreloadStaleTime: 0,
     defaultErrorComponent: RouteErrorBoundary,
     defaultNotFoundComponent: RouteNotFoundBoundary,
