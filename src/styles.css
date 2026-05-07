@@ -40,6 +40,8 @@
   --color-ringgreen: var(--ringgreen);
   --color-ringgreen-soft: var(--ringgreen-soft);
   --color-ringgreen-deep: var(--ringgreen-deep);
+  --color-ringgreen-tint: var(--ringgreen-tint);
+  --color-ringgreen-line: var(--ringgreen-line);
 }
 
 :root {
