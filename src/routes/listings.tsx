@@ -257,7 +257,7 @@ function ListingsPage() {
         )}
       </div>
 
-      {totalPages > 1 && !loading && (
+      {totalPages > 1 && !loading && search.view !== "map" && (
         <div className="container-page mt-14 mb-20 flex items-center justify-center gap-2">
           <button
             type="button"
@@ -410,6 +410,7 @@ function FiltersBar({
                 baths: 0,
                 q: "",
                 sort: "featured",
+                view: search.view,
                 page: 1,
               }),
             })
@@ -420,7 +421,37 @@ function FiltersBar({
         </button>
       </div>
 
-      <div className="mt-4 flex items-center justify-end gap-3">
+      <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+        <div className="inline-flex border border-border">
+          <button
+            type="button"
+            onClick={() => update("view", "grid")}
+            aria-pressed={search.view === "grid"}
+            className={[
+              "inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.2em] transition-colors",
+              search.view === "grid"
+                ? "bg-foreground text-background"
+                : "bg-background hover:bg-secondary",
+            ].join(" ")}
+          >
+            <LayoutGrid size={14} /> Grid
+          </button>
+          <button
+            type="button"
+            onClick={() => update("view", "map")}
+            aria-pressed={search.view === "map"}
+            className={[
+              "inline-flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-[0.2em] border-l border-border transition-colors",
+              search.view === "map"
+                ? "bg-foreground text-background"
+                : "bg-background hover:bg-secondary",
+            ].join(" ")}
+          >
+            <MapIcon size={14} /> Map
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
         <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           Sort by
         </label>
