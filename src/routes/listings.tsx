@@ -2,9 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useEffect, useMemo, useState } from "react";
-import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { ListingsMap } from "@/components/site/ListingsMap";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ---------------- Search params ---------------- */
