@@ -7,6 +7,7 @@ import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as M
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
+import { ListingCard } from "@/components/site/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
