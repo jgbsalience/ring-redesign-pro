@@ -34,6 +34,9 @@ function SoldIndex() {
   const [suburb, setSuburb] = useState("All suburbs");
   const [type, setType] = useState("Any type");
   const [beds, setBeds] = useState("Any");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 16;
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const sold = useMemo(() => listings.filter((l) => l.status === "sold"), []);
 
