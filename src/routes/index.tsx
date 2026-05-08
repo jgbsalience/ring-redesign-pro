@@ -208,7 +208,7 @@ function LuxuryCarousel() {
 
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
-  const sold = listings.filter((l) => l.status === "sold");
+  const sold = listings.filter((l) => l.status === "sold").slice(0, 15);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);

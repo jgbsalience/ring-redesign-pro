@@ -1,19 +1,23 @@
-## What you selected
-The Welcome paragraph on the listing detail page (e.g. `/buy/5-stella-street`). It's rendered from `listing.description` at `src/components/site/ListingDetail.tsx:114`:
+## Goal
+Cap the homepage "Recent results" strip at 15 sold listings and have it auto-scroll horizontally every 4s — pausing on hover/touch so users can browse without it moving under them.
 
-```tsx
-<div className="mt-12 space-y-6 text-base md:text-lg leading-relaxed">
-  {listing.description.map((p, i) => <p key={i}>{p}</p>)}
-</div>
-```
+## Changes — `src/routes/index.tsx` only
 
-A global rule in `src/styles.css` already forces every `<p>` to Inter (`font-family: var(--font-sans) !important`), so this paragraph should already be Inter. If it still looks serif in the preview, the cause is browser font cache or the rule order — not the markup.
+1. **Cap to 15**
+   - Replace `const sold = listings.filter((l) => l.status === "sold");` with the same line followed by `.slice(0, 15)`.
 
-## Plan
-- Add `font-sans` directly to the description wrapper in `ListingDetail.tsx` so Inter is applied explicitly via a Tailwind class, in addition to the global rule. This guarantees the body copy renders in Inter regardless of any inherited or future style.
+2. **Auto-advance**
+   - Extract the strip into a small inline `RecentSalesStrip` component (keeps state local).
+   - Use a ref on the scroll container (the existing `overflow-x-auto` div).
+   - Every 4000ms: scroll right by one card width (`card.offsetWidth + gap`, where gap is 24px). When near the end (`scrollLeft + clientWidth >= scrollWidth - 8`), smooth-scroll back to `0` to loop.
+   - Pause when `paused` state is true; resume when false.
+   - Pause triggers: `onMouseEnter`, `onMouseLeave`, `onTouchStart`, `onTouchEnd`, `onFocusCapture`, `onBlurCapture`.
+   - Respect `prefers-reduced-motion`: skip the interval entirely.
+   - Use `behavior: "smooth"` on the scrollBy for the luxe feel matching the hero carousel.
 
-```tsx
-<div className="mt-12 space-y-6 text-base md:text-lg leading-relaxed font-sans">
-```
+3. **No layout/visual changes** — same card sizes, same spacing, same hover-lift; only behaviour and the cap change.
 
-That's the only change. No content edits, no other components touched.
+## Out of scope
+- No new dependencies (no embla/swiper).
+- Other carousels/strips untouched.
+- No backend changes.
