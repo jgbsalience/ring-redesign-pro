@@ -51,7 +51,7 @@ function LuxuryCarousel() {
 
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 4500);
+    const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 7000);
     return () => clearInterval(id);
   }, [paused]);
 
