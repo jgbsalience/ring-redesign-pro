@@ -19,6 +19,7 @@ import { Route as RentIndexRouteImport } from './routes/rent.index'
 import { Route as BuyIndexRouteImport } from './routes/buy.index'
 import { Route as TeamAgentIdRouteImport } from './routes/team.$agentId'
 import { Route as SoldListingIdRouteImport } from './routes/sold.$listingId'
+import { Route as SellSetToSellRouteImport } from './routes/sell.set-to-sell'
 import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
@@ -75,6 +76,11 @@ const SoldListingIdRoute = SoldListingIdRouteImport.update({
   path: '/sold/$listingId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SellSetToSellRoute = SellSetToSellRouteImport.update({
+  id: '/set-to-sell',
+  path: '/set-to-sell',
+  getParentRoute: () => SellRoute,
+} as any)
 const SellAppraisalRoute = SellAppraisalRouteImport.update({
   id: '/appraisal',
   path: '/appraisal',
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
+  '/sell/set-to-sell': typeof SellSetToSellRoute
   '/sold/$listingId': typeof SoldListingIdRoute
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy/': typeof BuyIndexRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
+  '/sell/set-to-sell': typeof SellSetToSellRoute
   '/sold/$listingId': typeof SoldListingIdRoute
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy': typeof BuyIndexRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
+  '/sell/set-to-sell': typeof SellSetToSellRoute
   '/sold/$listingId': typeof SoldListingIdRoute
   '/team/$agentId': typeof TeamAgentIdRoute
   '/buy/': typeof BuyIndexRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
+    | '/sell/set-to-sell'
     | '/sold/$listingId'
     | '/team/$agentId'
     | '/buy/'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
+    | '/sell/set-to-sell'
     | '/sold/$listingId'
     | '/team/$agentId'
     | '/buy'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
+    | '/sell/set-to-sell'
     | '/sold/$listingId'
     | '/team/$agentId'
     | '/buy/'
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoldListingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sell/set-to-sell': {
+      id: '/sell/set-to-sell'
+      path: '/set-to-sell'
+      fullPath: '/sell/set-to-sell'
+      preLoaderRoute: typeof SellSetToSellRouteImport
+      parentRoute: typeof SellRoute
+    }
     '/sell/appraisal': {
       id: '/sell/appraisal'
       path: '/appraisal'
@@ -338,10 +357,12 @@ declare module '@tanstack/react-router' {
 
 interface SellRouteChildren {
   SellAppraisalRoute: typeof SellAppraisalRoute
+  SellSetToSellRoute: typeof SellSetToSellRoute
 }
 
 const SellRouteChildren: SellRouteChildren = {
   SellAppraisalRoute: SellAppraisalRoute,
+  SellSetToSellRoute: SellSetToSellRoute,
 }
 
 const SellRouteWithChildren = SellRoute._addFileChildren(SellRouteChildren)
@@ -365,3 +386,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
