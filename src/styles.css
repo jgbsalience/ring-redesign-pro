@@ -127,6 +127,31 @@
     font-style: normal;
   }
 
+  /* Cinematic Ken Burns motion for the homepage hero carousel */
+  @keyframes kenburns-a {
+    0%   { transform: scale(1.04) translate3d(0%, 0%, 0); }
+    100% { transform: scale(1.12) translate3d(-1.5%, 1%, 0); }
+  }
+  @keyframes kenburns-b {
+    0%   { transform: scale(1.04) translate3d(0%, 0%, 0); }
+    100% { transform: scale(1.12) translate3d(1.5%, -1%, 0); }
+  }
+  .kenburns-base {
+    transform: scale(1.04);
+    will-change: transform, opacity;
+  }
+  .kenburns-active-a {
+    animation: kenburns-a 9000ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+  .kenburns-active-b {
+    animation: kenburns-b 9000ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kenburns-active-a,
+    .kenburns-active-b { animation: none; }
+    .kenburns-base { transform: none; }
+  }
+
   /* ---------------------------------------------------------------- */
   /* Brand-green focus ring for everything keyboard-reachable          */
   /* ---------------------------------------------------------------- */
