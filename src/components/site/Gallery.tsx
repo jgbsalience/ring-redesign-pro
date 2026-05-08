@@ -300,7 +300,9 @@ function Lightbox({
         onDoubleClick={() => (scale > 1 ? reset() : zoomBy(2))}
       >
         <img
-          src={images[active]}
+          src={cdnVariant(images[active], 3200, 2400)}
+          srcSet={buildCdnSrcSet(images[active])}
+          sizes="100vw"
           alt={alt}
           referrerPolicy="no-referrer"
           draggable={false}
