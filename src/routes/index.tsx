@@ -376,7 +376,7 @@ function HomePage() {
           {/* Search bar */}
           <div className="mt-14 reveal reveal-4 max-w-4xl">
             {/* Intent tabs */}
-            <div role="tablist" aria-label="Search type" className="inline-flex gap-px bg-white/15 backdrop-blur p-px">
+            <div role="tablist" aria-label="Search type" className="inline-flex gap-px bg-[var(--ringgreen)]/25 backdrop-blur p-px ring-1 ring-[var(--ringgreen)]/40">
               {([
                 { id: "buy", label: "For sale" },
                 { id: "rent", label: "For rent" },
@@ -393,8 +393,8 @@ function HomePage() {
                     className={[
                       "px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
                       active
-                        ? "bg-background text-foreground"
-                        : "text-white/85 hover:text-white hover:bg-white/10",
+                        ? "bg-[var(--ringgreen)] text-[var(--ink)]"
+                        : "text-white/85 hover:text-white hover:bg-[var(--ringgreen)]/30",
                     ].join(" ")}
                   >
                     {t.label}
