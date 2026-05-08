@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Bed, Bath, Car, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { SpecLine } from "@/components/site/SpecLine";
 
 type MapRow = {
   id: string;
