@@ -135,7 +135,7 @@ function SoldIndex() {
             </select>
             <select
               value={beds}
-              onChange={(e) => setBeds(e.target.value)}
+              onChange={(e) => update({ beds: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>Any</option>
