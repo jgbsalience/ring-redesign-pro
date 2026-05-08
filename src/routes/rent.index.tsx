@@ -19,6 +19,7 @@ const RENT_SLIDES = (() => {
 })();
 
 export const Route = createFileRoute("/rent/")({
+  validateSearch: zodValidator(listingsSearchSchema),
   head: () => ({
     meta: [
       { title: "Rentals — Ring Real Estate Adelaide" },
