@@ -152,6 +152,16 @@
     .kenburns-base { transform: none; }
   }
 
+  /* Editorial dark scrim for image overlays (listing cards, hero captions) */
+  .editorial-scrim {
+    background-image: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.42) 38%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
   /* ---------------------------------------------------------------- */
   /* Brand-green focus ring for everything keyboard-reachable          */
   /* ---------------------------------------------------------------- */

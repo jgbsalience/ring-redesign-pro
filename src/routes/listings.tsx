@@ -3,10 +3,11 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useEffect, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Search, Bed, Bath, Car, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon, ArrowDown } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon, ArrowDown } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
+import { ListingCard } from "@/components/site/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
@@ -315,9 +316,24 @@ function ListingsPage() {
               {search.view === "map" ? (
                 <ListingsMap rows={rows} />
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {rows.map((r) => (
-                    <ListingDbCard key={r.id} r={r} />
+                    <ListingCard
+                      key={r.id}
+                      l={{
+                        id: r.id,
+                        status: r.status,
+                        address: r.address,
+                        suburb: r.suburb,
+                        state: r.state,
+                        price: r.price,
+                        beds: r.beds,
+                        baths: r.baths,
+                        cars: r.cars,
+                        hero: r.hero,
+                        featured: r.featured,
+                      }}
+                    />
                   ))}
                 </div>
               )}
@@ -693,74 +709,3 @@ function formatShortPrice(n: number): string {
   return `$${n}`;
 }
 
-/* ---------------- Card ---------------- */
-
-function ListingDbCard({ r }: { r: Row }) {
-  const to =
-    r.status === "for-rent" || r.status === "leased"
-      ? "/rent/$listingId"
-      : r.status === "sold"
-      ? "/sold/$listingId"
-      : "/buy/$listingId";
-
-  return (
-    <Link
-      to={to}
-      params={{ listingId: r.id }}
-      className="group block hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
-    >
-      <div className="img-zoom relative aspect-[4/3] bg-muted overflow-hidden">
-        {r.hero ? (
-          <img
-            src={r.hero}
-            alt={r.address}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        ) : null}
-        <div className="absolute top-3 left-3 flex gap-2">
-          <span className="text-[10px] uppercase tracking-[0.2em] bg-background/95 text-foreground px-2.5 py-1">
-            {r.status === "for-sale"
-              ? "For Sale"
-              : r.status === "for-rent"
-              ? "For Rent"
-              : r.status === "sold"
-              ? "Sold"
-              : "Leased"}
-          </span>
-          {r.featured && (
-            <span className="text-[10px] uppercase tracking-[0.2em] bg-[var(--ringgreen)] text-[var(--ink)] px-2.5 py-1">
-              Featured
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="pt-5 pb-2">
-        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          {r.suburb} · {r.state}
-        </div>
-        <h3 className="font-serif text-xl md:text-[1.4rem] mt-2 leading-snug group-hover:text-[var(--ringgreen)] transition-colors">
-          {r.address}
-        </h3>
-        <div className="mt-3 flex items-center justify-between">
-          <div className="text-sm font-medium">{r.price}</div>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Bed size={14} />
-              {r.beds}
-            </span>
-            <span className="flex items-center gap-1">
-              <Bath size={14} />
-              {r.baths}
-            </span>
-            <span className="flex items-center gap-1">
-              <Car size={14} />
-              {r.cars}
-            </span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
