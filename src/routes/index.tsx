@@ -166,7 +166,7 @@ function LuxuryCarousel() {
             <div
               key={s.id}
               aria-hidden={idx !== i}
-              className={`absolute inset-0 transition-all duration-700 ease-out ${
+              className={`absolute inset-0 transition-all duration-[900ms] [transition-timing-function:cubic-bezier(0.22,0.61,0.36,1)] ${
                 idx === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
             >
