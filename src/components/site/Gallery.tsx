@@ -1,6 +1,26 @@
 import { useEffect, useState, useCallback, useRef, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
 import { ChevronLeft, ChevronRight, Expand, ZoomIn, ZoomOut, RotateCcw, X } from "lucide-react";
 
+function buildCdnSrcSet(url: string): string | undefined {
+  if (!/cp-rect-\d+x\d+\.[a-z]+$/i.test(url)) return undefined;
+  const v = (w: number, h: number) =>
+    url.replace(/cp-rect-\d+x\d+\.([a-z]+)$/i, (_m, ext) => `cp-rect-${w}x${h}.${ext}`);
+  return [
+    `${v(960, 720)} 960w`,
+    `${v(1280, 960)} 1280w`,
+    `${v(1600, 1200)} 1600w`,
+    `${v(1920, 1440)} 1920w`,
+    `${v(2400, 1800)} 2400w`,
+    `${v(3200, 2400)} 3200w`,
+    `${v(4000, 3000)} 4000w`,
+  ].join(", ");
+}
+function cdnVariant(url: string, w: number, h: number): string {
+  return /cp-rect-\d+x\d+\.[a-z]+$/i.test(url)
+    ? url.replace(/cp-rect-\d+x\d+\.([a-z]+)$/i, (_m, ext) => `cp-rect-${w}x${h}.${ext}`)
+    : url;
+}
+
 export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
@@ -50,7 +70,9 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         onPointerUp={onMainPointerUp}
       >
         <img
-          src={images[active]}
+          src={cdnVariant(images[active], 1920, 1440)}
+          srcSet={buildCdnSrcSet(images[active])}
+          sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
           alt={alt}
           referrerPolicy="no-referrer"
           loading="eager"
@@ -278,7 +300,9 @@ function Lightbox({
         onDoubleClick={() => (scale > 1 ? reset() : zoomBy(2))}
       >
         <img
-          src={images[active]}
+          src={cdnVariant(images[active], 3200, 2400)}
+          srcSet={buildCdnSrcSet(images[active])}
+          sizes="100vw"
           alt={alt}
           referrerPolicy="no-referrer"
           draggable={false}

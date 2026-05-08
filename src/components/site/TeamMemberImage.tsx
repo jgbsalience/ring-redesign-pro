@@ -79,7 +79,7 @@ const baseWidthFor: Record<AnySize, number> = {
  * Pixel widths offered by the ring-sa.com.au CDN for cp-rect-* images.
  * Heights are derived from the original 4:3 ratio.
  */
-const CDN_WIDTHS = [200, 400, 600, 800, 1200, 1600] as const;
+const CDN_WIDTHS = [200, 400, 600, 800, 1200, 1600, 2000, 2400] as const;
 
 function withWidth(url: string, width: number): string | null {
   const match = url.match(/cp-rect-(\d+)x(\d+)\.([a-z]+)$/i);
