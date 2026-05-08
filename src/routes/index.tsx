@@ -391,26 +391,8 @@ function HomePage() {
             <div className="mt-6 font-serif italic text-[var(--ringgreen)] text-3xl">
               Integrity.
             </div>
-            <div
-              className="mt-10 relative overflow-hidden bg-muted"
-              style={{ aspectRatio: "4 / 5" }}
-            >
-              <img
-                src="https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1200x900.jpg"
-                srcSet={[400, 600, 800, 1200, 1600]
-                  .map((w) => `https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-${w}x${Math.round((w*3)/4)}.jpg ${w}w`)
-                  .join(", ")}
-                sizes="(min-width: 768px) 33vw, 90vw"
-                alt="58 Brighton Parade, Blackwood — a recent Ring residence"
-                width={1200}
-                height={1500}
-                referrerPolicy="no-referrer"
-                loading="lazy"
-                decoding="async"
-                draggable={false}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
+            <LuxuryCarousel />
+
           </div>
           <div className="md:col-span-7 md:col-start-6">
             <h2 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight">
