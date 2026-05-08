@@ -33,6 +33,60 @@ const HERO_SLIDES = (() => {
 })();
 const HERO = HERO_SLIDES[0]?.hero ?? "";
 
+const LUXURY_SLIDES = [
+  { id: "4-college", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg", alt: "4 College Avenue, Bellevue Heights" },
+  { id: "58-brighton", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1920x1440.pg", alt: "58 Brighton Parade, Blackwood" },
+  { id: "1-menura", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/b0c08cc5-7628-42b1-b77f-c17b375ff327/cp-rect-1920x1440.pg", alt: "1 Menura Avenue, Glenalta" },
+  { id: "16-gannet", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/dc3fcad6-baa5-47e6-9a57-c1949d40ecc2/cp-rect-1920x1440.pg", alt: "16 Gannet Avenue, Glenalta" },
+  { id: "9-esplanade", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/e258eebb-0add-4cb9-99ba-54a318f272b0/cp-rect-1920x1440.pg", alt: "9 Esplanade, Sellicks Beach" },
+];
+
+function LuxuryCarousel() {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 4500);
+    return () => clearInterval(id);
+  }, [paused]);
+  return (
+    <div
+      className="mt-10 relative overflow-hidden bg-muted group"
+      style={{ aspectRatio: "4 / 5" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      aria-roledescription="carousel"
+      aria-label="Recent Ring residences"
+    >
+      {LUXURY_SLIDES.map((s, idx) => (
+        <img
+          key={s.id}
+          src={s.hero}
+          alt={s.alt}
+          width={1200}
+          height={1500}
+          referrerPolicy="no-referrer"
+          loading={idx === 0 ? "eager" : "lazy"}
+          decoding="async"
+          draggable={false}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${idx === i ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+        {LUXURY_SLIDES.map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            aria-label={`Show image ${idx + 1}`}
+            onClick={() => setI(idx)}
+            className={`h-1 transition-all ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
   const sold = listings.filter((l) => l.status === "sold");
