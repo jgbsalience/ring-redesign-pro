@@ -46,7 +46,7 @@ function SoldIndex() {
   const update = (patch: Partial<typeof search>, resetPage = true) => {
     navigate({
       to: "/sold",
-      search: (prev) => ({ ...prev, ...patch, ...(resetPage ? { page: 1 } : {}) }),
+      search: (prev: typeof search) => ({ ...prev, ...patch, ...(resetPage ? { page: 1 } : {}) }),
       replace: true,
     });
   };
