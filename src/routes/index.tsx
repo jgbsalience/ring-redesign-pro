@@ -406,7 +406,7 @@ function HomePage() {
             <form
               role="search"
               onSubmit={(e) => { e.preventDefault(); setSuggestOpen(false); runSearch(); }}
-              className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)]"
+              className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] ring-1 ring-[var(--ringgreen)]/50 border-t-2 border-[var(--ringgreen)]"
             >
               {/* Query */}
               <div className="relative">
