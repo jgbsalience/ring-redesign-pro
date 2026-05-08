@@ -4,6 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
+import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { JsonLd } from "@/components/site/JsonLd";
 import { listings, agents, testimonials } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Search, ChevronDown, MapPin, BedDouble } from "lucide-react";
@@ -793,6 +794,14 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      <PortfolioCarousel
+        items={[
+          ...listings.filter((l) => l.featured && l.hero),
+          ...listings.filter((l) => l.status === "for-sale" && l.hero && !l.featured),
+          ...listings.filter((l) => l.status === "sold" && l.hero),
+        ]}
+      />
 
       <Footer />
     </div>
