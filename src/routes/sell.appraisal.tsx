@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/sell/appraisal")({
   head: () => ({
@@ -24,17 +27,66 @@ const INTERESTS = [
   "I want to know the best time to sell",
 ];
 
+const schema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z.string().min(6, "Enter a valid phone number"),
+  email: z.string().email("Enter a valid email address"),
+  propertyAddress: z.string().optional(),
+  suburb: z.string().optional(),
+  propertyType: z.string().min(1),
+  interests: z.array(z.string()),
+  comments: z.string().optional(),
+  website: z.literal("").optional(),
+});
+
+type FormValues = z.infer<typeof schema>;
+
 function AppraisalPage() {
-  const [interests, setInterests] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const toggle = (v: string) =>
-    setInterests((cur) => (cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]));
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      propertyType: "House",
+      interests: [],
+      website: "",
+    },
+  });
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  const selectedInterests = watch("interests");
+
+  const toggleInterest = (v: string) => {
+    const next = selectedInterests.includes(v)
+      ? selectedInterests.filter((x) => x !== v)
+      : [...selectedInterests, v];
+    setValue("interests", next);
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    setServerError(null);
+    try {
+      const res = await fetch("/api/appraisal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error ?? "Something went wrong");
+      }
+      setSubmitted(true);
+      if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setServerError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -85,74 +137,131 @@ function AppraisalPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={onSubmit} className="space-y-7">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-7" noValidate>
+                {/* Honeypot — hidden from real users */}
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  autoComplete="off"
+                  className="hidden"
+                  {...register("website")}
+                />
+
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Name" required placeholder="John Smith" />
-                  <Field label="Phone" type="tel" required placeholder="0400 000 000" />
+                  <Field label="Name" required error={errors.name?.message}>
+                    <input
+                      type="text"
+                      autoComplete="name"
+                      placeholder="John Smith"
+                      className={inputCls(!!errors.name)}
+                      {...register("name")}
+                    />
+                  </Field>
+                  <Field label="Phone" required error={errors.phone?.message}>
+                    <input
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="0400 000 000"
+                      className={inputCls(!!errors.phone)}
+                      {...register("phone")}
+                    />
+                  </Field>
                 </div>
+
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Email" type="email" required placeholder="johnsmith@somewhere.com.au" />
-                  <Field label="Property address" placeholder="Street, suburb" />
+                  <Field label="Email" required error={errors.email?.message}>
+                    <input
+                      type="email"
+                      autoComplete="email"
+                      placeholder="johnsmith@somewhere.com.au"
+                      className={inputCls(!!errors.email)}
+                      {...register("email")}
+                    />
+                  </Field>
+                  <Field label="Property address">
+                    <input
+                      type="text"
+                      placeholder="Street, suburb"
+                      className={inputCls(false)}
+                      {...register("propertyAddress")}
+                    />
+                  </Field>
                 </div>
+
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Suburb" />
-                  <div>
-                    <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                      Property type
-                    </label>
-                    <select className="mt-2 w-full bg-background border border-border rounded-[2px] px-4 py-3 text-sm focus:border-[var(--ringgreen-deep)] outline-none transition-colors">
+                  <Field label="Suburb">
+                    <input
+                      type="text"
+                      className={inputCls(false)}
+                      {...register("suburb")}
+                    />
+                  </Field>
+                  <Field label="Property type">
+                    <select
+                      className="mt-2 w-full bg-background border border-border rounded-[2px] px-4 py-3 text-sm focus:border-[var(--ringgreen-deep)] outline-none transition-colors"
+                      {...register("propertyType")}
+                    >
                       <option>House</option>
                       <option>Townhouse</option>
                       <option>Apartment</option>
                       <option>Land</option>
                       <option>Other</option>
                     </select>
-                  </div>
+                  </Field>
                 </div>
 
                 <div className="pt-2">
                   <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                     Interested in <span className="text-[var(--ringgreen-deep)]">*</span>
                   </label>
-                  <div className="mt-3 grid gap-2">
-                    {INTERESTS.map((v) => {
-                      const on = interests.includes(v);
-                      return (
-                        <button
-                          key={v}
-                          type="button"
-                          onClick={() => toggle(v)}
-                          className={`group flex items-start gap-3 text-left px-4 py-3 border rounded-[2px] transition-all ${
-                            on
-                              ? "border-[var(--ringgreen-deep)] bg-[var(--ringgreen-tint)]"
-                              : "border-border hover:border-foreground/40"
-                          }`}
-                        >
-                          <span
-                            className={`mt-0.5 flex items-center justify-center w-4 h-4 border rounded-[2px] ${
-                              on
-                                ? "bg-[var(--ringgreen-deep)] border-[var(--ringgreen-deep)] text-white"
-                                : "border-foreground/40"
-                            }`}
-                          >
-                            {on && <Check size={12} strokeWidth={3} />}
-                          </span>
-                          <span className="text-sm leading-snug">{v}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <Controller
+                    control={control}
+                    name="interests"
+                    render={() => (
+                      <div className="mt-3 grid gap-2">
+                        {INTERESTS.map((v) => {
+                          const on = selectedInterests.includes(v);
+                          return (
+                            <button
+                              key={v}
+                              type="button"
+                              onClick={() => toggleInterest(v)}
+                              className={`group flex items-start gap-3 text-left px-4 py-3 border rounded-[2px] transition-all ${
+                                on
+                                  ? "border-[var(--ringgreen-deep)] bg-[var(--ringgreen-tint)]"
+                                  : "border-border hover:border-foreground/40"
+                              }`}
+                            >
+                              <span
+                                className={`mt-0.5 flex items-center justify-center w-4 h-4 border rounded-[2px] shrink-0 ${
+                                  on
+                                    ? "bg-[var(--ringgreen-deep)] border-[var(--ringgreen-deep)] text-white"
+                                    : "border-foreground/40"
+                                }`}
+                              >
+                                {on && <Check size={12} strokeWidth={3} />}
+                              </span>
+                              <span className="text-sm leading-snug">{v}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  />
                 </div>
 
-                <div>
-                  <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Comments
-                  </label>
+                <Field label="Comments">
                   <textarea
                     placeholder="Anything we should know?"
                     className="mt-2 w-full bg-background border border-border rounded-[2px] px-4 py-3 text-sm min-h-32 focus:border-[var(--ringgreen-deep)] outline-none transition-colors resize-y"
+                    {...register("comments")}
                   />
-                </div>
+                </Field>
+
+                {serverError && (
+                  <p className="text-sm text-red-600 text-center">{serverError}</p>
+                )}
 
                 <p className="text-xs text-muted-foreground leading-relaxed text-center">
                   Your details are kept strictly confidential and used only to respond to this enquiry.
@@ -161,9 +270,14 @@ function AppraisalPage() {
                 <div className="flex justify-center pt-2">
                   <button
                     type="submit"
-                    className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-10 py-4 bg-[var(--ringgreen-deep)] text-white text-xs uppercase tracking-[0.22em] rounded-[2px] hover:opacity-90 transition-opacity"
+                    disabled={isSubmitting}
+                    className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-10 py-4 bg-[var(--ringgreen-deep)] text-white text-xs uppercase tracking-[0.22em] rounded-[2px] hover:opacity-90 disabled:opacity-50 transition-opacity"
                   >
-                    Request appraisal <ArrowRight size={14} />
+                    {isSubmitting ? (
+                      <><Loader2 size={14} className="animate-spin" /> Sending…</>
+                    ) : (
+                      <>Request appraisal <ArrowRight size={14} /></>
+                    )}
                   </button>
                 </div>
               </form>
@@ -197,8 +311,8 @@ function AppraisalPage() {
       <section className="bg-[var(--ink)] text-white">
         <div className="container-page py-16 md:py-24 grid md:grid-cols-12 gap-10 items-end">
           <blockquote className="md:col-span-8 font-serif text-3xl md:text-4xl leading-[1.2] tracking-tight">
-            <span className="text-[var(--ringgreen)]">“</span>We will walk the property,
-            ask questions, and listen.<span className="text-[var(--ringgreen)]">”</span>
+            <span className="text-[var(--ringgreen)]">"</span>We will walk the property,
+            ask questions, and listen.<span className="text-[var(--ringgreen)]">"</span>
           </blockquote>
           <div className="md:col-span-4 space-y-3 text-sm">
             <div className="text-white/60 uppercase tracking-[0.22em] text-[10px]">Speak with us directly</div>
@@ -217,28 +331,32 @@ function AppraisalPage() {
   );
 }
 
+function inputCls(hasError: boolean) {
+  return `mt-2 w-full bg-background border rounded-[2px] px-4 py-3 text-sm placeholder:text-muted-foreground/50 outline-none transition-colors ${
+    hasError
+      ? "border-red-500 focus:border-red-500"
+      : "border-border focus:border-[var(--ringgreen-deep)]"
+  }`;
+}
+
 function Field({
   label,
-  type = "text",
   required = false,
-  placeholder,
+  error,
+  children,
 }: {
   label: string;
-  type?: string;
   required?: boolean;
-  placeholder?: string;
+  error?: string;
+  children: React.ReactNode;
 }) {
   return (
     <div>
       <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         {label} {required && <span className="text-[var(--ringgreen-deep)]">*</span>}
       </label>
-      <input
-        type={type}
-        required={required}
-        placeholder={placeholder}
-        className="mt-2 w-full bg-background border border-border rounded-[2px] px-4 py-3 text-sm placeholder:text-muted-foreground/50 focus:border-[var(--ringgreen-deep)] outline-none transition-colors"
-      />
+      {children}
+      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
   );
 }

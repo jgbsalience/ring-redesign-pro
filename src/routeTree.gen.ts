@@ -23,6 +23,8 @@ import { Route as SellSetToSellRouteImport } from './routes/sell.set-to-sell'
 import { Route as SellAppraisalRouteImport } from './routes/sell.appraisal'
 import { Route as RentListingIdRouteImport } from './routes/rent.$listingId'
 import { Route as BuyListingIdRouteImport } from './routes/buy.$listingId'
+import { Route as ApiContactRouteImport } from './routes/api/contact'
+import { Route as ApiAppraisalRouteImport } from './routes/api/appraisal'
 import { Route as ApiPublicJobsSyncListingsRouteImport } from './routes/api/public/jobs/sync-listings'
 import { Route as ApiPublicJobsGeocodeListingsRouteImport } from './routes/api/public/jobs/geocode-listings'
 
@@ -96,6 +98,16 @@ const BuyListingIdRoute = BuyListingIdRouteImport.update({
   path: '/buy/$listingId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiContactRoute = ApiContactRouteImport.update({
+  id: '/api/contact',
+  path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAppraisalRoute = ApiAppraisalRouteImport.update({
+  id: '/api/appraisal',
+  path: '/api/appraisal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsSyncListingsRoute =
   ApiPublicJobsSyncListingsRouteImport.update({
     id: '/api/public/jobs/sync-listings',
@@ -115,6 +127,8 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
+  '/api/appraisal': typeof ApiAppraisalRoute
+  '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
@@ -133,6 +147,8 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
+  '/api/appraisal': typeof ApiAppraisalRoute
+  '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
@@ -152,6 +168,8 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
   '/sell': typeof SellRouteWithChildren
+  '/api/appraisal': typeof ApiAppraisalRoute
+  '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
   '/rent/$listingId': typeof RentListingIdRoute
   '/sell/appraisal': typeof SellAppraisalRoute
@@ -172,6 +190,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/listings'
     | '/sell'
+    | '/api/appraisal'
+    | '/api/contact'
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
@@ -190,6 +210,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/listings'
     | '/sell'
+    | '/api/appraisal'
+    | '/api/contact'
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
@@ -208,6 +230,8 @@ export interface FileRouteTypes {
     | '/contact'
     | '/listings'
     | '/sell'
+    | '/api/appraisal'
+    | '/api/contact'
     | '/buy/$listingId'
     | '/rent/$listingId'
     | '/sell/appraisal'
@@ -227,6 +251,8 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ListingsRoute: typeof ListingsRoute
   SellRoute: typeof SellRouteWithChildren
+  ApiAppraisalRoute: typeof ApiAppraisalRoute
+  ApiContactRoute: typeof ApiContactRoute
   BuyListingIdRoute: typeof BuyListingIdRoute
   RentListingIdRoute: typeof RentListingIdRoute
   SoldListingIdRoute: typeof SoldListingIdRoute
@@ -338,6 +364,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuyListingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/contact': {
+      id: '/api/contact'
+      path: '/api/contact'
+      fullPath: '/api/contact'
+      preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/appraisal': {
+      id: '/api/appraisal'
+      path: '/api/appraisal'
+      fullPath: '/api/appraisal'
+      preLoaderRoute: typeof ApiAppraisalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/sync-listings': {
       id: '/api/public/jobs/sync-listings'
       path: '/api/public/jobs/sync-listings'
@@ -373,6 +413,8 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ListingsRoute: ListingsRoute,
   SellRoute: SellRouteWithChildren,
+  ApiAppraisalRoute: ApiAppraisalRoute,
+  ApiContactRoute: ApiContactRoute,
   BuyListingIdRoute: BuyListingIdRoute,
   RentListingIdRoute: RentListingIdRoute,
   SoldListingIdRoute: SoldListingIdRoute,
@@ -386,3 +428,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
