@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { Listing } from "@/data/site";
-import { Bed, Bath, Car } from "lucide-react";
+import { SpecLine } from "@/components/site/SpecLine";
 
 export type ListingCardData = {
   id: string;
