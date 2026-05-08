@@ -213,9 +213,7 @@ function AboutPage() {
             slow when slowness produces the better result.
           </p>
           <p className="font-serif italic text-2xl md:text-3xl text-[var(--ringgreen)] leading-snug">
-            "We sell fewer homes than the franchises around us — and we sell
-            them better, by hand, by name, with the patience that good
-            outcomes require."
+            Our working passion
           </p>
         </div>
       </section>
