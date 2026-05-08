@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -6,11 +7,13 @@ import { ListingsBrowser } from "@/components/site/ListingsBrowser";
 import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
+import { listingsSearchSchema } from "@/lib/listingsSearch";
 import { useMemo, useState } from "react";
 
 const BUY_SLIDES = listings.filter((l) => l.status === "for-sale" && l.hero).slice(0, 6);
 
 export const Route = createFileRoute("/buy/")({
+  validateSearch: zodValidator(listingsSearchSchema),
   head: () => ({
     meta: [
       { title: "Properties — Ring Real Estate Adelaide" },
