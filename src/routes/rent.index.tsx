@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsBrowser } from "@/components/site/ListingsBrowser";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/rent/")({
       { property: "og:title", content: "Rentals — Ring Real Estate" },
       { property: "og:description", content: "Quality rentals across metropolitan Adelaide." },
     ],
+    links: canonical("/rent"),
   }),
   component: RentPage,
 });

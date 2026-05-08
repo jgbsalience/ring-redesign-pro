@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { BannerHero } from "@/components/site/BannerHero";
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/sell")({
       { property: "og:title", content: "Sell with Ring Real Estate" },
       { property: "og:description", content: "Three deliberate methods of sale. One promise: integrity." },
     ],
+    links: canonical("/sell"),
   }),
   component: SellPage,
 });

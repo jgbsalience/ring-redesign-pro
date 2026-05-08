@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/sold/")({
           "Recent results across Blackwood, Coromandel Valley, Bellevue Heights and beyond.",
       },
     ],
+    links: canonical("/sold"),
   }),
   component: SoldIndex,
 });

@@ -4,8 +4,10 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
+import { JsonLd } from "@/components/site/JsonLd";
 import { listings, agents, testimonials } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Search, ChevronDown, MapPin, BedDouble } from "lucide-react";
+import { canonical, localBusinessSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,6 +18,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Distinguished homes across metropolitan Adelaide. Since 1978." },
       { property: "og:image", content: listings[0]?.hero ?? "" },
     ],
+    links: canonical("/"),
   }),
   component: HomePage,
 });
@@ -290,6 +293,7 @@ function HomePage() {
 
   return (
     <div className="bg-background text-foreground">
+      <JsonLd schema={localBusinessSchema} />
       <Header overlay />
 
       {/* HERO */}

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/sell/appraisal")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/sell/appraisal")({
       { property: "og:title", content: "Request an appraisal — Ring Real Estate" },
       { property: "og:description", content: "Confidential. No obligation. Senior agent only." },
     ],
+    links: canonical("/sell/appraisal"),
   }),
   component: AppraisalPage,
 });

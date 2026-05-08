@@ -1,6 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getListing, type Listing } from "@/data/site";
 import { ListingDetailView } from "@/components/site/ListingDetail";
+import { JsonLd } from "@/components/site/JsonLd";
+import { canonical, listingSchema, breadcrumbSchema, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/sold/$listingId")({
   loader: ({ params }) => {
@@ -18,6 +20,7 @@ export const Route = createFileRoute("/sold/$listingId")({
           { property: "og:image", content: loaderData.listing.hero },
         ]
       : [],
+    links: loaderData ? canonical(`/sold/${loaderData.listing.id}`) : [],
   }),
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center">
@@ -32,6 +35,17 @@ export const Route = createFileRoute("/sold/$listingId")({
   ),
   component: () => {
     const { listing } = Route.useLoaderData() as { listing: Listing };
-    return <ListingDetailView listing={listing} />;
+    const path = `/sold/${listing.id}`;
+    return (
+      <>
+        <JsonLd schema={listingSchema(listing, path)} />
+        <JsonLd schema={breadcrumbSchema([
+          { name: "Home", url: SITE_URL },
+          { name: "Sold", url: `${SITE_URL}/sold` },
+          { name: `${listing.address}, ${listing.suburb}`, url: `${SITE_URL}${path}` },
+        ])} />
+        <ListingDetailView listing={listing} />
+      </>
+    );
   },
 });

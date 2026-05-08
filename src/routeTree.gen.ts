@@ -9,9 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrustAccountRouteImport } from './routes/trust-account'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellRouteImport } from './routes/sell'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ListingsRouteImport } from './routes/listings'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ComplaintsRouteImport } from './routes/complaints'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SoldIndexRouteImport } from './routes/sold.index'
@@ -28,9 +32,24 @@ import { Route as ApiAppraisalRouteImport } from './routes/api/appraisal'
 import { Route as ApiPublicJobsSyncListingsRouteImport } from './routes/api/public/jobs/sync-listings'
 import { Route as ApiPublicJobsGeocodeListingsRouteImport } from './routes/api/public/jobs/geocode-listings'
 
+const TrustAccountRoute = TrustAccountRouteImport.update({
+  id: '/trust-account',
+  path: '/trust-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SellRoute = SellRouteImport.update({
   id: '/sell',
   path: '/sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListingsRoute = ListingsRouteImport.update({
@@ -41,6 +60,11 @@ const ListingsRoute = ListingsRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplaintsRoute = ComplaintsRouteImport.update({
+  id: '/complaints',
+  path: '/complaints',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -124,9 +148,13 @@ const ApiPublicJobsGeocodeListingsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trust-account': typeof TrustAccountRoute
   '/api/appraisal': typeof ApiAppraisalRoute
   '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
@@ -144,9 +172,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trust-account': typeof TrustAccountRoute
   '/api/appraisal': typeof ApiAppraisalRoute
   '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
@@ -165,9 +197,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/complaints': typeof ComplaintsRoute
   '/contact': typeof ContactRoute
   '/listings': typeof ListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trust-account': typeof TrustAccountRoute
   '/api/appraisal': typeof ApiAppraisalRoute
   '/api/contact': typeof ApiContactRoute
   '/buy/$listingId': typeof BuyListingIdRoute
@@ -187,9 +223,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/complaints'
     | '/contact'
     | '/listings'
+    | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
+    | '/trust-account'
     | '/api/appraisal'
     | '/api/contact'
     | '/buy/$listingId'
@@ -207,9 +247,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/complaints'
     | '/contact'
     | '/listings'
+    | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
+    | '/trust-account'
     | '/api/appraisal'
     | '/api/contact'
     | '/buy/$listingId'
@@ -227,9 +271,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/complaints'
     | '/contact'
     | '/listings'
+    | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
+    | '/trust-account'
     | '/api/appraisal'
     | '/api/contact'
     | '/buy/$listingId'
@@ -248,9 +296,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ComplaintsRoute: typeof ComplaintsRoute
   ContactRoute: typeof ContactRoute
   ListingsRoute: typeof ListingsRoute
+  PrivacyRoute: typeof PrivacyRoute
   SellRoute: typeof SellRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TrustAccountRoute: typeof TrustAccountRoute
   ApiAppraisalRoute: typeof ApiAppraisalRoute
   ApiContactRoute: typeof ApiContactRoute
   BuyListingIdRoute: typeof BuyListingIdRoute
@@ -266,11 +318,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trust-account': {
+      id: '/trust-account'
+      path: '/trust-account'
+      fullPath: '/trust-account'
+      preLoaderRoute: typeof TrustAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sell': {
       id: '/sell'
       path: '/sell'
       fullPath: '/sell'
       preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/listings': {
@@ -285,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complaints': {
+      id: '/complaints'
+      path: '/complaints'
+      fullPath: '/complaints'
+      preLoaderRoute: typeof ComplaintsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -410,9 +490,13 @@ const SellRouteWithChildren = SellRoute._addFileChildren(SellRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ComplaintsRoute: ComplaintsRoute,
   ContactRoute: ContactRoute,
   ListingsRoute: ListingsRoute,
+  PrivacyRoute: PrivacyRoute,
   SellRoute: SellRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TrustAccountRoute: TrustAccountRoute,
   ApiAppraisalRoute: ApiAppraisalRoute,
   ApiContactRoute: ApiContactRoute,
   BuyListingIdRoute: BuyListingIdRoute,

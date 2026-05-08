@@ -57,11 +57,12 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-page py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs opacity-60">
+          {/* TODO: Replace RLA 12345 with the real licence number before going live */}
           <div>© {new Date().getFullYear()} Ring Real Estate Pty Ltd · RLA 12345</div>
           <div className="flex gap-6">
-            <a href="#">Privacy</a>
-            <a href="#">Complaints</a>
-            <a href="#">Trust account</a>
+            <Link to="/privacy" className="hover:opacity-100 transition-opacity">Privacy</Link>
+            <Link to="/complaints" className="hover:opacity-100 transition-opacity">Complaints</Link>
+            <Link to="/trust-account" className="hover:opacity-100 transition-opacity">Trust account</Link>
           </div>
         </div>
       </div>

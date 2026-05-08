@@ -7,6 +7,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArrowRight, MapPin, Phone, Mail, Clock, Loader2 } from "lucide-react";
 import { listings } from "@/data/site";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/contact")({
       { property: "og:title", content: "Contact Ring Real Estate" },
       { property: "og:description", content: "Visit our Bellevue Heights office, or send us a message." },
     ],
+    links: canonical("/contact"),
   }),
   component: ContactPage,
 });
