@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { Listing } from "@/data/site";
-import { Bed, Bath, Car } from "lucide-react";
+import { SpecLine } from "@/components/site/SpecLine";
 
 export type ListingCardData = {
   id: string;
@@ -128,14 +128,19 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
         <div className={`font-serif leading-tight mt-1.5 ${s.title}`}>
           {l.address}
         </div>
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <div className={`font-medium text-[var(--ringgreen)] ${s.price}`}>{l.price}</div>
-          {s.showSpecs && (
-            <div className="flex items-center gap-3 text-xs text-white/80">
-              <span className="flex items-center gap-1"><Bed size={14} />{l.beds}</span>
-              <span className="flex items-center gap-1"><Bath size={14} />{l.baths}</span>
-              <span className="flex items-center gap-1"><Car size={14} />{l.cars}</span>
-            </div>
+        <div className="mt-2">
+          {s.showSpecs ? (
+            <SpecLine
+              price={l.price}
+              beds={l.beds}
+              baths={l.baths}
+              cars={l.cars}
+              tone="dark"
+              size="sm"
+              priceClassName={`font-medium text-[var(--ringgreen)] tabular-nums leading-tight ${s.price}`}
+            />
+          ) : (
+            <div className={`font-medium text-[var(--ringgreen)] tabular-nums ${s.price}`}>{l.price}</div>
           )}
         </div>
       </div>

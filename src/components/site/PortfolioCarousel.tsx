@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { Listing } from "@/data/site";
+import { SpecLine } from "@/components/site/SpecLine";
 
 function srcSetFor(hero: string) {
   if (!/cp-rect-\d+x\d+\.pg$/.test(hero)) return undefined;
@@ -138,18 +139,14 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
               <h3 className="font-serif text-3xl md:text-5xl lg:text-6xl mt-3 leading-[1.05] tracking-tight text-white group-hover:text-[var(--ringgreen)] transition-colors">
                 {current.address}
               </h3>
-              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-y-2 sm:gap-x-5 text-sm text-white/85">
-                <span className="text-[var(--ringgreen)] font-medium tabular-nums leading-tight">
-                  {current.price}
-                </span>
-                <span aria-hidden="true" className="hidden sm:inline opacity-40">|</span>
-                <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 tabular-nums leading-tight">
-                  <li><span className="font-medium text-white">{current.beds}</span> <span className="opacity-70">bed</span></li>
-                  <li aria-hidden="true" className="opacity-40">·</li>
-                  <li><span className="font-medium text-white">{current.baths}</span> <span className="opacity-70">bath</span></li>
-                  <li aria-hidden="true" className="opacity-40">·</li>
-                  <li><span className="font-medium text-white">{current.cars}</span> <span className="opacity-70">car</span></li>
-                </ul>
+              <div className="mt-4">
+                <SpecLine
+                  price={current.price}
+                  beds={current.beds}
+                  baths={current.baths}
+                  cars={current.cars}
+                  tone="dark"
+                />
               </div>
             </Link>
           </div>

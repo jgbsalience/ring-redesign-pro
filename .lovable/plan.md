@@ -1,57 +1,55 @@
-## Problem
-
-The homepage hero filter (intent tabs + suburb/keyword input + beds select + Search button) currently navigates to `/buy`, `/rent`, or `/sold` with query params like `?q=Blackwood&beds=3`. But those destination pages render `ListingsBrowser`, which only uses **local component state** — the URL params are ignored, so the user lands on an unfiltered grid. The filter looks functional but isn't.
-
 ## Goal
 
-When the user submits the homepage filter (or clicks a popular suburb chip / suggestion), they should land on the correct status page with the listings already filtered by their suburb/keyword and minimum beds, and the filter inputs on that page should reflect those values so they can refine further.
+Make every listing caption price + bed/bath/car render with the same layout, typography, and breakpoint behavior as the improved `PortfolioCarousel` caption: text labels (no icons), tabular numerals, bolder values, dot dividers, and price stacking above the specs on narrow widths.
+
+## Reference (already shipped on `PortfolioCarousel`)
+
+```
+[ringgreen price]   |   3 bed · 2 bath · 1 car
+```
+- `flex-col` on mobile → `sm:flex-row sm:items-center sm:flex-wrap`
+- Price: `text-[var(--ringgreen)] font-medium tabular-nums leading-tight`
+- Vertical bar divider hidden on mobile
+- Specs as a `<ul>` with `tabular-nums`, value bold + label muted, `·` between items
 
 ## Changes
 
-### 1. Validate search params on `/buy`, `/rent`, `/sold`
+### 1. New shared component `src/components/site/SpecLine.tsx`
 
-Add a shared zod schema (e.g. `src/lib/listingsSearch.ts`) used by all three routes:
+A tiny presentational component that takes `{ price, beds, baths, cars, tone }` and renders the carousel's spec layout. Two tones:
 
-```ts
-const listingsSearchSchema = z.object({
-  q: fallback(z.string(), "").default(""),
-  suburb: fallback(z.string(), "All suburbs").default("All suburbs"),
-  type: fallback(z.string(), "Any type").default("Any type"),
-  beds: fallback(z.string(), "Any").default("Any"),
-  sort: fallback(z.enum(["newest","price-desc","price-asc","beds-desc"]), "newest").default("newest"),
-  page: fallback(z.number().int().min(1), 1).default(1),
-});
-```
+- `tone="dark"` (default): white text on dark backgrounds (used on overlay captions and the carousel)
+- `tone="light"`: foreground text on light backgrounds (used on the map sidebar)
 
-Wire `validateSearch: zodValidator(listingsSearchSchema)` into each route's `createFileRoute` config.
+This guarantees one source of truth across all surfaces.
 
-### 2. Make `ListingsBrowser` URL-driven
+### 2. `src/components/site/ListingCard.tsx`
 
-Refactor `src/components/site/ListingsBrowser.tsx` so its filter state is the URL search params instead of `useState`:
+Replace the current overlay caption block (lines ~131–140) — which uses `Bed/Bath/Car` lucide icons — with `<SpecLine price={l.price} beds={l.beds} baths={l.baths} cars={l.cars} tone="dark" />`.
 
-- Accept a `routeId` (or use `useSearch({ strict: false })`) to read current params.
-- Replace each `setQuery / setSuburb / setType / setBeds / setSort / setPage` call with `navigate({ search: (prev) => ({ ...prev, ... }) })` (function form to preserve other params).
-- Drop the `useEffect` that resets `page` on filter change — instead reset `page: 1` inline whenever a filter changes.
-- Keep the same UI; only the state source changes.
+- Remove the `Bed`, `Bath`, `Car` lucide imports if they're no longer used elsewhere in the file.
+- Keep the `s.showSpecs` gate so the smallest card variant can still hide specs.
+- Keep the price color variable from `s.price` by passing a `priceClassName` override prop, so size-variant scales (sm/md/lg) still apply.
 
-### 3. Update homepage `runSearch`
+### 3. `src/components/site/PortfolioCarousel.tsx`
 
-In `src/routes/index.tsx`, change `runSearch` to send keys that match the new schema (it already sends `q` and `beds`; that's fine). Make sure beds is sent as a string matching the select options ("1".."5"). Also navigate using TanStack's typed `navigate({ to, search })` rather than `Object.fromEntries(URLSearchParams)` so types stay clean.
+Swap the inline price + specs JSX for `<SpecLine ... tone="dark" />` so it stays the canonical reference and we don't have two copies to drift.
 
-### 4. Buy/Rent/Sold pages
+### 4. `src/components/site/ListingsMap.tsx` (sidebar rows, lines ~213–229)
 
-- `/buy` keeps its local `status` tab state for switching between for-sale / for-rent / sold sub-views, but defaults `status` from a route param if the user landed via the homepage Sold/Rent intent (already handled because homepage routes Sold→`/sold` and Rent→`/rent`, so `/buy` only needs to honor `for-sale` by default — no change needed there).
-- `/rent` and `/sold` already pass a pre-filtered `source` to `ListingsBrowser`; they just need the new search schema on the route.
+Replace the icon-based price + Bed/Bath/Car row with `<SpecLine ... tone="light" size="sm" />`. This row is on a light surface, so labels use `text-muted-foreground` and values use `text-foreground`. Use a smaller `text-xs` size variant.
 
 ### 5. Verify
 
-- From the homepage, type "Blackwood", select "3+ beds", click Search → land on `/buy?q=Blackwood&beds=3` with results filtered and the inputs pre-populated.
-- Refreshing the destination URL preserves the filter state.
-- Changing a filter on the destination page updates the URL and the grid; back/forward navigation works.
-- The "Popular" suburb chips on the homepage navigate with `q={suburb}` and filter correctly.
+- `/buy`, `/rent`, `/sold` listing grids (3-up, 2-up, 1-up at all breakpoints) — price + specs align consistently, wrap cleanly on the narrowest card width.
+- Homepage featured grid uses ListingCard, so it inherits the fix.
+- Portfolio carousel still renders identically (now via SpecLine).
+- `/listings` map view sidebar — specs now use text labels instead of icons, aligned the same way.
+- No layout shift on hover/active states.
+- Listing detail page is intentionally untouched (it has its own large stat block with icons by design).
 
 ## Out of scope
 
-- No backend / data changes — listings still come from `src/data/site.ts`.
-- No design changes to the filter UI itself.
-- Min/max price isn't part of the homepage filter, so we won't add it now.
+- ListingDetail.tsx hero stats (different design pattern: large icons + labels).
+- Any data/business logic — purely presentation.
+- Pluralization (`bed` vs `beds`) — keep current singular labels for visual rhythm and to match the carousel.
