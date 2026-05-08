@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { Listing } from "@/data/site";
+import { SpecLine } from "@/components/site/SpecLine";
 
 function srcSetFor(hero: string) {
   if (!/cp-rect-\d+x\d+\.pg$/.test(hero)) return undefined;
