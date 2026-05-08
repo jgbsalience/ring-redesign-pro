@@ -32,7 +32,7 @@ function SellPage() {
       <BannerHero
         slides={SELL_SLIDES}
         kicker="Selling with Ring"
-        title={<>A campaign as<br /><span className="italic font-light">considered</span> as the home.</>}
+        title={<>Welcome to <span className="italic font-light">Ring Real Estate</span></>}
         subtitle="Photography by the people the architects use. Copy that reads like a magazine, not a brochure. Negotiation by a senior agent who has done this for two decades."
         cta={{ label: "Request an appraisal", to: "/contact" }}
       />
