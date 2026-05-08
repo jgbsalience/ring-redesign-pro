@@ -1,14 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { listings } from "@/data/site";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { listingsSearchSchema } from "@/lib/listingsSearch";
+import { useMemo, useRef } from "react";
 import { Search, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/sold/")({
+  validateSearch: zodValidator(listingsSearchSchema),
   head: () => ({
     meta: [
       { title: "Recently sold — Ring Real Estate Adelaide" },
@@ -30,13 +33,23 @@ export const Route = createFileRoute("/sold/")({
 });
 
 function SoldIndex() {
-  const [query, setQuery] = useState("");
-  const [suburb, setSuburb] = useState("All suburbs");
-  const [type, setType] = useState("Any type");
-  const [beds, setBeds] = useState("Any");
-  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+  const search = Route.useSearch();
+  const query = search.q;
+  const suburb = search.suburb;
+  const type = search.type;
+  const beds = search.beds;
+  const page = search.page;
   const PAGE_SIZE = 16;
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const update = (patch: Partial<typeof search>, resetPage = true) => {
+    navigate({
+      to: "/sold",
+      search: (prev: typeof search) => ({ ...prev, ...patch, ...(resetPage ? { page: 1 } : {}) }),
+      replace: true,
+    });
+  };
 
   const sold = useMemo(() => listings.filter((l) => l.status === "sold"), []);
 
@@ -59,16 +72,12 @@ function SoldIndex() {
     [sold]
   );
 
-  useEffect(() => {
-    setPage(1);
-  }, [query, suburb, type, beds]);
-
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const current = Math.min(page, totalPages);
   const pageItems = filtered.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const goToPage = (n: number) => {
-    setPage(n);
+    update({ page: n }, false);
     if (typeof window !== "undefined") {
       gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -97,14 +106,14 @@ function SoldIndex() {
               <Search size={16} className="opacity-50" />
               <input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => update({ q: e.target.value })}
                 placeholder="Suburb, address or postcode"
                 className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
               />
             </div>
             <select
               value={suburb}
-              onChange={(e) => setSuburb(e.target.value)}
+              onChange={(e) => update({ suburb: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>All suburbs</option>
@@ -114,7 +123,7 @@ function SoldIndex() {
             </select>
             <select
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => update({ type: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>Any type</option>
@@ -126,7 +135,7 @@ function SoldIndex() {
             </select>
             <select
               value={beds}
-              onChange={(e) => setBeds(e.target.value)}
+              onChange={(e) => update({ beds: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>Any</option>
