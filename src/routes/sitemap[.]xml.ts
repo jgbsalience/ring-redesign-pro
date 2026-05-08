@@ -29,12 +29,7 @@ function buildSitemap() {
   const staticUrls = STATIC_PAGES.map((p) => url(p.path, p.priority, p.changefreq));
 
   const listingUrls = listings.map((l) => {
-    const base =
-      l.status === "for-sale"
-        ? "/buy"
-        : l.status === "for-rent"
-          ? "/rent"
-          : "/sold";
+    const base = l.status === "for-sale" ? "/buy" : l.status === "for-rent" ? "/rent" : "/sold";
     const priority = l.status === "for-sale" || l.status === "for-rent" ? "0.8" : "0.5";
     return url(`${base}/${l.id}`, priority, "weekly");
   });

@@ -43,22 +43,25 @@ export const localBusinessSchema = {
   sameAs: [],
 };
 
-export function listingSchema(listing: {
-  id: string;
-  address: string;
-  suburb: string;
-  state: string;
-  postcode: string;
-  price: string;
-  beds: number;
-  baths: number;
-  cars: number;
-  hero: string;
-  gallery: string[];
-  headline: string;
-  status: string;
-  type: string;
-}, path: string) {
+export function listingSchema(
+  listing: {
+    id: string;
+    address: string;
+    suburb: string;
+    state: string;
+    postcode: string;
+    price: string;
+    beds: number;
+    baths: number;
+    cars: number;
+    hero: string;
+    gallery: string[];
+    headline: string;
+    status: string;
+    type: string;
+  },
+  path: string,
+) {
   const statusMap: Record<string, string> = {
     "for-sale": "ForSale",
     "for-rent": "ForRent",

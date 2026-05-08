@@ -1,4 +1,11 @@
-import { useEffect, useState, useCallback, useRef, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  type PointerEvent as RPointerEvent,
+  type WheelEvent as RWheelEvent,
+} from "react";
 import { ChevronLeft, ChevronRight, Expand, ZoomIn, ZoomOut, RotateCcw, X } from "lucide-react";
 
 function buildCdnSrcSet(url: string): string | undefined {
@@ -40,7 +47,8 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
     const dy = e.clientY - swipeStart.current.y;
     swipeStart.current = null;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) next(); else prev();
+      if (dx < 0) next();
+      else prev();
     }
   };
 
@@ -90,14 +98,20 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         {total > 1 && (
           <>
             <button
-              onClick={(e) => { e.stopPropagation(); prev(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                prev();
+              }}
               aria-label="Previous"
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft size={18} />
             </button>
             <button
-              onClick={(e) => { e.stopPropagation(); next(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
               aria-label="Next"
               className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/85 hover:bg-background w-11 h-11 flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity"
             >
@@ -119,11 +133,19 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
               onClick={() => setActive(i)}
               className={[
                 "aspect-[4/3] overflow-hidden bg-muted transition-all",
-                i === active ? "ring-2 ring-[var(--ringgreen)] opacity-100" : "opacity-60 hover:opacity-100",
+                i === active
+                  ? "ring-2 ring-[var(--ringgreen)] opacity-100"
+                  : "opacity-60 hover:opacity-100",
               ].join(" ")}
               aria-label={`Image ${i + 1}`}
             >
-              <img src={src} alt="" referrerPolicy="no-referrer" loading="lazy" className="w-full h-full object-cover" />
+              <img
+                src={src}
+                alt=""
+                referrerPolicy="no-referrer"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
             </button>
           ))}
         </div>
@@ -174,10 +196,16 @@ function Lightbox({
   const MIN = 1;
   const MAX = 5;
 
-  const reset = useCallback(() => { setScale(1); setTx(0); setTy(0); }, []);
+  const reset = useCallback(() => {
+    setScale(1);
+    setTx(0);
+    setTy(0);
+  }, []);
 
   // Reset zoom when changing image
-  useEffect(() => { reset(); }, [active, reset]);
+  useEffect(() => {
+    reset();
+  }, [active, reset]);
 
   const clampPan = (nx: number, ny: number, s: number) => {
     const el = containerRef.current;
@@ -195,7 +223,10 @@ function Lightbox({
   const zoomBy = (factor: number) => {
     setScale((prev) => {
       const n = Math.max(MIN, Math.min(MAX, prev * factor));
-      if (n === 1) { setTx(0); setTy(0); }
+      if (n === 1) {
+        setTx(0);
+        setTy(0);
+      }
       return n;
     });
   };
@@ -233,7 +264,8 @@ function Lightbox({
     const dy = e.clientY - last.current.y;
     last.current = { x: e.clientX, y: e.clientY };
     const n = clampPan(tx + dx, ty + dy, scale);
-    setTx(n.x); setTy(n.y);
+    setTx(n.x);
+    setTy(n.y);
   };
   const onPointerUp = (e: RPointerEvent<HTMLDivElement>) => {
     dragging.current = false;
@@ -242,7 +274,8 @@ function Lightbox({
       const dy = e.clientY - swipe.current.y;
       swipe.current = null;
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-        if (dx < 0) next(); else prev();
+        if (dx < 0) next();
+        else prev();
       }
     }
   };
@@ -250,7 +283,9 @@ function Lightbox({
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col animate-fade-in select-none">
       <div className="flex items-center justify-between px-5 md:px-8 py-4 text-white/80 text-[10px] uppercase tracking-[0.25em] z-10">
-        <span>{active + 1} / {total}</span>
+        <span>
+          {active + 1} / {total}
+        </span>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -260,7 +295,9 @@ function Lightbox({
           >
             <ZoomOut size={16} />
           </button>
-          <div className="w-12 text-center tabular-nums text-[11px] text-white/80">{Math.round(scale * 100)}%</div>
+          <div className="w-12 text-center tabular-nums text-[11px] text-white/80">
+            {Math.round(scale * 100)}%
+          </div>
           <button
             type="button"
             aria-label="Zoom in"
@@ -337,10 +374,17 @@ function Lightbox({
               onClick={() => setActive(i)}
               className={[
                 "h-16 w-24 shrink-0 overflow-hidden transition-opacity",
-                i === active ? "ring-2 ring-[var(--ringgreen)] opacity-100" : "opacity-50 hover:opacity-100",
+                i === active
+                  ? "ring-2 ring-[var(--ringgreen)] opacity-100"
+                  : "opacity-50 hover:opacity-100",
               ].join(" ")}
             >
-              <img src={src} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+              <img
+                src={src}
+                alt=""
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
             </button>
           ))}
         </div>

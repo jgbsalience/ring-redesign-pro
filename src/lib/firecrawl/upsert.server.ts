@@ -19,11 +19,7 @@
 
 import { createHash } from "node:crypto";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import {
-  mapFirecrawlBatch,
-  type FirecrawlDoc,
-  type ListingRow,
-} from "@/lib/firecrawl/mapper";
+import { mapFirecrawlBatch, type FirecrawlDoc, type ListingRow } from "@/lib/firecrawl/mapper";
 
 /* ------------------------------------------------------------------ */
 /* Fingerprinting                                                      */
@@ -79,12 +75,12 @@ function dedupeBatch(rows: ListingRow[]): ListingRow[] {
 /* ------------------------------------------------------------------ */
 
 export type UpsertReport = {
-  received: number;       // raw docs in
-  mapped: number;         // rows after mapping (dropped if no source_url)
-  unique: number;         // rows after in-batch dedupe
-  inserted: number;       // brand new source_urls
-  updated: number;        // changed fingerprint
-  skipped: number;        // unchanged
+  received: number; // raw docs in
+  mapped: number; // rows after mapping (dropped if no source_url)
+  unique: number; // rows after in-batch dedupe
+  inserted: number; // brand new source_urls
+  updated: number; // changed fingerprint
+  skipped: number; // unchanged
   errors: { source_url: string; error: string }[];
 };
 
@@ -193,9 +189,7 @@ export async function upsertFirecrawlListings(
       .eq("status", opts.pruneMissingForStatus);
 
     if (!staleErr && stale) {
-      const missing = stale
-        .filter((r) => !seen.has(r.source_url))
-        .map((r) => r.source_url);
+      const missing = stale.filter((r) => !seen.has(r.source_url)).map((r) => r.source_url);
 
       if (missing.length > 0) {
         const newStatus = opts.pruneMissingForStatus === "for-rent" ? "leased" : "sold";

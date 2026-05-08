@@ -3,7 +3,14 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { useEffect, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Search, ChevronLeft, ChevronRight, LayoutGrid, Map as MapIcon, ArrowDown } from "lucide-react";
+import {
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  Map as MapIcon,
+  ArrowDown,
+} from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
@@ -108,9 +115,7 @@ async function fetchListings(search: SearchParams): Promise<{ rows: Row[]; count
     .in("status", dbStatuses);
 
   if (search.sort === "featured") {
-    query = query
-      .order("featured", { ascending: false })
-      .order("scraped_at", { ascending: false });
+    query = query.order("featured", { ascending: false }).order("scraped_at", { ascending: false });
   } else if (search.sort === "newest") {
     query = query.order("scraped_at", { ascending: false });
   } else if (search.sort === "price-asc") {
@@ -197,10 +202,10 @@ function ListingsPage() {
   useEffect(() => {
     const el = resultsRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      ([entry]) => setResultsOffscreen(!entry.isIntersecting),
-      { rootMargin: "-80px 0px 0px 0px", threshold: 0 },
-    );
+    const io = new IntersectionObserver(([entry]) => setResultsOffscreen(!entry.isIntersecting), {
+      rootMargin: "-80px 0px 0px 0px",
+      threshold: 0,
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -248,13 +253,20 @@ function ListingsPage() {
             Homes for sale, rent, <span className="italic">and recently sold.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-muted-foreground leading-relaxed">
-            The full Ring Real Estate database, filterable by status, price and
-            specifications. Updated continuously from our live system.
+            The full Ring Real Estate database, filterable by status, price and specifications.
+            Updated continuously from our live system.
           </p>
         </div>
       </section>
 
-      <FiltersBar search={search} navigate={navigate} qInput={qInput} setQInput={setQInput} onSubmitQ={submitQ} disabled={isFetching} />
+      <FiltersBar
+        search={search}
+        navigate={navigate}
+        qInput={qInput}
+        setQInput={setQInput}
+        onSubmitQ={submitQ}
+        disabled={isFetching}
+      />
 
       <ActiveFilterChips search={search} navigate={navigate} setQInput={setQInput} />
 
@@ -349,7 +361,10 @@ function ListingsPage() {
             disabled={search.page === 1}
             onClick={() =>
               navigate({
-                search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: Math.max(1, p.page - 1) }),
+                search: (p: z.infer<typeof searchSchema>) => ({
+                  ...p,
+                  page: Math.max(1, p.page - 1),
+                }),
               })
             }
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
@@ -364,7 +379,10 @@ function ListingsPage() {
             disabled={search.page >= totalPages}
             onClick={() =>
               navigate({
-                search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: Math.min(totalPages, p.page + 1) }),
+                search: (p: z.infer<typeof searchSchema>) => ({
+                  ...p,
+                  page: Math.min(totalPages, p.page + 1),
+                }),
               })
             }
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
@@ -473,7 +491,9 @@ function ActiveFilterChips({
           aria-label={`Remove filter ${c.label}`}
         >
           <span>{c.label}</span>
-          <span aria-hidden="true" className="opacity-60">×</span>
+          <span aria-hidden="true" className="opacity-60">
+            ×
+          </span>
         </button>
       ))}
       <button
@@ -567,6 +587,8 @@ function FiltersBar({
         </form>
 
         <select
+          id="min-price"
+          aria-label="Minimum price"
           className="bg-background px-4 py-3 text-sm"
           value={search.minPrice}
           onChange={(e) => update("minPrice", Number(e.target.value))}
@@ -580,6 +602,8 @@ function FiltersBar({
         </select>
 
         <select
+          id="max-price"
+          aria-label="Maximum price"
           className="bg-background px-4 py-3 text-sm"
           value={search.maxPrice}
           onChange={(e) => update("maxPrice", Number(e.target.value))}
@@ -593,6 +617,8 @@ function FiltersBar({
         </select>
 
         <select
+          id="beds"
+          aria-label="Minimum bedrooms"
           className="bg-background px-4 py-3 text-sm"
           value={search.beds}
           onChange={(e) => update("beds", Number(e.target.value))}
@@ -606,6 +632,8 @@ function FiltersBar({
         </select>
 
         <select
+          id="baths"
+          aria-label="Minimum bathrooms"
           className="bg-background px-4 py-3 text-sm"
           value={search.baths}
           onChange={(e) => update("baths", Number(e.target.value))}
@@ -673,19 +701,23 @@ function FiltersBar({
         </div>
 
         <div className="flex items-center gap-3">
-        <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          Sort by
-        </label>
-        <select
-          className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.18em]"
-          value={search.sort}
-          onChange={(e) => update("sort", e.target.value as SortKey)}
-        >
-          <option value="featured">Featured</option>
-          <option value="newest">Newest</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-        </select>
+          <label
+            htmlFor="listing-sort"
+            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground"
+          >
+            Sort by
+          </label>
+          <select
+            id="listing-sort"
+            className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.18em]"
+            value={search.sort}
+            onChange={(e) => update("sort", e.target.value as SortKey)}
+          >
+            <option value="featured">Featured</option>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
         </div>
       </div>
     </fieldset>
@@ -698,8 +730,7 @@ function priceOptions(status: StatusKey): number[] {
     return [400, 500, 600, 700, 800, 1000, 1250, 1500, 2000];
   }
   return [
-    500_000, 750_000, 1_000_000, 1_250_000, 1_500_000, 2_000_000, 2_500_000,
-    3_000_000, 5_000_000,
+    500_000, 750_000, 1_000_000, 1_250_000, 1_500_000, 2_000_000, 2_500_000, 3_000_000, 5_000_000,
   ];
 }
 
@@ -708,4 +739,3 @@ function formatShortPrice(n: number): string {
   if (n >= 1_000) return `$${Math.round(n / 1_000)}k`;
   return `$${n}`;
 }
-

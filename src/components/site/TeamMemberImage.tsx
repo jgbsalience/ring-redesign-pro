@@ -5,10 +5,10 @@ type Size = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 /** Responsive presets that scale across breakpoints without layout shift. */
 type ResponsiveSize =
-  | "xs-sm"   // xs on mobile, sm on sm+
-  | "sm-md"   // sm on mobile, md on md+
-  | "md-lg"   // md on mobile, lg on lg+ (avatar -> portrait)
-  | "avatar"  // xs on mobile, sm on sm, md on lg
+  | "xs-sm" // xs on mobile, sm on sm+
+  | "sm-md" // sm on mobile, md on md+
+  | "md-lg" // md on mobile, lg on lg+ (avatar -> portrait)
+  | "avatar" // xs on mobile, sm on sm, md on lg
   | "portrait"; // lg on mobile/tablet, xl on lg+
 
 type AnySize = Size | ResponsiveSize;
@@ -70,8 +70,16 @@ const defaultSizes: Record<AnySize, string> = {
  * everywhere.
  */
 const baseWidthFor: Record<AnySize, number> = {
-  xs: 200, sm: 200, md: 200, lg: 600, xl: 800, "2xl": 1200,
-  "xs-sm": 200, "sm-md": 200, "md-lg": 400, avatar: 200,
+  xs: 200,
+  sm: 200,
+  md: 200,
+  lg: 600,
+  xl: 800,
+  "2xl": 1200,
+  "xs-sm": 200,
+  "sm-md": 200,
+  "md-lg": 400,
+  avatar: 200,
   portrait: 800,
 };
 
@@ -123,10 +131,7 @@ type Props = {
 };
 
 /** Avatar/round presets size themselves; no wrapper needed. */
-const ROUND_PRESETS = new Set<AnySize>([
-  "xs", "sm", "md",
-  "xs-sm", "sm-md", "md-lg", "avatar",
-]);
+const ROUND_PRESETS = new Set<AnySize>(["xs", "sm", "md", "xs-sm", "sm-md", "md-lg", "avatar"]);
 
 /**
  * Reusable team member photo. Centralises:
@@ -161,7 +166,7 @@ export function TeamMemberImage({
     <img
       src={src}
       srcSet={srcSet}
-      sizes={srcSet ? sizes ?? defaultSizes[size] : undefined}
+      sizes={srcSet ? (sizes ?? defaultSizes[size]) : undefined}
       alt={alt ?? agent.name}
       width={baseWidth}
       height={Math.round((baseWidth * 3) / 4)}
@@ -175,7 +180,9 @@ export function TeamMemberImage({
           ? "absolute inset-0 w-full h-full object-cover"
           : sizeClass[size],
         className,
-      ].filter(Boolean).join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
     />
   );
 
@@ -184,14 +191,12 @@ export function TeamMemberImage({
 
   return (
     <div
-      className={[
-        "relative block w-full overflow-hidden bg-muted",
-        wrapperClassName,
-      ].filter(Boolean).join(" ")}
+      className={["relative block w-full overflow-hidden bg-muted", wrapperClassName]
+        .filter(Boolean)
+        .join(" ")}
       style={{ aspectRatio: aspect, contain: "layout paint" }}
     >
       {img}
     </div>
   );
 }
-

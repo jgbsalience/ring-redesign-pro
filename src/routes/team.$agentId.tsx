@@ -16,9 +16,15 @@ export const Route = createFileRoute("/team/$agentId")({
     meta: loaderData
       ? [
           { title: `${loaderData.agent.name} — ${loaderData.agent.role} · Ring Real Estate` },
-          { name: "description", content: loaderData.agent.shortBio ?? loaderData.agent.bio[0] ?? "" },
+          {
+            name: "description",
+            content: loaderData.agent.shortBio ?? loaderData.agent.bio[0] ?? "",
+          },
           { property: "og:title", content: `${loaderData.agent.name} — Ring Real Estate` },
-          { property: "og:description", content: loaderData.agent.shortBio ?? loaderData.agent.bio[0] ?? "" },
+          {
+            property: "og:description",
+            content: loaderData.agent.shortBio ?? loaderData.agent.bio[0] ?? "",
+          },
           { property: "og:image", content: loaderData.agent.photo },
         ]
       : [],
@@ -27,12 +33,16 @@ export const Route = createFileRoute("/team/$agentId")({
     <div className="min-h-screen flex items-center justify-center text-center">
       <div>
         <div className="font-serif text-6xl">Not found</div>
-        <Link to="/about" className="mt-6 inline-block underline">Meet the team</Link>
+        <Link to="/about" className="mt-6 inline-block underline">
+          Meet the team
+        </Link>
       </div>
     </div>
   ),
   errorComponent: ({ error }) => (
-    <div className="min-h-screen flex items-center justify-center"><div>{error.message}</div></div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div>{error.message}</div>
+    </div>
   ),
   component: AgentPage,
 });
@@ -47,7 +57,9 @@ function AgentPage() {
 
       <section className="container-page pt-32 pb-16 md:pt-40 md:pb-24">
         <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-          <Link to="/about" className="hover:text-foreground">Our inner circle</Link>
+          <Link to="/about" className="hover:text-foreground">
+            Our inner circle
+          </Link>
         </div>
         <div className="mt-8 grid md:grid-cols-12 gap-12 items-start">
           <div className="md:col-span-5">
@@ -79,7 +91,13 @@ function AgentPage() {
             </div>
             {agent.office && (
               <div className="mt-4 text-sm text-muted-foreground">
-                Office <a href={`tel:${agent.office.replace(/\s+/g, "")}`} className="hover:text-foreground">{agent.office}</a>
+                Office{" "}
+                <a
+                  href={`tel:${agent.office.replace(/\s+/g, "")}`}
+                  className="hover:text-foreground"
+                >
+                  {agent.office}
+                </a>
               </div>
             )}
 
@@ -99,7 +117,10 @@ function AgentPage() {
               <h2 className="font-serif text-3xl md:text-5xl tracking-tight">
                 {agent.name.split(" ")[0]}'s current listings
               </h2>
-              <Link to="/buy" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+              <Link
+                to="/buy"
+                className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+              >
                 All listings <ArrowRight size={14} />
               </Link>
             </div>
@@ -117,19 +138,30 @@ function AgentPage() {
           The rest of the team
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {agents.filter((a) => a.id !== agent.id).map((a) => (
-            <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block">
-              <div className="aspect-[3/4] img-zoom bg-muted">
-                <TeamMemberImage agent={a} size="lg" className="grayscale hover:grayscale-0 transition-all duration-700" />
-              </div>
-              <div className="mt-4">
-                <div className="font-serif text-lg">{a.name}</div>
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
-                  {a.role}
+          {agents
+            .filter((a) => a.id !== agent.id)
+            .map((a) => (
+              <Link
+                key={a.id}
+                to="/team/$agentId"
+                params={{ agentId: a.id }}
+                className="hover-lift block"
+              >
+                <div className="aspect-[3/4] img-zoom bg-muted">
+                  <TeamMemberImage
+                    agent={a}
+                    size="lg"
+                    className="grayscale hover:grayscale-0 transition-all duration-700"
+                  />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="mt-4">
+                  <div className="font-serif text-lg">{a.name}</div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
+                    {a.role}
+                  </div>
+                </div>
+              </Link>
+            ))}
         </div>
       </section>
 
@@ -137,4 +169,3 @@ function AgentPage() {
     </div>
   );
 }
-

@@ -3,24 +3,17 @@ import { useEffect } from "react";
 
 function logRouterState(label: string, extra?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
-  // eslint-disable-next-line no-console
+
   console.warn(`[RouteBoundary] ${label}`, {
     href: window.location.href,
     pathname: window.location.pathname,
     readyState: document.readyState,
-    hydrated: !!(window as unknown as { __TSR_HYDRATED__?: boolean })
-      .__TSR_HYDRATED__,
+    hydrated: !!(window as unknown as { __TSR_HYDRATED__?: boolean }).__TSR_HYDRATED__,
     ...extra,
   });
 }
 
-export function RouteErrorBoundary({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+export function RouteErrorBoundary({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -36,12 +29,10 @@ export function RouteErrorBoundary({
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
           Something went wrong
         </p>
-        <h1 className="mt-3 font-serif text-3xl text-foreground">
-          We couldn't load this page
-        </h1>
+        <h1 className="mt-3 font-serif text-3xl text-foreground">We couldn't load this page</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          A temporary issue stopped this section from loading. Try again, or
-          return home and we'll get you back on track.
+          A temporary issue stopped this section from loading. Try again, or return home and we'll
+          get you back on track.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -73,15 +64,13 @@ export function RouteNotFoundBoundary() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center bg-background px-4 py-16">
       <div className="max-w-md text-center">
-        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          Not found
-        </p>
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Not found</p>
         <h1 className="mt-3 font-serif text-3xl text-foreground">
           We couldn't find what you were looking for
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          The page may have moved, or the link may be out of date. Browse our
-          listings or head back to the homepage.
+          The page may have moved, or the link may be out of date. Browse our listings or head back
+          to the homepage.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Link

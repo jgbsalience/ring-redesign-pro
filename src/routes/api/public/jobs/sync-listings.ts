@@ -20,10 +20,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Firecrawl from "@mendable/firecrawl-js";
 import { z } from "zod";
-import {
-  upsertFirecrawlListings,
-  type UpsertReport,
-} from "@/lib/firecrawl/upsert.server";
+import { upsertFirecrawlListings, type UpsertReport } from "@/lib/firecrawl/upsert.server";
 import type { FirecrawlDoc } from "@/lib/firecrawl/mapper";
 
 /* ---------------- Config ---------------- */
@@ -91,9 +88,7 @@ async function crawlSection(
   });
 
   // SDK v2 returns documents on `.data`; fall back gracefully.
-  const docs =
-    (result as { data?: FirecrawlDoc[] }).data ??
-    ((result as unknown) as FirecrawlDoc[]);
+  const docs = (result as { data?: FirecrawlDoc[] }).data ?? (result as unknown as FirecrawlDoc[]);
   return Array.isArray(docs) ? docs : [];
 }
 
@@ -106,10 +101,10 @@ export const Route = createFileRoute("/api/public/jobs/sync-listings")({
         if (!checkAuth(request)) return unauthorized();
 
         if (!process.env.FIRECRAWL_API_KEY) {
-          return new Response(
-            JSON.stringify({ error: "FIRECRAWL_API_KEY not configured" }),
-            { status: 500, headers: { "Content-Type": "application/json" } },
-          );
+          return new Response(JSON.stringify({ error: "FIRECRAWL_API_KEY not configured" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         let body: z.infer<typeof BodySchema> = {};
@@ -126,11 +121,7 @@ export const Route = createFileRoute("/api/public/jobs/sync-listings")({
           );
         }
 
-        const targets: Status[] = body.targets ?? [
-          "for-sale",
-          "for-rent",
-          "sold",
-        ];
+        const targets: Status[] = body.targets ?? ["for-sale", "for-rent", "sold"];
         const limit = body.limit ?? 100;
         const prune = body.prune ?? false;
 

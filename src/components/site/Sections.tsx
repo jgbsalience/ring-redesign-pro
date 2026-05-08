@@ -82,9 +82,16 @@ export function GreenHero({
       <div
         aria-hidden
         className="absolute inset-x-0 -top-32 h-64 pointer-events-none opacity-60"
-        style={{ background: "radial-gradient(closest-side, var(--ringgreen-soft), transparent 70%)" }}
+        style={{
+          background: "radial-gradient(closest-side, var(--ringgreen-soft), transparent 70%)",
+        }}
       />
-      <div className={cn("container-page pt-28 md:pt-36 pb-20 md:pb-28 relative", align === "center" && "text-center")}>
+      <div
+        className={cn(
+          "container-page pt-28 md:pt-36 pb-20 md:pb-28 relative",
+          align === "center" && "text-center",
+        )}
+      >
         {eyebrow && (
           <div
             className={cn(
@@ -131,7 +138,8 @@ export function GreenHero({
 function CTAButton({ cta, dark }: { cta: CTA; dark: boolean }) {
   const base =
     "group inline-flex items-center gap-3 px-7 py-4 text-xs uppercase tracking-[0.22em] transition-colors";
-  const primary = "bg-[var(--ringgreen)] text-[var(--ink)] hover:bg-[var(--ringgreen-deep)] hover:text-[var(--bone)]";
+  const primary =
+    "bg-[var(--ringgreen)] text-[var(--ink)] hover:bg-[var(--ringgreen-deep)] hover:text-[var(--bone)]";
   const ghost = dark
     ? "border border-[var(--bone)]/30 text-[var(--bone)] hover:bg-[var(--bone)]/5"
     : "border border-foreground/80 text-foreground hover:bg-foreground hover:text-background";
@@ -142,8 +150,17 @@ function CTAButton({ cta, dark }: { cta: CTA; dark: boolean }) {
       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
     </>
   );
-  if (cta.to) return <Link to={cta.to} className={cls}>{inner}</Link>;
-  return <a href={cta.href ?? "#"} className={cls}>{inner}</a>;
+  if (cta.to)
+    return (
+      <Link to={cta.to} className={cls}>
+        {inner}
+      </Link>
+    );
+  return (
+    <a href={cta.href ?? "#"} className={cls}>
+      {inner}
+    </a>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -176,12 +193,19 @@ export function FeatureBand({
     <SectionShell tone={tone} className="border-0">
       <div className="grid md:grid-cols-12 gap-10 md:gap-16">
         <div className="md:col-span-5">
-          {eyebrow && <Eyebrow className={isDark ? "text-[var(--ringgreen)]" : undefined}>{eyebrow}</Eyebrow>}
+          {eyebrow && (
+            <Eyebrow className={isDark ? "text-[var(--ringgreen)]" : undefined}>{eyebrow}</Eyebrow>
+          )}
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
             {title} {italic && <span className="italic font-light">{italic}</span>}
           </h2>
           {description && (
-            <p className={cn("mt-6 max-w-md", isDark ? "text-[var(--bone)]/70" : "text-muted-foreground")}>
+            <p
+              className={cn(
+                "mt-6 max-w-md",
+                isDark ? "text-[var(--bone)]/70" : "text-muted-foreground",
+              )}
+            >
               {description}
             </p>
           )}
@@ -191,7 +215,12 @@ export function FeatureBand({
             <div key={f.title} className="border-t border-green pt-5">
               <f.icon size={20} className="text-[var(--ringgreen-deep)]" />
               <div className="font-serif text-xl mt-4">{f.title}</div>
-              <p className={cn("mt-2 text-sm leading-relaxed", isDark ? "text-[var(--bone)]/70" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "mt-2 text-sm leading-relaxed",
+                  isDark ? "text-[var(--bone)]/70" : "text-muted-foreground",
+                )}
+              >
                 {f.body}
               </p>
             </div>
@@ -240,7 +269,12 @@ export function Callout({
             {title} {italic && <span className="italic font-light">{italic}</span>}
           </h2>
           {description && (
-            <p className={cn("mt-5 max-w-xl", isDark ? "text-[var(--bone)]/70" : "text-muted-foreground")}>
+            <p
+              className={cn(
+                "mt-5 max-w-xl",
+                isDark ? "text-[var(--bone)]/70" : "text-muted-foreground",
+              )}
+            >
               {description}
             </p>
           )}

@@ -40,8 +40,7 @@ export function SpecLine({
     >
       <span
         className={
-          priceClassName ??
-          "text-[var(--ringgreen)] font-medium tabular-nums leading-tight"
+          priceClassName ?? "text-[var(--ringgreen)] font-medium tabular-nums leading-tight"
         }
       >
         {price}
@@ -54,12 +53,16 @@ export function SpecLine({
           <span className={`font-medium ${valueClass}`}>{beds}</span>{" "}
           <span className={labelClass}>bed</span>
         </li>
-        <li aria-hidden="true" className={dividerClass}>·</li>
+        <li aria-hidden="true" className={dividerClass}>
+          ·
+        </li>
         <li>
           <span className={`font-medium ${valueClass}`}>{baths}</span>{" "}
           <span className={labelClass}>bath</span>
         </li>
-        <li aria-hidden="true" className={dividerClass}>·</li>
+        <li aria-hidden="true" className={dividerClass}>
+          ·
+        </li>
         <li>
           <span className={`font-medium ${valueClass}`}>{cars}</span>{" "}
           <span className={labelClass}>car</span>

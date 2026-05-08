@@ -2,11 +2,25 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { agents, testimonials, listings } from "@/data/site";
-import { ArrowRight, Plus, Minus, Phone, Mail, CalendarDays, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import {
+  ArrowRight,
+  Plus,
+  Minus,
+  Phone,
+  Mail,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+} from "lucide-react";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import React, { useEffect, useRef, useState } from "react";
 
-const FAQS: { q: string; a: string; group: "Selling" | "Buying" | "Suburbs" | "Timelines" | "About us" }[] = [
+const FAQS: {
+  q: string;
+  a: string;
+  group: "Selling" | "Buying" | "Suburbs" | "Timelines" | "About us";
+}[] = [
   {
     group: "Selling",
     q: "How long does it take to sell a home in Adelaide?",
@@ -108,7 +122,10 @@ export const Route = createFileRoute("/about")({
         content:
           "Adelaide real estate, Adelaide real estate agents, Adelaide real estate agency, residential real estate Adelaide, Blackwood real estate, Bellevue Heights real estate, Glenalta real estate, Coromandel Valley real estate",
       },
-      { property: "og:title", content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978" },
+      {
+        property: "og:title",
+        content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978",
+      },
       {
         property: "og:description",
         content:
@@ -117,7 +134,10 @@ export const Route = createFileRoute("/about")({
       { property: "og:type", content: "website" },
       { property: "og:image", content: listings[1]?.hero ?? "" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978" },
+      {
+        name: "twitter:title",
+        content: "About Ring Real Estate — Adelaide Real Estate Agents Since 1978",
+      },
       {
         name: "twitter:description",
         content:
@@ -174,75 +194,90 @@ function AboutPage() {
     <div className="bg-background text-foreground">
       <Header overlay />
       <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
-        <img src={listings[1]?.hero} alt="A distinguished Adelaide home sold by Ring Real Estate" className="absolute inset-0 w-full h-full object-cover" />
+        <img
+          src={listings[1]?.hero}
+          alt="A distinguished Adelaide home sold by Ring Real Estate"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
         <div className="relative container-page h-full flex flex-col justify-end pb-20 text-white">
           <div className="text-[10px] uppercase tracking-[0.32em] opacity-80">
             <span className="ring-mark" /> &nbsp;Adelaide real estate, established 1978
           </div>
           <h1 className="font-serif text-5xl md:text-8xl tracking-tight mt-5 leading-[0.95] max-w-5xl">
-            Adelaide real estate,<br /><span className="italic">done the same way since 1978.</span>
+            Adelaide real estate,
+            <br />
+            <span className="italic">done the same way since 1978.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-base md:text-lg text-white/85 leading-relaxed">
-            Ring Real Estate is an independent Adelaide real estate agency
-            selling, leasing and managing distinguished homes across
-            Blackwood, Bellevue Heights, Glenalta, Coromandel Valley and the
-            wider southern foothills.
+            Ring Real Estate is an independent Adelaide real estate agency selling, leasing and
+            managing distinguished homes across Blackwood, Bellevue Heights, Glenalta, Coromandel
+            Valley and the wider southern foothills.
           </p>
         </div>
       </section>
 
       <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-5">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">The difference</div>
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            The difference
+          </div>
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
-            How did we<br /><span className="italic">come to be?</span>
+            How did we
+            <br />
+            <span className="italic">come to be?</span>
           </h2>
           <p className="mt-6 text-muted-foreground leading-relaxed">
-            Established in 1976, Ring Partners Real Estate was built by John
-            and Sandra Ring — a family business servicing their local
-            Blackwood District community. Their reputation and success grew
-            quickly as a result of the trusted care for their clients and
-            customers, the manner in which they went about their work, and a
-            philosophy of going the extra mile.
+            Established in 1976, Ring Partners Real Estate was built by John and Sandra Ring — a
+            family business servicing their local Blackwood District community. Their reputation and
+            success grew quickly as a result of the trusted care for their clients and customers,
+            the manner in which they went about their work, and a philosophy of going the extra
+            mile.
           </p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Integrity was at the heart of their work — John managed Real
-            Estate Sales, Valuations, Land Economy and Development, and
-            Sandra, Accounting and Property Management. Together they became
-            one of the most successful independently owned real estate
-            businesses in Adelaide. One of their mottos was 'Good Agency
-            Practice Will Prevail'. We are proud to say that, to this day,
-            all of their spirited company mottos are at the forefront of who
+            Integrity was at the heart of their work — John managed Real Estate Sales, Valuations,
+            Land Economy and Development, and Sandra, Accounting and Property Management. Together
+            they became one of the most successful independently owned real estate businesses in
+            Adelaide. One of their mottos was 'Good Agency Practice Will Prevail'. We are proud to
+            say that, to this day, all of their spirited company mottos are at the forefront of who
             we are now and into the future.
           </p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Their son Stephen joined the family business in 1992 with the
-            goal of carrying on the tradition. It was one of the most
-            tumultuous decades to begin a career, with Australia and
-            particularly South Australia moving through a recessive economic
-            cycle. Stephen immersed himself in real estate, learning and
-            studying while working with mentors whose teachings and
-            philosophies still inspire his work today. Stephen endeavoured to
-            consolidate the Ring brand as one of the most respected names in
-            the industry, and to learn the skills that have enabled him to be
-            among the elite real estate agents in South Australia.
+            Their son Stephen joined the family business in 1992 with the goal of carrying on the
+            tradition. It was one of the most tumultuous decades to begin a career, with Australia
+            and particularly South Australia moving through a recessive economic cycle. Stephen
+            immersed himself in real estate, learning and studying while working with mentors whose
+            teachings and philosophies still inspire his work today. Stephen endeavoured to
+            consolidate the Ring brand as one of the most respected names in the industry, and to
+            learn the skills that have enabled him to be among the elite real estate agents in South
+            Australia.
           </p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Today, Stephen has exceeded his goals with a wealth of knowledge
-            to match his consistent performance, energy and passion for
-            helping people to have real estate success. With a committed team
-            behind him, Stephen is the Principal Director of Ring Real Estate
-            with a clear vision to carry on the tradition of sound values and
-            to be at the forefront of professional real estate service.
+            Today, Stephen has exceeded his goals with a wealth of knowledge to match his consistent
+            performance, energy and passion for helping people to have real estate success. With a
+            committed team behind him, Stephen is the Principal Director of Ring Real Estate with a
+            clear vision to carry on the tradition of sound values and to be at the forefront of
+            professional real estate service.
           </p>
         </div>
         <div className="md:col-span-7 space-y-8">
           {[
-            { t: "Your agent answers the phone", b: "Not a junior, not a call centre. The person whose name is on your listing." },
-            { t: "We see the home before we price it", b: "Often twice. We will not put a number to a property we have walked through once at dusk." },
-            { t: "Photography is commissioned, not templated", b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra." },
-            { t: "We tell you what isn't working", b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end." },
+            {
+              t: "Your agent answers the phone",
+              b: "Not a junior, not a call centre. The person whose name is on your listing.",
+            },
+            {
+              t: "We see the home before we price it",
+              b: "Often twice. We will not put a number to a property we have walked through once at dusk.",
+            },
+            {
+              t: "Photography is commissioned, not templated",
+              b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra.",
+            },
+            {
+              t: "We tell you what isn't working",
+              b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end.",
+            },
           ].map((d) => (
             <div key={d.t} className="flex gap-6 border-b border-border pb-8">
               <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
@@ -257,36 +292,33 @@ function AboutPage() {
 
       <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our story · Adelaide, since 1978</div>
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            Our story · Adelaide, since 1978
+          </div>
         </div>
         <div className="md:col-span-7 space-y-7 text-lg leading-relaxed">
           <h2 className="font-serif text-3xl md:text-4xl tracking-tight leading-[1.1]">
             Adelaide's independent residential real estate agency, since 1978.
           </h2>
           <p>
-            Our brand represents absolute integrity and our commitment to
-            Sellers and Buyers, Landlords and Tenants. We value our work and
-            the important role we have in managing these relationships and
-            creating successful outcomes. Where there is integrity, there will
-            be trust. Where there is trust, there will be an atmosphere for
-            success. Everything we do happens around that one essential human
-            value — Integrity. It is the foundation principle of our
-            working-culture, it simply goes without saying. Especially in a
-            professional services industry where performance varies greatly,
-            the environment is subjective, emotion can cloud reality, and the
-            market is always on the move — it is human integrity that earns
-            trust and delivers outcomes.
+            Our brand represents absolute integrity and our commitment to Sellers and Buyers,
+            Landlords and Tenants. We value our work and the important role we have in managing
+            these relationships and creating successful outcomes. Where there is integrity, there
+            will be trust. Where there is trust, there will be an atmosphere for success. Everything
+            we do happens around that one essential human value — Integrity. It is the foundation
+            principle of our working-culture, it simply goes without saying. Especially in a
+            professional services industry where performance varies greatly, the environment is
+            subjective, emotion can cloud reality, and the market is always on the move — it is
+            human integrity that earns trust and delivers outcomes.
           </p>
           <p>
-            It's why we are Successfully Independent & Proud of It. While
-            others come and go, since 1976 it has been our dedicated work
-            ethic, professional manner and our commitment to caring for client
-            and customer relations that have developed long standing and
-            trusting relationships where our services are valued and
-            consistently referred — in any profession, there really is no
-            greater reward than your work being referred to another. It is
-            important to us to be considered as a valued member and
-            contributor of our exciting industry and our local community.
+            It's why we are Successfully Independent & Proud of It. While others come and go, since
+            1976 it has been our dedicated work ethic, professional manner and our commitment to
+            caring for client and customer relations that have developed long standing and trusting
+            relationships where our services are valued and consistently referred — in any
+            profession, there really is no greater reward than your work being referred to another.
+            It is important to us to be considered as a valued member and contributor of our
+            exciting industry and our local community.
           </p>
           <p className="font-serif italic text-2xl md:text-3xl text-[var(--ringgreen)] leading-snug">
             Our working passion
@@ -304,8 +336,12 @@ function AboutPage() {
             { n: "92%", l: "Repeat & referral business" },
           ].map((s) => (
             <div key={s.l} className="text-center md:text-left">
-              <div className="font-serif text-5xl md:text-6xl text-[var(--ringgreen)] leading-none">{s.n}</div>
-              <div className="mt-3 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">{s.l}</div>
+              <div className="font-serif text-5xl md:text-6xl text-[var(--ringgreen)] leading-none">
+                {s.n}
+              </div>
+              <div className="mt-3 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                {s.l}
+              </div>
             </div>
           ))}
         </div>
@@ -315,20 +351,38 @@ function AboutPage() {
       <section className="container-page py-24 md:py-32">
         <div className="grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
-            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">What we hold to</div>
+            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+              What we hold to
+            </div>
             <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
-              Four principles,<br /><span className="italic">unmoved since 1978.</span>
+              Four principles,
+              <br />
+              <span className="italic">unmoved since 1978.</span>
             </h2>
           </div>
           <div className="md:col-span-8 grid sm:grid-cols-2 gap-x-10 gap-y-12">
             {[
-              { t: "Senior, always", b: "No juniors learning on your home. Every campaign is led, listed and negotiated by a principal with twenty years or more in the business." },
-              { t: "Small by design", b: "We cap our rolls. A team that takes on too much cannot give attention to any of it — and attention is the work." },
-              { t: "Quiet first", b: "Off-market introductions before public campaigns. Many of Adelaide's finest homes change hands without a sign on the lawn." },
-              { t: "Plain language", b: "No jargon, no theatre, no inflated appraisals to win the listing. We tell you what we believe, then we earn it." },
+              {
+                t: "Senior, always",
+                b: "No juniors learning on your home. Every campaign is led, listed and negotiated by a principal with twenty years or more in the business.",
+              },
+              {
+                t: "Small by design",
+                b: "We cap our rolls. A team that takes on too much cannot give attention to any of it — and attention is the work.",
+              },
+              {
+                t: "Quiet first",
+                b: "Off-market introductions before public campaigns. Many of Adelaide's finest homes change hands without a sign on the lawn.",
+              },
+              {
+                t: "Plain language",
+                b: "No jargon, no theatre, no inflated appraisals to win the listing. We tell you what we believe, then we earn it.",
+              },
             ].map((p, i) => (
               <div key={p.t} className="border-t border-foreground pt-6">
-                <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">0{i + 1}</div>
+                <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">
+                  0{i + 1}
+                </div>
                 <h3 className="font-serif text-2xl mt-3">{p.t}</h3>
                 <p className="mt-4 text-muted-foreground leading-relaxed">{p.b}</p>
               </div>
@@ -340,16 +394,44 @@ function AboutPage() {
       {/* Timeline */}
       <section className="bg-secondary/40 py-24 md:py-32">
         <div className="container-page">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">A short history</div>
-          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">Forty-seven years, in moments.</h2>
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            A short history
+          </div>
+          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">
+            Forty-seven years, in moments.
+          </h2>
           <ol className="mt-16 relative border-l border-border pl-8 md:pl-12 space-y-12">
             {[
-              { y: "1978", t: "Founded in Fullarton", d: "Geoffrey Ring opens a single-room office on Fisher Street with two listings and a borrowed typewriter." },
-              { y: "1986", t: "Property management begins", d: "A handful of long-term landlords ask us to manage what we sold them. The rent roll is born." },
-              { y: "1997", t: "The studio on Unley Road", d: "We move to the building we still occupy today — restored, not renovated." },
-              { y: "2008", t: "Through the downturn", d: "We do not retrench. The team that started the GFC together finishes it together." },
-              { y: "2019", t: "Second generation", d: "Geoffrey's children join the principal team, carrying the same standards forward." },
-              { y: "2025", t: "Still independent", d: "No franchise, no investors, no targets that override the client's interest. As it began." },
+              {
+                y: "1978",
+                t: "Founded in Fullarton",
+                d: "Geoffrey Ring opens a single-room office on Fisher Street with two listings and a borrowed typewriter.",
+              },
+              {
+                y: "1986",
+                t: "Property management begins",
+                d: "A handful of long-term landlords ask us to manage what we sold them. The rent roll is born.",
+              },
+              {
+                y: "1997",
+                t: "The studio on Unley Road",
+                d: "We move to the building we still occupy today — restored, not renovated.",
+              },
+              {
+                y: "2008",
+                t: "Through the downturn",
+                d: "We do not retrench. The team that started the GFC together finishes it together.",
+              },
+              {
+                y: "2019",
+                t: "Second generation",
+                d: "Geoffrey's children join the principal team, carrying the same standards forward.",
+              },
+              {
+                y: "2025",
+                t: "Still independent",
+                d: "No franchise, no investors, no targets that override the client's interest. As it began.",
+              },
             ].map((m) => (
               <li key={m.y} className="relative">
                 <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-secondary/40" />
@@ -368,16 +450,16 @@ function AboutPage() {
       {/* Full team */}
       <section className="bg-secondary/50 py-24 md:py-32">
         <div className="container-page">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our inner circle</div>
-          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">The people you'll work with.</h2>
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            Our inner circle
+          </div>
+          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">
+            The people you'll work with.
+          </h2>
           <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
             {agents.map((a) => (
               <div key={a.id} className="group flex flex-col">
-                <Link
-                  to="/team/$agentId"
-                  params={{ agentId: a.id }}
-                  className="block"
-                >
+                <Link to="/team/$agentId" params={{ agentId: a.id }} className="block">
                   <div className="aspect-[3/4] overflow-hidden bg-muted">
                     <TeamMemberImage
                       agent={a}
@@ -393,10 +475,16 @@ function AboutPage() {
                   </div>
                 </Link>
                 <div className="mt-4 pt-4 border-t border-border text-sm space-y-2">
-                  <a href={`tel:${a.phone}`} className="flex items-center gap-2 hover:text-[var(--ringgreen)]">
+                  <a
+                    href={`tel:${a.phone}`}
+                    className="flex items-center gap-2 hover:text-[var(--ringgreen)]"
+                  >
                     <Phone size={14} className="text-muted-foreground" /> {a.phone}
                   </a>
-                  <a href={`mailto:${a.email}`} className="flex items-center gap-2 text-muted-foreground hover:text-[var(--ringgreen)]">
+                  <a
+                    href={`mailto:${a.email}`}
+                    className="flex items-center gap-2 text-muted-foreground hover:text-[var(--ringgreen)]"
+                  >
                     <Mail size={14} /> {a.email}
                   </a>
                 </div>
@@ -415,7 +503,6 @@ function AboutPage() {
 
       <TestimonialsCarousel />
 
-
       <FaqSection />
 
       <section className="bg-[var(--ink)] text-[var(--bone)]">
@@ -429,7 +516,8 @@ function AboutPage() {
                 Come and meet us — <span className="italic">coffee is on,</span> always.
               </h2>
               <p className="mt-6 text-[var(--bone)]/70 max-w-lg">
-                Whether you're ready to sell, just curious about the market, or looking for the right home in Adelaide — pick the way that suits you best.
+                Whether you're ready to sell, just curious about the market, or looking for the
+                right home in Adelaide — pick the way that suits you best.
               </p>
             </div>
             <div className="md:col-span-5 grid gap-3">
@@ -437,21 +525,27 @@ function AboutPage() {
                 href="tel:0883703211"
                 className="group flex items-center justify-between gap-4 px-7 py-5 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:opacity-90"
               >
-                <span className="flex items-center gap-3"><Phone size={16} /> Call (08) 8370 3211</span>
+                <span className="flex items-center gap-3">
+                  <Phone size={16} /> Call (08) 8370 3211
+                </span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </a>
               <a
                 href="mailto:ring@ring-sa.com.au"
                 className="group flex items-center justify-between gap-4 px-7 py-5 border border-[var(--bone)]/30 text-[var(--bone)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--bone)]/5"
               >
-                <span className="flex items-center gap-3"><Mail size={16} /> Email the team</span>
+                <span className="flex items-center gap-3">
+                  <Mail size={16} /> Email the team
+                </span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </a>
               <Link
                 to="/sell/appraisal"
                 className="group flex items-center justify-between gap-4 px-7 py-5 border border-[var(--bone)]/30 text-[var(--bone)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--bone)]/5"
               >
-                <span className="flex items-center gap-3"><CalendarDays size={16} /> Book an appraisal</span>
+                <span className="flex items-center gap-3">
+                  <CalendarDays size={16} /> Book an appraisal
+                </span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -478,12 +572,15 @@ function FaqSection() {
       <div className="container-page py-24 md:py-32">
         <div className="grid md:grid-cols-12 gap-10 md:gap-16">
           <div className="md:col-span-4">
-            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Frequently asked</div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Frequently asked
+            </div>
             <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
               Questions, <span className="italic font-light">answered honestly.</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-sm">
-              Buying or selling in Adelaide should feel considered, not rushed. If your question isn't here, ask us directly.
+              Buying or selling in Adelaide should feel considered, not rushed. If your question
+              isn't here, ask us directly.
             </p>
             <Link
               to="/contact"
@@ -495,7 +592,9 @@ function FaqSection() {
           <div className="md:col-span-8 space-y-12">
             {groups.map((group) => (
               <div key={group}>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">{group}</div>
+                <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">
+                  {group}
+                </div>
                 <div className="border-t border-border">
                   {FAQS.filter((f) => f.group === group).map((f) => {
                     const isOpen = open === f.q;
@@ -534,31 +633,36 @@ function FaqSection() {
 
 const STORIES = [
   {
-    quote: "Stephen and the team made selling our family home of 30 years feel calm and considered. The result spoke for itself — well above our expectations.",
+    quote:
+      "Stephen and the team made selling our family home of 30 years feel calm and considered. The result spoke for itself — well above our expectations.",
     author: "The Whitford Family",
     location: "Bellevue Heights",
     context: "Sold via private treaty",
   },
   {
-    quote: "Luke listened, told us the truth, and then went above and beyond. We could not recommend Ring more highly to anyone selling in the foothills.",
+    quote:
+      "Luke listened, told us the truth, and then went above and beyond. We could not recommend Ring more highly to anyone selling in the foothills.",
     author: "Daniel & Mei",
     location: "Glenalta",
     context: "Sold under the hammer",
   },
   {
-    quote: "Soozie has looked after our investment properties for years — proactive, communicative, and always on top of detail. Property management done properly.",
+    quote:
+      "Soozie has looked after our investment properties for years — proactive, communicative, and always on top of detail. Property management done properly.",
     author: "P. Whitelock",
     location: "Blackwood",
     context: "Property management",
   },
   {
-    quote: "From the first appraisal to settlement day, the communication was outstanding. We always knew where we stood. A genuinely human experience.",
+    quote:
+      "From the first appraisal to settlement day, the communication was outstanding. We always knew where we stood. A genuinely human experience.",
     author: "The Hassell Family",
     location: "Eden Hills",
     context: "Sold in 18 days",
   },
   {
-    quote: "We interviewed four agents. Ring stood out for honesty and craft — no inflated promises, just a clear plan that delivered exactly what they said it would.",
+    quote:
+      "We interviewed four agents. Ring stood out for honesty and craft — no inflated promises, just a clear plan that delivered exactly what they said it would.",
     author: "Andrew & Kate",
     location: "Coromandel Valley",
     context: "Sold off-market",
@@ -569,14 +673,14 @@ function TestimonialsCarousel() {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const total = STORIES.length;
-  const next = () => setI((p) => (p + 1) % total);
-  const prev = () => setI((p) => (p - 1 + total) % total);
+  const next = React.useCallback(() => setI((p) => (p + 1) % total), [total]);
+  const prev = React.useCallback(() => setI((p) => (p - 1 + total) % total), [total]);
 
   useEffect(() => {
     if (paused) return;
     const t = setInterval(next, 7000);
     return () => clearInterval(t);
-  }, [paused, total]);
+  }, [paused, next]);
 
   const story = STORIES[i];
 
@@ -591,7 +695,8 @@ function TestimonialsCarousel() {
     const dy = e.clientY - swipeStart.current.y;
     swipeStart.current = null;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) next(); else prev();
+      if (dx < 0) next();
+      else prev();
     }
   };
 
@@ -602,7 +707,9 @@ function TestimonialsCarousel() {
       onMouseLeave={() => setPaused(false)}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
-      onPointerCancel={() => { swipeStart.current = null; }}
+      onPointerCancel={() => {
+        swipeStart.current = null;
+      }}
       style={{ touchAction: "pan-y" }}
     >
       <div className="container-page py-24 md:py-32">

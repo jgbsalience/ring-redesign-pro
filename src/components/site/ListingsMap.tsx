@@ -41,27 +41,28 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([import("react-leaflet"), import("leaflet"), import("leaflet/dist/leaflet.css")]).then(
-      ([rl, leaflet]) => {
-        if (cancelled) return;
-        // Default Leaflet marker icons reference assets that don't bundle correctly.
-        // Use CDN-hosted icons.
-        const L = leaflet.default ?? leaflet;
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl:
-            "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          iconUrl: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png",
-          shadowUrl: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png",
-        });
-        setLib({
-          MapContainer: rl.MapContainer,
-          TileLayer: rl.TileLayer,
-          Marker: rl.Marker,
-          Popup: rl.Popup,
-          L,
-        });
-      },
-    );
+    Promise.all([
+      import("react-leaflet"),
+      import("leaflet"),
+      import("leaflet/dist/leaflet.css"),
+    ]).then(([rl, leaflet]) => {
+      if (cancelled) return;
+      // Default Leaflet marker icons reference assets that don't bundle correctly.
+      // Use CDN-hosted icons.
+      const L = leaflet.default ?? leaflet;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        iconUrl: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png",
+        shadowUrl: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png",
+      });
+      setLib({
+        MapContainer: rl.MapContainer,
+        TileLayer: rl.TileLayer,
+        Marker: rl.Marker,
+        Popup: rl.Popup,
+        L,
+      });
+    });
     return () => {
       cancelled = true;
     };
@@ -208,9 +209,7 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
                       <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground truncate">
                         {r.suburb} · {r.state}
                       </div>
-                      <div className="font-serif text-sm leading-snug truncate">
-                        {r.address}
-                      </div>
+                      <div className="font-serif text-sm leading-snug truncate">{r.address}</div>
                       <div className="mt-1">
                         <SpecLine
                           price={r.price}

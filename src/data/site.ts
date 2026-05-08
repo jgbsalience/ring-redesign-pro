@@ -109,9 +109,7 @@ export const testimonials = [
   },
 ];
 
-export const suburbs = Array.from(
-  new Set(listings.map((l) => l.suburb).filter(Boolean))
-).sort();
+export const suburbs = Array.from(new Set(listings.map((l) => l.suburb).filter(Boolean))).sort();
 
 export function getAgent(id: string): Agent {
   return agents.find((a) => a.id === id) ?? agents[0];

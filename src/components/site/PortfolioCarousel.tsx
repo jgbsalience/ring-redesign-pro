@@ -6,8 +6,7 @@ import { SpecLine } from "@/components/site/SpecLine";
 
 function srcSetFor(hero: string) {
   if (!/cp-rect-\d+x\d+\.pg$/.test(hero)) return undefined;
-  const v = (w: number, h: number) =>
-    hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
+  const v = (w: number, h: number) => hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
   return [
     `${v(960, 720)} 960w`,
     `${v(1280, 960)} 1280w`,
@@ -22,20 +21,20 @@ function statusTo(s: Listing["status"]) {
   return s === "for-rent" || s === "leased"
     ? "/rent/$listingId"
     : s === "sold"
-    ? "/sold/$listingId"
-    : "/buy/$listingId";
+      ? "/sold/$listingId"
+      : "/buy/$listingId";
 }
 
 function statusLabel(s: Listing["status"]) {
   return s === "for-sale"
     ? "For Sale"
     : s === "for-rent"
-    ? "For Rent"
-    : s === "sold"
-    ? "Sold"
-    : s === "leased"
-    ? "Leased"
-    : String(s);
+      ? "For Rent"
+      : s === "sold"
+        ? "Sold"
+        : s === "leased"
+          ? "Leased"
+          : String(s);
 }
 
 export function PortfolioCarousel({ items }: { items: Listing[] }) {
@@ -72,12 +71,8 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
       <div className="container-page">
         <div className="flex items-end justify-between flex-wrap gap-6 mb-10">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.32em] opacity-60">
-              The portfolio
-            </div>
-            <h2 className="font-serif text-4xl md:text-6xl mt-3 tracking-tight">
-              A closer look.
-            </h2>
+            <div className="text-[10px] uppercase tracking-[0.32em] opacity-60">The portfolio</div>
+            <h2 className="font-serif text-4xl md:text-6xl mt-3 tracking-tight">A closer look.</h2>
           </div>
           <Link
             to="/buy"
@@ -102,8 +97,7 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
                 className="absolute inset-0"
                 style={{
                   opacity: active ? 1 : 0,
-                  transition:
-                    "opacity 1200ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+                  transition: "opacity 1200ms cubic-bezier(0.22, 0.61, 0.36, 1)",
                   willChange: "opacity",
                 }}
               >
@@ -126,11 +120,7 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
 
           {/* Caption */}
           <div className="absolute inset-x-0 bottom-0 z-10 p-6 md:p-12">
-            <Link
-              to={to}
-              params={{ listingId: current.id }}
-              className="block group max-w-3xl"
-            >
+            <Link to={to} params={{ listingId: current.id }} className="block group max-w-3xl">
               <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.28em] text-white/85">
                 <span className="inline-block h-px w-6 bg-[var(--ringgreen)]" />
                 {statusLabel(current.status)} · {current.suburb}

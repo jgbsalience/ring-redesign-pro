@@ -14,9 +14,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Ring Real Estate — Adelaide residential, since 1978" },
-      { name: "description", content: "Distinguished homes across metropolitan Adelaide. Sell, buy, rent and manage with a small, senior team." },
+      {
+        name: "description",
+        content:
+          "Distinguished homes across metropolitan Adelaide. Sell, buy, rent and manage with a small, senior team.",
+      },
       { property: "og:title", content: "Ring Real Estate" },
-      { property: "og:description", content: "Distinguished homes across metropolitan Adelaide. Since 1978." },
+      {
+        property: "og:description",
+        content: "Distinguished homes across metropolitan Adelaide. Since 1978.",
+      },
       { property: "og:image", content: listings[0]?.hero ?? "" },
     ],
     links: canonical("/"),
@@ -38,75 +45,176 @@ const HERO_SLIDES = (() => {
 const HERO = HERO_SLIDES[0]?.hero ?? "";
 
 const LUXURY_SLIDES = [
-  { id: "4-college", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg", address: "4 College Avenue", suburb: "Bellevue Heights", caption: "A truly wonderful home, offered for the very first time." },
-  { id: "58-brighton", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1920x1440.pg", address: "58 Brighton Parade", suburb: "Blackwood", caption: "Architectural calm in a treasured tree-lined pocket." },
-  { id: "1-menura", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/b0c08cc5-7628-42b1-b77f-c17b375ff327/cp-rect-1920x1440.pg", address: "1 Menura Avenue", suburb: "Glenalta", caption: "60s contemporary in a position-perfect setting." },
-  { id: "16-gannet", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/dc3fcad6-baa5-47e6-9a57-c1949d40ecc2/cp-rect-1920x1440.pg", address: "16 Gannet Avenue", suburb: "Glenalta", caption: "Family scale and garden privacy, beautifully kept." },
-  { id: "9-esplanade", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/e258eebb-0add-4cb9-99ba-54a318f272b0/cp-rect-1920x1440.pg", address: "9 Esplanade", suburb: "Sellicks Beach", caption: "An unrepeatable absolute beachfront position." },
+  {
+    id: "4-college",
+    hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg",
+    address: "4 College Avenue",
+    suburb: "Bellevue Heights",
+    caption: "A truly wonderful home, offered for the very first time.",
+  },
+  {
+    id: "58-brighton",
+    hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1920x1440.pg",
+    address: "58 Brighton Parade",
+    suburb: "Blackwood",
+    caption: "Architectural calm in a treasured tree-lined pocket.",
+  },
+  {
+    id: "1-menura",
+    hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/b0c08cc5-7628-42b1-b77f-c17b375ff327/cp-rect-1920x1440.pg",
+    address: "1 Menura Avenue",
+    suburb: "Glenalta",
+    caption: "60s contemporary in a position-perfect setting.",
+  },
+  {
+    id: "16-gannet",
+    hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/dc3fcad6-baa5-47e6-9a57-c1949d40ecc2/cp-rect-1920x1440.pg",
+    address: "16 Gannet Avenue",
+    suburb: "Glenalta",
+    caption: "Family scale and garden privacy, beautifully kept.",
+  },
+  {
+    id: "9-esplanade",
+    hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/e258eebb-0add-4cb9-99ba-54a318f272b0/cp-rect-1920x1440.pg",
+    address: "9 Esplanade",
+    suburb: "Sellicks Beach",
+    caption: "An unrepeatable absolute beachfront position.",
+  },
 ];
-
 
 function LuxuryCarousel() {
   const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
-  const touchActive = useRef(false);
+  const [pausedByInteraction, setPausedByInteraction] = useState(false);
+  const pointerStartX = useRef<number | null>(null);
+  const pointerStartY = useRef<number | null>(null);
+  const pointerActive = useRef(false);
+  const pointerIsTouch = useRef(false);
 
   useEffect(() => {
-    if (paused) return;
+    if (pausedByInteraction) return;
+    if (LUXURY_SLIDES.length < 2) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
     const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 7000);
     return () => clearInterval(id);
-  }, [paused]);
+  }, [pausedByInteraction]);
 
   const go = (delta: number) =>
     setI((n) => (n + delta + LUXURY_SLIDES.length) % LUXURY_SLIDES.length);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    const t = e.touches[0];
-    touchStartX.current = t.clientX;
-    touchStartY.current = t.clientY;
-    touchActive.current = true;
-    setPaused(true);
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    pointerStartX.current = e.clientX;
+    pointerStartY.current = e.clientY;
+    pointerActive.current = true;
+    pointerIsTouch.current = e.pointerType === "touch";
+    setPausedByInteraction(true);
   };
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) return;
-    const dx = e.touches[0].clientX - touchStartX.current;
-    const dy = e.touches[0].clientY - touchStartY.current;
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointerActive.current || !pointerIsTouch.current) return;
+    if (pointerStartX.current === null || pointerStartY.current === null) return;
+    const dx = e.clientX - pointerStartX.current;
+    const dy = e.clientY - pointerStartY.current;
     // Once a clear horizontal gesture is detected, prevent vertical scroll hijack.
     if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
       e.preventDefault?.();
     }
   };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) {
-      touchActive.current = false;
-      setPaused(false);
+  const endPointerInteraction = (e?: React.PointerEvent<HTMLDivElement>) => {
+    if (
+      !pointerActive.current ||
+      pointerStartX.current === null ||
+      pointerStartY.current === null
+    ) {
+      pointerActive.current = false;
+      pointerIsTouch.current = false;
+      setPausedByInteraction(false);
+      return;
+    }
+
+    if (e && pointerIsTouch.current) {
+      const dx = e.clientX - pointerStartX.current;
+      const dy = e.clientY - pointerStartY.current;
+      const SWIPE = 40;
+      if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
+        go(dx < 0 ? 1 : -1);
+      }
+    }
+
+    pointerStartX.current = null;
+    pointerStartY.current = null;
+    pointerActive.current = false;
+    pointerIsTouch.current = false;
+    setPausedByInteraction(false);
+  };
+
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    endPointerInteraction(e);
+  };
+
+  const onPointerCancel = () => {
+    endPointerInteraction();
+  };
+
+  const onMouseEnter = () => {
+    setPausedByInteraction(true);
+  };
+
+  const onMouseLeave = () => {
+    if (!pointerActive.current) setPausedByInteraction(false);
+  };
+
+  const onBlurCapture = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+      if (!pointerActive.current) setPausedByInteraction(false);
+    }
+  };
+
+  const onFocusCapture = () => {
+    setPausedByInteraction(true);
+  };
+
+  const onLegacyTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    // keep a touch-end fallback for browsers with inconsistent pointer-up behavior
+    if (
+      !pointerActive.current ||
+      pointerStartX.current === null ||
+      pointerStartY.current === null
+    ) {
+      pointerActive.current = false;
+      pointerIsTouch.current = false;
+      setPausedByInteraction(false);
       return;
     }
     const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX.current;
-    const dy = t.clientY - touchStartY.current;
+    const dx = t.clientX - pointerStartX.current;
+    const dy = t.clientY - pointerStartY.current;
     const SWIPE = 40;
     if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
       go(dx < 0 ? 1 : -1);
     }
-    touchStartX.current = null;
-    touchStartY.current = null;
-    touchActive.current = false;
-    setPaused(false);
+    pointerStartX.current = null;
+    pointerStartY.current = null;
+    pointerActive.current = false;
+    pointerIsTouch.current = false;
+    setPausedByInteraction(false);
   };
 
   return (
     <div
       className="mt-10 relative overflow-hidden bg-muted group touch-pan-y select-none"
       style={{ aspectRatio: "4 / 5" }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onTouchCancel={onTouchEnd}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocusCapture={onFocusCapture}
+      onBlurCapture={onBlurCapture}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerCancel}
+      onTouchEnd={onLegacyTouchEnd}
       role="group"
       aria-roledescription="carousel"
       aria-label="Recent Ring residences"
@@ -181,9 +289,7 @@ function LuxuryCarousel() {
                 <span className="inline-block h-px w-6 bg-[var(--ringgreen)]" />
                 {s.suburb}
               </div>
-              <div className="font-serif text-xl md:text-2xl leading-tight mt-1.5">
-                {s.address}
-              </div>
+              <div className="font-serif text-xl md:text-2xl leading-tight mt-1.5">{s.address}</div>
               <div className="text-[12px] md:text-[13px] text-white/80 leading-snug mt-1 max-w-[26rem]">
                 {s.caption}
               </div>
@@ -212,14 +318,17 @@ function LuxuryCarousel() {
   );
 }
 
-
 function RecentSalesStrip({ sold }: { sold: typeof listings }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     if (paused) return;
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
     const id = setInterval(() => {
       const el = scrollerRef.current;
       if (!el) return;
@@ -286,7 +395,9 @@ function HomePage() {
     navigate({ to: dest, search: search as never });
   }
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (HERO_SLIDES.length < 2 || paused) return;
@@ -297,7 +408,6 @@ function HomePage() {
   }, [paused]);
 
   const current = HERO_SLIDES[slide] ?? HERO_SLIDES[0];
-
 
   return (
     <div className="bg-background text-foreground">
@@ -337,8 +447,8 @@ function HomePage() {
               current.status === "for-rent" || current.status === "leased"
                 ? "/rent/$listingId"
                 : current.status === "sold"
-                ? "/sold/$listingId"
-                : "/buy/$listingId"
+                  ? "/sold/$listingId"
+                  : "/buy/$listingId"
             }
             params={{ listingId: current.id }}
             aria-label={`View featured property: ${current.address}, ${current.suburb} — ${current.price}`}
@@ -362,25 +472,33 @@ function HomePage() {
               <span className="ring-mark" /> &nbsp;Adelaide · Established 1978
             </div>
             <h1 className="font-serif text-[3.2rem] sm:text-[5rem] md:text-[7rem] leading-[0.92] tracking-tight mt-6 reveal reveal-2">
-              The home<br />
-              <span className="italic font-light">you have been</span><br />
+              The home
+              <br />
+              <span className="italic font-light">you have been</span>
+              <br />
               looking for.
             </h1>
             <p className="mt-8 max-w-xl text-base md:text-lg opacity-85 leading-relaxed reveal reveal-3">
-              A small, senior team quietly selling and managing some of South
-              Australia's most considered homes — for nearly five decades.
+              A small, senior team quietly selling and managing some of South Australia's most
+              considered homes — for nearly five decades.
             </p>
           </div>
 
           {/* Search bar */}
           <div className="mt-14 reveal reveal-4 max-w-4xl">
             {/* Intent tabs */}
-            <div role="tablist" aria-label="Search type" className="inline-flex gap-px bg-[var(--ringgreen)]/25 backdrop-blur p-px ring-1 ring-[var(--ringgreen)]/40">
-              {([
-                { id: "buy", label: "For sale" },
-                { id: "rent", label: "For rent" },
-                { id: "sold", label: "Sold" },
-              ] as const).map((t) => {
+            <div
+              role="tablist"
+              aria-label="Search type"
+              className="inline-flex gap-px bg-[var(--ringgreen)]/25 backdrop-blur p-px ring-1 ring-[var(--ringgreen)]/40"
+            >
+              {(
+                [
+                  { id: "buy", label: "For sale" },
+                  { id: "rent", label: "For rent" },
+                  { id: "sold", label: "Sold" },
+                ] as const
+              ).map((t) => {
                 const active = intent === t.id;
                 return (
                   <button
@@ -404,7 +522,11 @@ function HomePage() {
 
             <form
               role="search"
-              onSubmit={(e) => { e.preventDefault(); setSuggestOpen(false); runSearch(); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSuggestOpen(false);
+                runSearch();
+              }}
               className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] ring-1 ring-[var(--ringgreen)]/50 border-t-2 border-[var(--ringgreen)]"
             >
               {/* Query */}
@@ -414,7 +536,10 @@ function HomePage() {
                   <span className="sr-only">Where</span>
                   <input
                     value={query}
-                    onChange={(e) => { setQuery(e.target.value); setSuggestOpen(true); }}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setSuggestOpen(true);
+                    }}
                     onFocus={() => setSuggestOpen(true)}
                     onBlur={() => setTimeout(() => setSuggestOpen(false), 150)}
                     onKeyDown={(e) => {
@@ -428,7 +553,10 @@ function HomePage() {
                   {query && (
                     <button
                       type="button"
-                      onClick={() => { setQuery(""); setSuggestOpen(false); }}
+                      onClick={() => {
+                        setQuery("");
+                        setSuggestOpen(false);
+                      }}
                       className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
                       aria-label="Clear search"
                     >
@@ -446,7 +574,11 @@ function HomePage() {
                         <button
                           type="button"
                           onMouseDown={(e) => e.preventDefault()}
-                          onClick={() => { setQuery(s); setSuggestOpen(false); runSearch(s); }}
+                          onClick={() => {
+                            setQuery(s);
+                            setSuggestOpen(false);
+                            runSearch(s);
+                          }}
                           className="w-full text-left px-5 py-3 text-sm hover:bg-secondary flex items-center gap-3"
                         >
                           <MapPin size={14} className="text-muted-foreground" />
@@ -477,10 +609,15 @@ function HomePage() {
                       <option value="4">4+ beds</option>
                       <option value="5">5+ beds</option>
                     </select>
-                    <ChevronDown size={14} className="text-muted-foreground absolute right-4 pointer-events-none" />
+                    <ChevronDown
+                      size={14}
+                      className="text-muted-foreground absolute right-4 pointer-events-none"
+                    />
                   </>
                 ) : (
-                  <span className="text-sm pr-6" aria-hidden="true">Any beds</span>
+                  <span className="text-sm pr-6" aria-hidden="true">
+                    Any beds
+                  </span>
                 )}
               </label>
 
@@ -499,7 +636,10 @@ function HomePage() {
               >
                 <Search size={14} className="md:hidden" />
                 Search
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight
+                  size={14}
+                  className="transition-transform group-hover:translate-x-0.5"
+                />
               </button>
             </form>
 
@@ -509,7 +649,10 @@ function HomePage() {
                 <button
                   key={s}
                   type="button"
-                  onClick={() => { setQuery(s); runSearch(s); }}
+                  onClick={() => {
+                    setQuery(s);
+                    runSearch(s);
+                  }}
                   className="hover:text-white border-b border-transparent hover:border-white/60 pb-0.5 transition-colors"
                 >
                   {s}
@@ -517,7 +660,6 @@ function HomePage() {
               ))}
             </div>
           </div>
-
         </div>
 
         <div className="absolute z-20 bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70 pointer-events-none">
@@ -527,8 +669,8 @@ function HomePage() {
                 current.status === "for-rent" || current.status === "leased"
                   ? "/rent/$listingId"
                   : current.status === "sold"
-                  ? "/sold/$listingId"
-                  : "/buy/$listingId"
+                    ? "/sold/$listingId"
+                    : "/buy/$listingId"
               }
               params={{ listingId: current.id }}
               aria-label={`View featured property: ${current.address}, ${current.suburb}`}
@@ -573,7 +715,10 @@ function HomePage() {
                 Senior agents, by name.
               </h2>
             </div>
-            <Link to="/about" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+            <Link
+              to="/about"
+              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+            >
               Meet the team <ArrowUpRight size={16} />
             </Link>
           </div>
@@ -617,18 +762,19 @@ function HomePage() {
               Integrity.
             </div>
             <LuxuryCarousel />
-
           </div>
           <div className="md:col-span-7 md:col-start-6">
             <h2 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight">
-              A single word, given as a promise — and kept, transaction
-              after transaction, generation after generation.
+              A single word, given as a promise — and kept, transaction after transaction,
+              generation after generation.
             </h2>
-            <p className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-              Ring Real Estate has remained deliberately small since the day
-              we opened our doors in Fullarton. We sell fewer homes than the
-              franchises around us, and we sell them better — by hand, by
-              name, with the patience that good outcomes require.
+            <p
+              className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl"
+              style={{ fontFamily: '"Roboto", -apple-system, BlinkMacSystemFont, sans-serif' }}
+            >
+              Ring Real Estate has remained deliberately small since the day we opened our doors in
+              Fullarton. We sell fewer homes than the franchises around us, and we sell them better
+              — by hand, by name, with the patience that good outcomes require.
             </p>
             <Link
               to="/about"
@@ -652,7 +798,10 @@ function HomePage() {
                 Featured residences
               </h2>
             </div>
-            <Link to="/buy" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+            <Link
+              to="/buy"
+              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+            >
               View all listings <ArrowUpRight size={16} />
             </Link>
           </div>
@@ -688,7 +837,10 @@ function HomePage() {
               Quietly, exceptionally.
             </h2>
           </div>
-          <Link to="/sold" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+          <Link
+            to="/sold"
+            className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+          >
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>
@@ -710,16 +862,27 @@ function HomePage() {
               Three deliberate paths to the right buyer.
             </h2>
             <p className="mt-6 text-muted-foreground max-w-md">
-              Every campaign is built around the home, not the calendar. We
-              recommend the method that will produce the strongest result,
-              not the fastest commission.
+              Every campaign is built around the home, not the calendar. We recommend the method
+              that will produce the strongest result, not the fastest commission.
             </p>
           </div>
           <div className="md:col-span-8 grid sm:grid-cols-3 gap-px bg-border">
             {[
-              { n: "01", t: "Set to Sell", d: "A defined campaign window with a closing date — clarity for buyers, urgency in the market." },
-              { n: "02", t: "Auction", d: "Public competition on the day. Transparent, decisive, and frequently the highest result." },
-              { n: "03", t: "Private Treaty", d: "Quiet negotiation on a published price. The right approach for the right home." },
+              {
+                n: "01",
+                t: "Set to Sell",
+                d: "A defined campaign window with a closing date — clarity for buyers, urgency in the market.",
+              },
+              {
+                n: "02",
+                t: "Auction",
+                d: "Public competition on the day. Transparent, decisive, and frequently the highest result.",
+              },
+              {
+                n: "03",
+                t: "Private Treaty",
+                d: "Quiet negotiation on a published price. The right approach for the right home.",
+              },
             ].map((m) => (
               <div key={m.n} className="bg-background p-8 md:p-10 hover-lift">
                 <div className="font-serif text-5xl text-[var(--ringgreen)]">{m.n}</div>
@@ -743,18 +906,32 @@ function HomePage() {
                 Senior, every time.
               </h2>
             </div>
-            <Link to="/about" className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all">
+            <Link
+              to="/about"
+              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+            >
               Meet the team <ArrowUpRight size={16} />
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {agents.map((a) => (
-              <Link key={a.id} to="/team/$agentId" params={{ agentId: a.id }} className="hover-lift block group">
+              <Link
+                key={a.id}
+                to="/team/$agentId"
+                params={{ agentId: a.id }}
+                className="hover-lift block group"
+              >
                 <div className="aspect-[3/4] img-zoom bg-muted">
-                  <TeamMemberImage agent={a} size="lg" className="grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  <TeamMemberImage
+                    agent={a}
+                    size="lg"
+                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
                 </div>
                 <div className="mt-4">
-                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">{a.name}</div>
+                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">
+                    {a.name}
+                  </div>
                   <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
                     {a.role}
                   </div>
@@ -786,15 +963,15 @@ function HomePage() {
               <span className="ring-mark" /> &nbsp;Considering selling?
             </div>
             <h2 className="font-serif text-5xl md:text-7xl tracking-tight mt-6 leading-[1.02]">
-              A confidential, considered<br />
+              A confidential, considered
+              <br />
               appraisal of your home.
             </h2>
           </div>
           <div className="md:col-span-5">
             <p className="opacity-75 leading-relaxed">
-              No obligation. No franchise theatre. A senior agent will visit
-              you, walk the home, and prepare a written appraisal grounded in
-              recent comparable sales.
+              No obligation. No franchise theatre. A senior agent will visit you, walk the home, and
+              prepare a written appraisal grounded in recent comparable sales.
             </p>
             <Link
               to="/sell/appraisal"

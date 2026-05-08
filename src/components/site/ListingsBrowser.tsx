@@ -101,14 +101,22 @@ export function ListingsBrowser({
               placeholder="Suburb, address or keyword"
             />
           </div>
-          <select className="bg-background px-4 py-3 text-sm" value={suburb} onChange={(e) => update({ suburb: e.target.value })}>
+          <select
+            className="bg-background px-4 py-3 text-sm"
+            value={suburb}
+            onChange={(e) => update({ suburb: e.target.value })}
+          >
             <option>All suburbs</option>
             {sourceSuburbs.map((s) => (
               <option key={s}>{s}</option>
             ))}
           </select>
           {showTypeFilter ? (
-            <select className="bg-background px-4 py-3 text-sm" value={type} onChange={(e) => update({ type: e.target.value })}>
+            <select
+              className="bg-background px-4 py-3 text-sm"
+              value={type}
+              onChange={(e) => update({ type: e.target.value })}
+            >
               {TYPES.map((t) => (
                 <option key={t}>{t}</option>
               ))}
@@ -116,14 +124,22 @@ export function ListingsBrowser({
           ) : (
             <div className="hidden md:block" />
           )}
-          <select className="bg-background px-4 py-3 text-sm" value={beds} onChange={(e) => update({ beds: e.target.value })}>
+          <select
+            className="bg-background px-4 py-3 text-sm"
+            value={beds}
+            onChange={(e) => update({ beds: e.target.value })}
+          >
             {BEDS.map((b) => (
               <option key={b} value={b}>
                 {b === "Any" ? "Any beds" : `${b}+`}
               </option>
             ))}
           </select>
-          <select className="bg-background px-4 py-3 text-sm" value={sort} onChange={(e) => update({ sort: e.target.value as ListingsSearch["sort"] })}>
+          <select
+            className="bg-background px-4 py-3 text-sm"
+            value={sort}
+            onChange={(e) => update({ sort: e.target.value as ListingsSearch["sort"] })}
+          >
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
@@ -146,7 +162,11 @@ export function ListingsBrowser({
         <div className="container-page text-center py-32 text-muted-foreground">
           {emptyMessage ?? (
             <>
-              No matches. <Link to="/contact" className="underline">Talk to us</Link> about an off-market home.
+              No matches.{" "}
+              <Link to="/contact" className="underline">
+                Talk to us
+              </Link>{" "}
+              about an off-market home.
             </>
           )}
         </div>

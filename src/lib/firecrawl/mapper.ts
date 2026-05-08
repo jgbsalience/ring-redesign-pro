@@ -75,7 +75,11 @@ export const LISTING_JSON_SCHEMA = {
     suburb: { type: "string" },
     state: { type: "string", description: "Two-letter Australian state code, e.g. 'SA'" },
     postcode: { type: "string" },
-    price: { type: "string", description: "Display price exactly as shown, e.g. 'Offers above $850,000' or 'Contact Agent'" },
+    price: {
+      type: "string",
+      description:
+        "Display price exactly as shown, e.g. 'Offers above $850,000' or 'Contact Agent'",
+    },
     priceNote: { type: "string", description: "Optional qualifier like 'Per week' or 'Guide'" },
     status: { type: "string", enum: ["for-sale", "for-rent", "sold", "leased"] },
     beds: { type: "number" },
@@ -84,7 +88,11 @@ export const LISTING_JSON_SCHEMA = {
     land: { type: "string", description: "Land size with units, e.g. '612 sqm'" },
     type: { type: "string", enum: ["House", "Townhouse", "Apartment", "Land", "Villa"] },
     headline: { type: "string", description: "Short marketing tagline" },
-    description: { type: "array", items: { type: "string" }, description: "Full description split into paragraphs" },
+    description: {
+      type: "array",
+      items: { type: "string" },
+      description: "Full description split into paragraphs",
+    },
     features: { type: "array", items: { type: "string" } },
     hero: { type: "string", description: "URL of the main hero image" },
     gallery: { type: "array", items: { type: "string" } },
@@ -262,7 +270,9 @@ export function mapFirecrawlToListing(
 
   // Media
   const hero = str(get(j, "hero")) ?? str(doc.metadata?.ogImage);
-  const galleryRaw = arr<unknown>(get(j, "gallery")).map(str).filter((x): x is string => !!x);
+  const galleryRaw = arr<unknown>(get(j, "gallery"))
+    .map(str)
+    .filter((x): x is string => !!x);
   const gallery = hero && !galleryRaw.includes(hero) ? [hero, ...galleryRaw] : galleryRaw;
   const floorplan = str(get(j, "floorplan"));
 
@@ -276,8 +286,12 @@ export function mapFirecrawlToListing(
     .filter((x): x is string => !!x);
 
   // Agents — accept slugs or names
-  const agentNames = arr<unknown>(get(j, "agentNames")).map(str).filter((x): x is string => !!x);
-  const explicitSlugs = arr<unknown>(get(j, "agentSlugs")).map(str).filter((x): x is string => !!x);
+  const agentNames = arr<unknown>(get(j, "agentNames"))
+    .map(str)
+    .filter((x): x is string => !!x);
+  const explicitSlugs = arr<unknown>(get(j, "agentSlugs"))
+    .map(str)
+    .filter((x): x is string => !!x);
   const agentSlugs = explicitSlugs.length ? explicitSlugs : agentNames.map(slugifyAgent);
 
   // Inspections

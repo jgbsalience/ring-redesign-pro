@@ -18,15 +18,10 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const src = readFileSync(
-  resolve(__dirname, "../src/components/site/TeamMemberImage.tsx"),
-  "utf8",
-);
+const src = readFileSync(resolve(__dirname, "../src/components/site/TeamMemberImage.tsx"), "utf8");
 
 // --- Extract the defaultSizes object literal ---------------------------------
-const block = src.match(
-  /const defaultSizes:[^=]*=\s*{([\s\S]*?)\n};/,
-);
+const block = src.match(/const defaultSizes:[^=]*=\s*{([\s\S]*?)\n};/);
 if (!block) {
   console.error("FAIL: could not locate defaultSizes literal");
   process.exit(2);
@@ -87,9 +82,7 @@ for (const [preset, sizesAttr] of Object.entries(sizes)) {
     });
 
     if (!Number.isFinite(px)) {
-      failures.push(
-        `[${preset} @ ${bp.name}] could not parse resolved value "${resolved}"`,
-      );
+      failures.push(`[${preset} @ ${bp.name}] could not parse resolved value "${resolved}"`);
       continue;
     }
     if (px > bp.maxPx) {

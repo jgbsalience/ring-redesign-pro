@@ -23,8 +23,7 @@ export const Route = createFileRoute("/sold/")({
       { property: "og:title", content: "Recently sold — Ring Real Estate" },
       {
         property: "og:description",
-        content:
-          "Recent results across Blackwood, Coromandel Valley, Bellevue Heights and beyond.",
+        content: "Recent results across Blackwood, Coromandel Valley, Bellevue Heights and beyond.",
       },
     ],
     links: canonical("/sold"),
@@ -64,13 +63,13 @@ function SoldIndex() {
         (q === "" ||
           l.address.toLowerCase().includes(q) ||
           l.suburb.toLowerCase().includes(q) ||
-          l.postcode.toLowerCase().includes(q))
+          l.postcode.toLowerCase().includes(q)),
     );
   }, [sold, query, suburb, type, beds]);
 
   const soldSuburbs = useMemo(
     () => Array.from(new Set(sold.map((l) => l.suburb).filter(Boolean))).sort(),
-    [sold]
+    [sold],
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -97,8 +96,8 @@ function SoldIndex() {
             exceptionally.
           </h1>
           <p className="mt-6 max-w-2xl text-muted-foreground leading-relaxed">
-            A selection of recently sold residential properties — handled with
-            the same patience and judgement we bring to every campaign.
+            A selection of recently sold residential properties — handled with the same patience and
+            judgement we bring to every campaign.
           </p>
 
           {/* Filters */}
@@ -211,8 +210,7 @@ function SoldIndex() {
               </div>
               <h2 className="font-serif text-4xl md:text-6xl mt-4 tracking-tight leading-[1]">
                 A quiet conversation,
-                <br />
-                a considered result.
+                <br />a considered result.
               </h2>
             </div>
             <div className="md:col-span-4 flex md:justify-end">

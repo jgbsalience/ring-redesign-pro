@@ -6,10 +6,9 @@ export const listingsSearchSchema = z.object({
   suburb: fallback(z.string(), "All suburbs").default("All suburbs"),
   type: fallback(z.string(), "Any type").default("Any type"),
   beds: fallback(z.string(), "Any").default("Any"),
-  sort: fallback(
-    z.enum(["newest", "price-desc", "price-asc", "beds-desc"]),
+  sort: fallback(z.enum(["newest", "price-desc", "price-asc", "beds-desc"]), "newest").default(
     "newest",
-  ).default("newest"),
+  ),
   page: fallback(z.number().int().min(1), 1).default(1),
 });
 

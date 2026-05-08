@@ -38,7 +38,17 @@ export const Route = createFileRoute("/api/appraisal")({
           return json({ error: "Validation failed", issues: result.error.issues }, 422);
         }
 
-        const { name, phone, email, propertyAddress, suburb, propertyType, interests, comments, website } = result.data;
+        const {
+          name,
+          phone,
+          email,
+          propertyAddress,
+          suburb,
+          propertyType,
+          interests,
+          comments,
+          website,
+        } = result.data;
 
         // Reject honeypot fills silently
         if (website) return json({ ok: true });

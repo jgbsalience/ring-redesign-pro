@@ -7,9 +7,17 @@ export const Route = createFileRoute("/sell/set-to-sell")({
   head: () => ({
     meta: [
       { title: "Set to Sell — Ring Real Estate" },
-      { name: "description", content: "A Private Treaty–Tender strategy to sell your home in 28 days. Ring's signature method: more buyer enquiry, seller in control, less risk, less stress." },
+      {
+        name: "description",
+        content:
+          "A Private Treaty–Tender strategy to sell your home in 28 days. Ring's signature method: more buyer enquiry, seller in control, less risk, less stress.",
+      },
       { property: "og:title", content: "Set to Sell — The fourth method" },
-      { property: "og:description", content: "Ring's trademarked selling strategy: 8 winning features, 4 selling phases, one outcome." },
+      {
+        property: "og:description",
+        content:
+          "Ring's trademarked selling strategy: 8 winning features, 4 selling phases, one outcome.",
+      },
     ],
   }),
   component: SetToSellPage,
@@ -40,21 +48,69 @@ const METHODS = [
 ];
 
 const FEATURES = [
-  { n: "01", t: "Tailored to you", c: "Built around your home, your reason for sale, and your private circumstances." },
-  { n: "02", t: "Optimum selling time", c: "A 28-day cadence that creates momentum without panic." },
-  { n: "03", t: "Greater enquiry", c: "Marketing designed to draw the broadest qualified buyer pool." },
-  { n: "04", t: "Buyer empowerment", c: "Clear opportunity to engage, inspect and offer with confidence." },
-  { n: "05", t: "Seller in control", c: "Decisions remain with you at every step — from price to timing." },
-  { n: "06", t: "Ethical negotiation", c: "Private, transparent, principled — no theatre, no pressure." },
-  { n: "07", t: "Transparent consultation", c: "You see the offers, the feedback and the rationale, in real time." },
-  { n: "08", t: "Fail-safe by design", c: "A structure that protects the outcome even if the market shifts." },
+  {
+    n: "01",
+    t: "Tailored to you",
+    c: "Built around your home, your reason for sale, and your private circumstances.",
+  },
+  {
+    n: "02",
+    t: "Optimum selling time",
+    c: "A 28-day cadence that creates momentum without panic.",
+  },
+  {
+    n: "03",
+    t: "Greater enquiry",
+    c: "Marketing designed to draw the broadest qualified buyer pool.",
+  },
+  {
+    n: "04",
+    t: "Buyer empowerment",
+    c: "Clear opportunity to engage, inspect and offer with confidence.",
+  },
+  {
+    n: "05",
+    t: "Seller in control",
+    c: "Decisions remain with you at every step — from price to timing.",
+  },
+  {
+    n: "06",
+    t: "Ethical negotiation",
+    c: "Private, transparent, principled — no theatre, no pressure.",
+  },
+  {
+    n: "07",
+    t: "Transparent consultation",
+    c: "You see the offers, the feedback and the rationale, in real time.",
+  },
+  {
+    n: "08",
+    t: "Fail-safe by design",
+    c: "A structure that protects the outcome even if the market shifts.",
+  },
 ];
 
 const PHASES = [
-  { d: "Days 1–7", t: "Prepare", c: "Presentation, photography, pricing strategy and launch plan signed off." },
-  { d: "Days 8–14", t: "Present", c: "Market launch, first inspections, buyer registration, qualified enquiry." },
-  { d: "Days 15–21", t: "Negotiate", c: "Private negotiation begins. Offers are reviewed transparently with you." },
-  { d: "Days 22–28", t: "Settle", c: "Best terms accepted. Contracts exchanged with the right buyer at the right price." },
+  {
+    d: "Days 1–7",
+    t: "Prepare",
+    c: "Presentation, photography, pricing strategy and launch plan signed off.",
+  },
+  {
+    d: "Days 8–14",
+    t: "Present",
+    c: "Market launch, first inspections, buyer registration, qualified enquiry.",
+  },
+  {
+    d: "Days 15–21",
+    t: "Negotiate",
+    c: "Private negotiation begins. Offers are reviewed transparently with you.",
+  },
+  {
+    d: "Days 22–28",
+    t: "Settle",
+    c: "Best terms accepted. Contracts exchanged with the right buyer at the right price.",
+  },
 ];
 
 function SetToSellPage() {
@@ -84,8 +140,8 @@ function SetToSellPage() {
           </h1>
           <div className="mt-8 h-px w-24 bg-[var(--ringgreen)]" />
           <p className="mt-6 max-w-2xl text-white/85 text-lg leading-relaxed">
-            A Private Treaty–Tender strategy designed to sell your home in 28 days
-            — with less risk and less stress.
+            A Private Treaty–Tender strategy designed to sell your home in 28 days — with less risk
+            and less stress.
           </p>
           <p className="mt-4 text-[10px] uppercase tracking-[0.28em] text-white/50">
             Set to Sell™ &nbsp;·&nbsp; A registered trademark of Ring Real Estate
@@ -104,9 +160,19 @@ function SetToSellPage() {
               Not a method. A discipline.
             </h2>
             <div className="mt-8 space-y-5 text-muted-foreground leading-relaxed text-[1.05rem] max-w-2xl">
-              <p>Set to Sell removes the restrictions of the traditional methods of sale and brings together their positive elements — into a single, compelling marketing and selling strategy.</p>
-              <p>It is unique because it is tailored to your property, your reasons, and your circumstances. It is compelling because it promotes the sale in the optimum selling window, generates more buyer enquiry, and keeps you in control at every step.</p>
-              <p className="text-foreground">Driven by the most ethical and transparent private negotiation process we know.</p>
+              <p>
+                Set to Sell removes the restrictions of the traditional methods of sale and brings
+                together their positive elements — into a single, compelling marketing and selling
+                strategy.
+              </p>
+              <p>
+                It is unique because it is tailored to your property, your reasons, and your
+                circumstances. It is compelling because it promotes the sale in the optimum selling
+                window, generates more buyer enquiry, and keeps you in control at every step.
+              </p>
+              <p className="text-foreground">
+                Driven by the most ethical and transparent private negotiation process we know.
+              </p>
             </div>
           </div>
 
@@ -119,8 +185,13 @@ function SetToSellPage() {
                 ["Marketing", "Bespoke per property"],
                 ["Authorisation", "Ring agents only"],
               ].map(([k, v]) => (
-                <div key={k} className="flex justify-between items-baseline border-b border-border/60 pb-4">
-                  <span className="text-muted-foreground uppercase tracking-[0.18em] text-[10px]">{k}</span>
+                <div
+                  key={k}
+                  className="flex justify-between items-baseline border-b border-border/60 pb-4"
+                >
+                  <span className="text-muted-foreground uppercase tracking-[0.18em] text-[10px]">
+                    {k}
+                  </span>
                   <span className="text-foreground">{v}</span>
                 </div>
               ))}
@@ -144,7 +215,9 @@ function SetToSellPage() {
               <div key={m.n} className="bg-background border border-border p-8 md:p-10">
                 <div className="flex items-baseline justify-between">
                   <span className="font-serif text-3xl text-[var(--ringgreen-deep)]">{m.n}</span>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{m.tag}</span>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                    {m.tag}
+                  </span>
                 </div>
                 <h3 className="font-serif text-2xl md:text-3xl tracking-tight mt-6">{m.name}</h3>
                 <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{m.body}</p>
@@ -158,17 +231,21 @@ function SetToSellPage() {
               <div className="md:col-span-7">
                 <div className="flex items-baseline gap-4">
                   <span className="font-serif text-3xl text-[var(--ringgreen-deep)]">04</span>
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-[var(--ringgreen-deep)]">The fourth method</span>
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-[var(--ringgreen-deep)]">
+                    The fourth method
+                  </span>
                 </div>
                 <h3 className="font-serif text-3xl md:text-5xl tracking-tight mt-4">Set to Sell</h3>
                 <p className="mt-4 text-foreground/80 leading-relaxed max-w-xl">
                   A Private Treaty–Tender hybrid with a private negotiation system. Combines the
-                  flexibility of Private Treaty, the urgency of Auction, and the discretion of Tender —
-                  into one disciplined 28-day plan.
+                  flexibility of Private Treaty, the urgency of Auction, and the discretion of
+                  Tender — into one disciplined 28-day plan.
                 </p>
               </div>
               <div className="md:col-span-5 md:text-right">
-                <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Outcome</div>
+                <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                  Outcome
+                </div>
                 <div className="font-serif text-2xl md:text-3xl tracking-tight mt-2">
                   Sold for the right price, to the right buyer, on time.
                 </div>
@@ -182,9 +259,18 @@ function SetToSellPage() {
       <section className="container-page py-20 md:py-28">
         <div className="grid md:grid-cols-3 gap-10 md:gap-16">
           {[
-            { t: "More buyer enquiry", c: "Marketing crafted to widen the qualified audience, not just the audience." },
-            { t: "Seller in control", c: "Decisions on price, timing and terms stay with you — never delegated to the room." },
-            { t: "28 days, by design", c: "A finite, focused window that creates momentum without forcing the outcome." },
+            {
+              t: "More buyer enquiry",
+              c: "Marketing crafted to widen the qualified audience, not just the audience.",
+            },
+            {
+              t: "Seller in control",
+              c: "Decisions on price, timing and terms stay with you — never delegated to the room.",
+            },
+            {
+              t: "28 days, by design",
+              c: "A finite, focused window that creates momentum without forcing the outcome.",
+            },
           ].map((p) => (
             <div key={p.t}>
               <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground flex items-center gap-2">
@@ -208,8 +294,13 @@ function SetToSellPage() {
           </h2>
           <div className="mt-14 grid md:grid-cols-2 gap-5">
             {FEATURES.map((f) => (
-              <div key={f.n} className="bg-background border border-border p-6 md:p-8 flex gap-6 items-start">
-                <span className="font-serif text-3xl text-[var(--ringgreen-deep)] leading-none">{f.n}</span>
+              <div
+                key={f.n}
+                className="bg-background border border-border p-6 md:p-8 flex gap-6 items-start"
+              >
+                <span className="font-serif text-3xl text-[var(--ringgreen-deep)] leading-none">
+                  {f.n}
+                </span>
                 <div>
                   <h3 className="font-serif text-xl md:text-2xl tracking-tight">{f.t}</h3>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{f.c}</p>
@@ -258,10 +349,12 @@ function SetToSellPage() {
           </div>
           <div className="md:col-span-8">
             <blockquote className="font-serif text-2xl md:text-3xl tracking-tight leading-[1.25]">
-              <span className="text-[var(--ringgreen-deep)]">“</span>The foundation principles of Set to Sell were trademarked as
-              <em className="not-italic"> Set Sale</em> from 2000 to 2010 — licensed to more than 500 consultants across Australia and
-              New Zealand. Stephen Ring and Ring Real Estate were among the first authorised, and have been refining the
-              discipline ever since.<span className="text-[var(--ringgreen-deep)]">”</span>
+              <span className="text-[var(--ringgreen-deep)]">“</span>The foundation principles of
+              Set to Sell were trademarked as
+              <em className="not-italic"> Set Sale</em> from 2000 to 2010 — licensed to more than
+              500 consultants across Australia and New Zealand. Stephen Ring and Ring Real Estate
+              were among the first authorised, and have been refining the discipline ever since.
+              <span className="text-[var(--ringgreen-deep)]">”</span>
             </blockquote>
             <p className="mt-6 text-sm text-muted-foreground">
               Today, the strategy has been refreshed and is reserved for trained Ring agents only.

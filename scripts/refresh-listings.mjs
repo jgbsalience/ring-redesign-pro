@@ -20,7 +20,8 @@ const IGNORE_LOCAL = new Set(["ring", "info", "admin", "office", "rentals", "sal
 function statusFromUrl(url) {
   if (/\/sold-residential-real-estate\//.test(url)) return "sold";
   if (/\/leased-residential-real-estate\//.test(url)) return "leased";
-  if (/\/rent-residential-real-estate\//.test(url) || /residential-for-rent/.test(url)) return "for-rent";
+  if (/\/rent-residential-real-estate\//.test(url) || /residential-for-rent/.test(url))
+    return "for-rent";
   return "for-sale";
 }
 
@@ -33,7 +34,9 @@ async function fetchHtml(url) {
 }
 
 function extractAgents(html) {
-  const emails = [...html.matchAll(/mailto:([a-z0-9._-]+)@ring-sa\.com\.au/gi)].map((m) => m[1].toLowerCase());
+  const emails = [...html.matchAll(/mailto:([a-z0-9._-]+)@ring-sa\.com\.au/gi)].map((m) =>
+    m[1].toLowerCase(),
+  );
   const seen = new Set();
   const ids = [];
   for (const local of emails) {
@@ -57,7 +60,10 @@ function extractPrice(html) {
   // Try common patterns; fall back to nothing.
   const m = html.match(/<[^>]*class="[^"]*(?:price|listing-price)[^"]*"[^>]*>([\s\S]*?)<\/[^>]+>/i);
   if (!m) return null;
-  const txt = m[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const txt = m[1]
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return txt || null;
 }
 
@@ -143,4 +149,7 @@ async function main() {
   console.log(`\nDone. ${report.length} listings changed/warned. Report: /tmp/refresh-report.json`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

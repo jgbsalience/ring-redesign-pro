@@ -17,9 +17,17 @@ export const Route = createFileRoute("/buy/")({
   head: () => ({
     meta: [
       { title: "Properties — Ring Real Estate Adelaide" },
-      { name: "description", content: "Browse residential properties for sale, for rent and recently sold across metropolitan Adelaide." },
+      {
+        name: "description",
+        content:
+          "Browse residential properties for sale, for rent and recently sold across metropolitan Adelaide.",
+      },
       { property: "og:title", content: "Properties — Ring Real Estate" },
-      { property: "og:description", content: "Distinguished homes for sale, for rent and recently sold across metropolitan Adelaide." },
+      {
+        property: "og:description",
+        content:
+          "Distinguished homes for sale, for rent and recently sold across metropolitan Adelaide.",
+      },
     ],
     links: canonical("/buy"),
   }),
@@ -32,7 +40,7 @@ const STATUSES = [
   { id: "sold", label: "Sold" },
 ] as const;
 
-type StatusId = typeof STATUSES[number]["id"];
+type StatusId = (typeof STATUSES)[number]["id"];
 
 function BuyPage() {
   const [status, setStatus] = useState<StatusId>("for-sale");

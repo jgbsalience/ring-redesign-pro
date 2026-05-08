@@ -52,9 +52,12 @@ const SIZE = {
 } as const;
 
 function srcSetFor(hero: string) {
-  // multiarray CDN paths look like .../cp-rect-1920x1440.pg — swap variants for crispness
-  if (!/cp-rect-\d+x\d+\.pg$/.test(hero)) return undefined;
-  const v = (w: number, h: number) => hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
+  // multiarray CDN paths look like .../cp-rect-1920x1440.jpg — swap variants for crispness
+  const m = hero.match(/cp-rect-\d+x\d+\.([a-z]+)$/i);
+  if (!m) return undefined;
+  const ext = m[1];
+  const v = (w: number, h: number) =>
+    hero.replace(/cp-rect-\d+x\d+\.[a-z]+$/i, `cp-rect-${w}x${h}.${ext}`);
   return [
     `${v(640, 800)} 640w`,
     `${v(960, 1200)} 960w`,
@@ -67,15 +70,23 @@ function srcSetFor(hero: string) {
 }
 
 function statusLabel(s: ListingCardData["status"]) {
-  return s === "for-sale" ? "For Sale" : s === "for-rent" ? "For Rent" : s === "sold" ? "Sold" : s === "leased" ? "Leased" : String(s);
+  return s === "for-sale"
+    ? "For Sale"
+    : s === "for-rent"
+      ? "For Rent"
+      : s === "sold"
+        ? "Sold"
+        : s === "leased"
+          ? "Leased"
+          : String(s);
 }
 
 function statusTo(s: ListingCardData["status"]) {
   return s === "for-rent" || s === "leased"
     ? "/rent/$listingId"
     : s === "sold"
-    ? "/sold/$listingId"
-    : "/buy/$listingId";
+      ? "/sold/$listingId"
+      : "/buy/$listingId";
 }
 
 export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Size }) {
@@ -87,7 +98,7 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
     <Link
       to={to}
       params={{ listingId: l.id }}
-      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
+      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform"
       style={{ aspectRatio: "4 / 5" }}
       aria-label={`${l.address}, ${l.suburb} — ${l.price}`}
     >
@@ -113,7 +124,9 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
           {statusLabel(l.status)}
         </span>
         {l.featured && (
-          <span className={`uppercase tracking-[0.2em] bg-[var(--ringgreen)] text-[var(--ink)] ${s.pill}`}>
+          <span
+            className={`uppercase tracking-[0.2em] bg-[var(--ringgreen)] text-[var(--ink)] ${s.pill}`}
+          >
             Featured
           </span>
         )}
@@ -123,11 +136,10 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
       <div className={`absolute inset-x-0 bottom-0 z-10 text-white ${s.pad} ${s.capH}`}>
         <div className={`flex items-center gap-2 uppercase ${s.suburb} text-white/85`}>
           <span className={`inline-block h-px ${s.rule} bg-[var(--ringgreen)]`} />
-          {l.suburb}{l.state ? ` · ${l.state}` : ""}
+          {l.suburb}
+          {l.state ? ` · ${l.state}` : ""}
         </div>
-        <div className={`font-serif leading-tight mt-1.5 ${s.title}`}>
-          {l.address}
-        </div>
+        <div className={`font-serif leading-tight mt-1.5 ${s.title}`}>{l.address}</div>
         <div className="mt-2">
           {s.showSpecs ? (
             <SpecLine
@@ -140,7 +152,9 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
               priceClassName={`font-medium text-[var(--ringgreen)] tabular-nums leading-tight ${s.price}`}
             />
           ) : (
-            <div className={`font-medium text-[var(--ringgreen)] tabular-nums ${s.price}`}>{l.price}</div>
+            <div className={`font-medium text-[var(--ringgreen)] tabular-nums ${s.price}`}>
+              {l.price}
+            </div>
           )}
         </div>
       </div>

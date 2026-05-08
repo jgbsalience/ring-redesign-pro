@@ -34,12 +34,13 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
       ].join(" ")}
     >
       <div className="container-page flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)} aria-label="Ring Real Estate home">
-          <img
-            src={logo}
-            alt="Ring Real Estate"
-            className="h-10 md:h-12 w-auto"
-          />
+        <Link
+          to="/"
+          className="flex items-center gap-3 group"
+          onClick={() => setOpen(false)}
+          aria-label="Ring Real Estate home"
+        >
+          <img src={logo} alt="Ring Real Estate" className="h-10 md:h-12 w-auto" />
           <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] text-white/60 mt-0.5">
             Est. 1978
           </span>
@@ -59,7 +60,10 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
         </nav>
 
         <div className="hidden md:flex items-center gap-5">
-          <a href="tel:+61883703211" className="text-sm text-white/85 hover:text-[var(--ringgreen)] transition-colors">
+          <a
+            href="tel:+61883703211"
+            className="text-sm text-white/85 hover:text-[var(--ringgreen)] transition-colors"
+          >
             (08) 8370 3211
           </a>
           <Link
@@ -76,9 +80,13 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
           aria-label="Menu"
         >
           <div className="w-6 flex flex-col gap-1.5">
-            <span className={`h-px bg-current transition ${open ? "rotate-45 translate-y-[6px]" : ""}`} />
+            <span
+              className={`h-px bg-current transition ${open ? "rotate-45 translate-y-[6px]" : ""}`}
+            />
             <span className={`h-px bg-current transition ${open ? "opacity-0" : ""}`} />
-            <span className={`h-px bg-current transition ${open ? "-rotate-45 -translate-y-[6px]" : ""}`} />
+            <span
+              className={`h-px bg-current transition ${open ? "-rotate-45 -translate-y-[6px]" : ""}`}
+            />
           </div>
         </button>
       </div>
@@ -87,7 +95,9 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
       <div
         className={[
           "md:hidden fixed inset-x-0 top-16 bottom-0 bg-[var(--ink)] text-white transition-all duration-500",
-          open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none",
+          open
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-2 pointer-events-none",
         ].join(" ")}
       >
         <div className="container-page py-10 flex flex-col gap-7">
@@ -102,7 +112,9 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
             </Link>
           ))}
           <div className="mt-8 pt-8 border-t border-white/10 space-y-3 text-sm">
-            <a href="tel:+61883703211" className="block">(08) 8370 3211</a>
+            <a href="tel:+61883703211" className="block">
+              (08) 8370 3211
+            </a>
             <a href="mailto:ring@ring-sa.com.au" className="block text-white/70">
               ring@ring-sa.com.au
             </a>

@@ -12,9 +12,13 @@ import { ArrowRight } from "lucide-react";
 import { useMemo } from "react";
 
 const RENT_SLIDES = (() => {
-  const rentals = listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero);
+  const rentals = listings.filter(
+    (l) => (l.status === "for-rent" || l.status === "leased") && l.hero,
+  );
   if (rentals.length >= 4) return rentals.slice(0, 6);
-  const filler = listings.filter((l) => l.hero && !rentals.includes(l)).slice(0, 6 - rentals.length);
+  const filler = listings
+    .filter((l) => l.hero && !rentals.includes(l))
+    .slice(0, 6 - rentals.length);
   return [...rentals, ...filler];
 })();
 
@@ -23,7 +27,10 @@ export const Route = createFileRoute("/rent/")({
   head: () => ({
     meta: [
       { title: "Rentals — Ring Real Estate Adelaide" },
-      { name: "description", content: "Quality rental homes managed personally by our award-winning property team." },
+      {
+        name: "description",
+        content: "Quality rental homes managed personally by our award-winning property team.",
+      },
       { property: "og:title", content: "Rentals — Ring Real Estate" },
       { property: "og:description", content: "Quality rentals across metropolitan Adelaide." },
     ],
@@ -79,8 +86,12 @@ function RentPage() {
         <div className="container-page mt-24">
           <div className="bg-secondary p-10 md:p-16 grid md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-8">
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">For owners</div>
-              <h2 className="font-serif text-3xl md:text-5xl mt-3 tracking-tight">Considering letting your home?</h2>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                For owners
+              </div>
+              <h2 className="font-serif text-3xl md:text-5xl mt-3 tracking-tight">
+                Considering letting your home?
+              </h2>
             </div>
             <div className="md:col-span-4 md:text-right">
               <Link
@@ -93,9 +104,10 @@ function RentPage() {
           </div>
         </div>
       </div>
-      <PortfolioCarousel items={listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero)} />
+      <PortfolioCarousel
+        items={listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero)}
+      />
       <Footer />
     </div>
   );
 }
-

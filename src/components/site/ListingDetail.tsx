@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as RPointerEvent,
+  type WheelEvent as RWheelEvent,
+} from "react";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -6,9 +12,28 @@ import { ListingCard } from "@/components/site/ListingCard";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { Gallery } from "@/components/site/Gallery";
 import { getAgent, listings, type Listing } from "@/data/site";
-import { Bed, Bath, Car, Maximize, MapPin, ArrowRight, Ruler, Phone, Mail, Download, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import {
+  Bed,
+  Bath,
+  Car,
+  Maximize,
+  MapPin,
+  ArrowRight,
+  Ruler,
+  Phone,
+  Mail,
+  Download,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+} from "lucide-react";
 
-function downloadBrochure(listing: Listing, agentName: string, agentPhone: string, agentEmail: string) {
+function downloadBrochure(
+  listing: Listing,
+  agentName: string,
+  agentPhone: string,
+  agentEmail: string,
+) {
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>${listing.address}, ${listing.suburb} — Ring Real Estate</title>
 <style>body{font-family:Georgia,serif;max-width:780px;margin:40px auto;padding:0 24px;color:#111;line-height:1.6}
 h1{font-size:32px;margin:0 0 8px}h2{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#666;margin-top:32px}
@@ -47,18 +72,22 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
     listing.status === "for-rent" || listing.status === "leased"
       ? { to: "/rent" as const, label: "For rent" }
       : listing.status === "sold"
-      ? { to: "/buy" as const, label: "Recent sales" }
-      : { to: "/buy" as const, label: "For sale" };
+        ? { to: "/buy" as const, label: "Recent sales" }
+        : { to: "/buy" as const, label: "For sale" };
 
   const enquireLabel =
-    listing.status === "for-rent" ? "Enquire about this rental"
-    : listing.status === "sold" ? "Discuss recent sales"
-    : "Enquire about this home";
+    listing.status === "for-rent"
+      ? "Enquire about this rental"
+      : listing.status === "sold"
+        ? "Discuss recent sales"
+        : "Enquire about this home";
 
   const [floorplanOpen, setFloorplanOpen] = useState(false);
   useEffect(() => {
     if (!floorplanOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setFloorplanOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFloorplanOpen(false);
+    };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
@@ -74,12 +103,15 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
       <section className="pt-20 md:pt-24">
         <div className="container-page py-10 md:py-14">
           <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground flex items-center gap-2">
-            <Link to={crumb.to} className="hover:text-foreground">{crumb.label}</Link>
+            <Link to={crumb.to} className="hover:text-foreground">
+              {crumb.label}
+            </Link>
             <span>/</span>
             <span>{listing.suburb}</span>
           </div>
           <h1 className="font-serif text-4xl md:text-7xl tracking-tight mt-5 leading-[0.98] max-w-5xl">
-            {listing.address}<span className="text-muted-foreground">, {listing.suburb}</span>
+            {listing.address}
+            <span className="text-muted-foreground">, {listing.suburb}</span>
           </h1>
           {listing.headline && (
             <p className="mt-6 font-serif italic text-xl md:text-2xl text-[var(--ringgreen)]">
@@ -104,19 +136,25 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
             ].map(({ Icon, l, v }) => (
               <div key={l}>
                 <Icon size={18} className="text-[var(--ringgreen)]" />
-                <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{l}</div>
+                <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {l}
+                </div>
                 <div className="font-serif text-2xl mt-1">{v}</div>
               </div>
             ))}
           </div>
 
           <div className="mt-12 space-y-6 text-base md:text-lg leading-relaxed font-sans">
-            {listing.description.map((p, i) => <p key={i}>{p}</p>)}
+            {listing.description.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
 
           {listing.features.length > 0 && (
             <div className="mt-14">
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Features</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                Features
+              </div>
               <ul className="mt-6 grid sm:grid-cols-2 gap-x-10 gap-y-3 text-sm">
                 {listing.features.map((f) => (
                   <li key={f} className="flex items-start gap-3 py-2 border-b border-border/60">
@@ -132,7 +170,9 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
             <div className="mt-14">
               <div className="flex items-end justify-between gap-4">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Floorplan</div>
+                  <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                    Floorplan
+                  </div>
                   <h3 className="font-serif text-2xl md:text-3xl mt-2">The layout, at a glance.</h3>
                 </div>
                 <button
@@ -160,10 +200,15 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
 
           {listing.inspections && listing.inspections.length > 0 && (
             <div className="mt-14">
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Open for inspection</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                Open for inspection
+              </div>
               <div className="mt-4 space-y-3">
                 {listing.inspections.map((i) => (
-                  <div key={i.date} className="flex items-baseline justify-between border-b border-border py-3">
+                  <div
+                    key={i.date}
+                    className="flex items-baseline justify-between border-b border-border py-3"
+                  >
                     <div className="font-serif text-xl">{i.date}</div>
                     <div className="text-sm text-muted-foreground">{i.time}</div>
                   </div>
@@ -176,10 +221,18 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
         <aside className="lg:col-span-5">
           <div className="lg:sticky lg:top-28 space-y-8">
             <div className="bg-secondary/60 p-8">
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{listing.priceNote ?? (listing.status === "for-rent" ? "Per week" : listing.status === "sold" ? "Sold" : "Guide")}</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                {listing.priceNote ??
+                  (listing.status === "for-rent"
+                    ? "Per week"
+                    : listing.status === "sold"
+                      ? "Sold"
+                      : "Guide")}
+              </div>
               <div className="font-serif text-3xl md:text-4xl mt-2">{listing.price}</div>
               <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin size={14} /> {listing.address}, {listing.suburb} {listing.state} {listing.postcode}
+                <MapPin size={14} /> {listing.address}, {listing.suburb} {listing.state}{" "}
+                {listing.postcode}
               </div>
 
               {/* Primary CTAs */}
@@ -199,7 +252,14 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
                   </a>
                   <button
                     type="button"
-                    onClick={() => downloadBrochure(listing, agents[0]?.name ?? "Ring Real Estate", agents[0]?.phone ?? "(08) 8370 3211", agents[0]?.email ?? "ring@ring-sa.com.au")}
+                    onClick={() =>
+                      downloadBrochure(
+                        listing,
+                        agents[0]?.name ?? "Ring Real Estate",
+                        agents[0]?.phone ?? "(08) 8370 3211",
+                        agents[0]?.email ?? "ring@ring-sa.com.au",
+                      )
+                    }
                     className="border border-foreground text-foreground py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-colors"
                   >
                     <Download size={14} /> Brochure
@@ -208,31 +268,74 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
               </div>
             </div>
 
-            <form id="enquire" className="bg-background border border-border p-8 space-y-4 scroll-mt-28">
+            <form
+              id="enquire"
+              className="bg-background border border-border p-8 space-y-4 scroll-mt-28"
+            >
               <div className="font-serif text-2xl">{enquireLabel}</div>
-              <input className="w-full bg-secondary px-4 py-3 text-sm outline-none" placeholder="Full name" />
-              <input className="w-full bg-secondary px-4 py-3 text-sm outline-none" placeholder="Email" type="email" />
-              <input className="w-full bg-secondary px-4 py-3 text-sm outline-none" placeholder="Phone" />
-              <textarea className="w-full bg-secondary px-4 py-3 text-sm outline-none min-h-32" defaultValue={`Please send me more information about ${listing.address}, ${listing.suburb}.`} />
-              <button type="button" className="w-full bg-foreground text-background py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90">
+              <label htmlFor="enquiry-name" className="sr-only">
+                Full name
+              </label>
+              <input
+                id="enquiry-name"
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Full name"
+              />
+              <label htmlFor="enquiry-email" className="sr-only">
+                Email
+              </label>
+              <input
+                id="enquiry-email"
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Email"
+                type="email"
+              />
+              <label htmlFor="enquiry-phone" className="sr-only">
+                Phone
+              </label>
+              <input
+                id="enquiry-phone"
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Phone"
+              />
+              <label htmlFor="enquiry-message" className="sr-only">
+                Message
+              </label>
+              <textarea
+                id="enquiry-message"
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none min-h-32"
+                defaultValue={`Please send me more information about ${listing.address}, ${listing.suburb}.`}
+              />
+              <button
+                type="button"
+                className="w-full bg-foreground text-background py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90"
+              >
                 Send enquiry <ArrowRight size={14} />
               </button>
             </form>
 
             <div className="border border-border p-8 space-y-6">
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Listing agents</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                Listing agents
+              </div>
               {agents.map((a) => (
                 <div key={a.id} className="flex items-center gap-4">
                   <Link to="/team/$agentId" params={{ agentId: a.id }} className="shrink-0">
                     <TeamMemberImage agent={a} size="md" />
                   </Link>
                   <div className="flex-1 min-w-0">
-                    <Link to="/team/$agentId" params={{ agentId: a.id }} className="font-serif text-lg leading-tight hover:text-[var(--ringgreen)] transition-colors block truncate">
+                    <Link
+                      to="/team/$agentId"
+                      params={{ agentId: a.id }}
+                      className="font-serif text-lg leading-tight hover:text-[var(--ringgreen)] transition-colors block truncate"
+                    >
                       {a.name}
                     </Link>
                     <div className="text-xs text-muted-foreground truncate">{a.role}</div>
                   </div>
-                  <a href={`tel:${a.phone}`} className="text-xs underline">{a.phone}</a>
+                  <a href={`tel:${a.phone}`} className="text-xs underline">
+                    {a.phone}
+                  </a>
                 </div>
               ))}
             </div>
@@ -243,9 +346,13 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
       {similar.length > 0 && (
         <section className="bg-secondary/50 py-24">
           <div className="container-page">
-            <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-12">You may also like</h2>
+            <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-12">
+              You may also like
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
-              {similar.map((l) => <ListingCard key={l.id} l={l} />)}
+              {similar.map((l) => (
+                <ListingCard key={l.id} l={l} />
+              ))}
             </div>
           </div>
         </section>
@@ -264,13 +371,22 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
   );
 }
 
-function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+function FloorplanLightbox({
+  src,
+  alt,
+  onClose,
+}: {
+  src: string;
+  alt: string;
+  onClose: () => void;
+}) {
   const [scale, setScale] = useState(1);
   const [tx, setTx] = useState(0);
   const [ty, setTy] = useState(0);
   const dragging = useRef(false);
   const last = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const MIN = 1;
   const MAX = 6;
@@ -280,7 +396,11 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
       if (e.key === "Escape") onClose();
       else if (e.key === "+" || e.key === "=") setScale((s) => Math.min(MAX, s * 1.25));
       else if (e.key === "-" || e.key === "_") setScale((s) => Math.max(MIN, s / 1.25));
-      else if (e.key === "0") { setScale(1); setTx(0); setTy(0); }
+      else if (e.key === "0") {
+        setScale(1);
+        setTx(0);
+        setTy(0);
+      }
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -289,6 +409,10 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
       document.body.style.overflow = "";
     };
   }, [onClose]);
+
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
 
   const clampPan = (nx: number, ny: number, s: number) => {
     const el = containerRef.current;
@@ -322,7 +446,8 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
           return clampPan(tx, newT, next).y;
         });
       } else if (next === 1) {
-        setTx(0); setTy(0);
+        setTx(0);
+        setTy(0);
       }
       return next;
     });
@@ -348,13 +473,24 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
     setTx(next.x);
     setTy(next.y);
   };
-  const onPointerUp = () => { dragging.current = false; };
+  const onPointerUp = () => {
+    dragging.current = false;
+  };
 
-  const reset = () => { setScale(1); setTx(0); setTy(0); };
+  const reset = () => {
+    setScale(1);
+    setTx(0);
+    setTy(0);
+  };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/95 animate-fade-in select-none">
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white/80 text-xs uppercase tracking-[0.25em] z-10">
+    <div
+      className="fixed inset-0 z-[100] bg-black/95 animate-fade-in select-none"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Floorplan image viewer"
+    >
+      <div className="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 text-white/80 text-xs uppercase tracking-[0.25em] z-10">
         <div className="hidden md:block">Drag to pan · Scroll or pinch to zoom · 0 to reset</div>
         <div className="flex items-center gap-2 ml-auto">
           <button
@@ -365,7 +501,9 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
           >
             <ZoomOut size={16} />
           </button>
-          <div className="w-14 text-center tabular-nums text-[11px]">{Math.round(scale * 100)}%</div>
+          <div className="w-14 text-center tabular-nums text-[11px]">
+            {Math.round(scale * 100)}%
+          </div>
           <button
             type="button"
             aria-label="Zoom in"
@@ -385,6 +523,7 @@ function FloorplanLightbox({ src, alt, onClose }: { src: string; alt: string; on
           <button
             type="button"
             onClick={onClose}
+            ref={closeButtonRef}
             className="ml-3 px-3 h-9 inline-flex items-center bg-white/10 hover:bg-white/20 transition-colors"
           >
             Close ✕

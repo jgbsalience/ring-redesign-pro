@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { cloneElement, isValidElement, useId, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArrowRight, MapPin, Phone, Mail, Clock, Loader2 } from "lucide-react";
@@ -13,9 +13,16 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — Ring Real Estate Adelaide" },
-      { name: "description", content: "Visit our Bellevue Heights office, or send us a message. We respond within the business day." },
+      {
+        name: "description",
+        content:
+          "Visit our Bellevue Heights office, or send us a message. We respond within the business day.",
+      },
       { property: "og:title", content: "Contact Ring Real Estate" },
-      { property: "og:description", content: "Visit our Bellevue Heights office, or send us a message." },
+      {
+        property: "og:description",
+        content: "Visit our Bellevue Heights office, or send us a message.",
+      },
     ],
     links: canonical("/contact"),
   }),
@@ -62,7 +69,9 @@ function ContactPage() {
       setSubmitted(true);
       if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setServerError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again.",
+      );
     }
   };
 
@@ -79,10 +88,18 @@ function ContactPage() {
 
         <div className="mt-20 grid md:grid-cols-12 gap-12 lg:gap-20">
           <div className="md:col-span-5 space-y-10">
-            <Item Icon={MapPin} title="Office" lines={["140 Shepherds Hill Road", "Bellevue Heights SA 5050"]} />
+            <Item
+              Icon={MapPin}
+              title="Office"
+              lines={["140 Shepherds Hill Road", "Bellevue Heights SA 5050"]}
+            />
             <Item Icon={Phone} title="Telephone" lines={["(08) 8370 3211"]} />
             <Item Icon={Mail} title="Email" lines={["ring@ring-sa.com.au"]} />
-            <Item Icon={Clock} title="Hours" lines={["Mon – Fri · 8:30 – 5:30", "Sat · By appointment"]} />
+            <Item
+              Icon={Clock}
+              title="Hours"
+              lines={["Mon – Fri · 8:30 – 5:30", "Sat · By appointment"]}
+            />
 
             <div className="aspect-[4/3] bg-secondary overflow-hidden">
               <img
@@ -95,11 +112,18 @@ function ContactPage() {
 
           {submitted ? (
             <div className="md:col-span-7 bg-secondary/50 p-8 md:p-12 flex flex-col justify-center text-center gap-5">
-              <div className="text-[10px] uppercase tracking-[0.32em] text-[var(--ringgreen-deep)]">Received</div>
-              <h2 className="font-serif text-3xl md:text-4xl tracking-tight">Thank you. We'll be in touch.</h2>
+              <div className="text-[10px] uppercase tracking-[0.32em] text-[var(--ringgreen-deep)]">
+                Received
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl tracking-tight">
+                Thank you. We'll be in touch.
+              </h2>
               <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto">
                 We aim to respond within one business day. You can also reach us directly on{" "}
-                <a href="tel:+61883703211" className="underline underline-offset-2">(08) 8370 3211</a>.
+                <a href="tel:+61883703211" className="underline underline-offset-2">
+                  (08) 8370 3211
+                </a>
+                .
               </p>
             </div>
           ) : (
@@ -177,9 +201,7 @@ function ContactPage() {
                 />
               </Field>
 
-              {serverError && (
-                <p className="text-sm text-red-600">{serverError}</p>
-              )}
+              {serverError && <p className="text-sm text-red-600">{serverError}</p>}
 
               <button
                 type="submit"
@@ -187,9 +209,13 @@ function ContactPage() {
                 className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-foreground text-background text-xs uppercase tracking-[0.22em] hover:bg-foreground/90 disabled:opacity-50 transition-opacity"
               >
                 {isSubmitting ? (
-                  <><Loader2 size={14} className="animate-spin" /> Sending…</>
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Sending…
+                  </>
                 ) : (
-                  <>Send message <ArrowRight size={14} /></>
+                  <>
+                    Send message <ArrowRight size={14} />
+                  </>
                 )}
               </button>
             </form>
@@ -203,9 +229,7 @@ function ContactPage() {
 
 function inputCls(hasError: boolean) {
   return `mt-2 w-full bg-background px-4 py-3.5 text-sm outline-none transition-all ${
-    hasError
-      ? "ring-1 ring-red-500"
-      : "focus:ring-1 focus:ring-[var(--ringgreen-deep)]"
+    hasError ? "ring-1 ring-red-500" : "focus:ring-1 focus:ring-[var(--ringgreen-deep)]"
   }`;
 }
 
@@ -218,10 +242,19 @@ function Field({
   error?: string;
   children: React.ReactNode;
 }) {
+  const id = useId();
+  const control = isValidElement(children)
+    ? cloneElement(children as React.ReactElement<{ id?: string }>, {
+        id,
+      })
+    : children;
+
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{label}</label>
-      {children}
+      <label htmlFor={id} className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        {label}
+      </label>
+      {control}
       {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
   );
@@ -234,7 +267,9 @@ function Item({ Icon, title, lines }: { Icon: typeof MapPin; title: string; line
       <div>
         <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{title}</div>
         <div className="mt-2 space-y-1 text-base">
-          {lines.map((l) => <div key={l}>{l}</div>)}
+          {lines.map((l) => (
+            <div key={l}>{l}</div>
+          ))}
         </div>
       </div>
     </div>

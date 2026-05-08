@@ -150,6 +150,23 @@
     .kenburns-active-a,
     .kenburns-active-b { animation: none; }
     .kenburns-base { transform: none; }
+    .reveal {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .hover-lift,
+    .hover-lift-green,
+    .img-zoom > img {
+      transition: none;
+      transform: none;
+    }
+    .text-gradient-green-animate {
+      animation: none;
+    }
+    .featured-scroll {
+      scroll-behavior: auto;
+    }
   }
 
   /* Editorial dark scrim for image overlays (listing cards, hero captions) */

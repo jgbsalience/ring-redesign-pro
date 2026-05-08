@@ -47,9 +47,7 @@ export const geocodeMissingListings = createServerFn({ method: "POST" })
         if (!result) {
           // Fallback to suburb-level
           await sleep(1100);
-          const fallback = [r.suburb, r.state, r.postcode, "Australia"]
-            .filter(Boolean)
-            .join(", ");
+          const fallback = [r.suburb, r.state, r.postcode, "Australia"].filter(Boolean).join(", ");
           result = await geocodeOne(fallback);
         }
 

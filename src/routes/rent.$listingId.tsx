@@ -4,6 +4,24 @@ import { ListingDetailView } from "@/components/site/ListingDetail";
 import { JsonLd } from "@/components/site/JsonLd";
 import { canonical, listingSchema, breadcrumbSchema, SITE_URL } from "@/lib/seo";
 
+function RentListingRouteComponent() {
+  const { listing } = Route.useLoaderData() as { listing: Listing };
+  const path = `/rent/${listing.id}`;
+  return (
+    <>
+      <JsonLd schema={listingSchema(listing, path)} />
+      <JsonLd
+        schema={breadcrumbSchema([
+          { name: "Home", url: SITE_URL },
+          { name: "Rent", url: `${SITE_URL}/rent` },
+          { name: `${listing.address}, ${listing.suburb}`, url: `${SITE_URL}${path}` },
+        ])}
+      />
+      <ListingDetailView listing={listing} />
+    </>
+  );
+}
+
 export const Route = createFileRoute("/rent/$listingId")({
   loader: ({ params }) => {
     const l = getListing(params.listingId);
@@ -13,9 +31,14 @@ export const Route = createFileRoute("/rent/$listingId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.listing.address}, ${loaderData.listing.suburb} — Rental — Ring Real Estate` },
+          {
+            title: `${loaderData.listing.address}, ${loaderData.listing.suburb} — Rental — Ring Real Estate`,
+          },
           { name: "description", content: loaderData.listing.headline },
-          { property: "og:title", content: `${loaderData.listing.address}, ${loaderData.listing.suburb}` },
+          {
+            property: "og:title",
+            content: `${loaderData.listing.address}, ${loaderData.listing.suburb}`,
+          },
           { property: "og:description", content: loaderData.listing.headline },
           { property: "og:image", content: loaderData.listing.hero },
         ]
@@ -26,26 +49,16 @@ export const Route = createFileRoute("/rent/$listingId")({
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="font-serif text-6xl">Not found</div>
-        <Link to="/rent" className="mt-6 inline-block underline">All rentals</Link>
+        <Link to="/rent" className="mt-6 inline-block underline">
+          All rentals
+        </Link>
       </div>
     </div>
   ),
   errorComponent: ({ error }) => (
-    <div className="min-h-screen flex items-center justify-center"><div>{error.message}</div></div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div>{error.message}</div>
+    </div>
   ),
-  component: () => {
-    const { listing } = Route.useLoaderData() as { listing: Listing };
-    const path = `/rent/${listing.id}`;
-    return (
-      <>
-        <JsonLd schema={listingSchema(listing, path)} />
-        <JsonLd schema={breadcrumbSchema([
-          { name: "Home", url: SITE_URL },
-          { name: "Rent", url: `${SITE_URL}/rent` },
-          { name: `${listing.address}, ${listing.suburb}`, url: `${SITE_URL}${path}` },
-        ])} />
-        <ListingDetailView listing={listing} />
-      </>
-    );
-  },
+  component: RentListingRouteComponent,
 });

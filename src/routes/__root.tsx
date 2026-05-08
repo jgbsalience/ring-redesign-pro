@@ -75,9 +75,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Ring Real Estate — Adelaide's independent residential agency, since 1978" },
-      { name: "description", content: "Ring Real Estate. A small, senior team selling and managing distinguished homes across metropolitan Adelaide since 1978." },
+      {
+        name: "description",
+        content:
+          "Ring Real Estate. A small, senior team selling and managing distinguished homes across metropolitan Adelaide since 1978.",
+      },
       { property: "og:title", content: "Ring Real Estate" },
-      { property: "og:description", content: "Adelaide's independent residential agency. Selling, leasing and managing distinguished homes since 1978." },
+      {
+        property: "og:description",
+        content:
+          "Adelaide's independent residential agency. Selling, leasing and managing distinguished homes since 1978.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -117,7 +125,7 @@ function RootComponent() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname]);
 
   return (

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { cloneElement, isValidElement, useId, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
@@ -12,7 +12,11 @@ export const Route = createFileRoute("/sell/appraisal")({
   head: () => ({
     meta: [
       { title: "Find out the true market value of your home — Ring Real Estate" },
-      { name: "description", content: "A confidential, no-obligation written appraisal of your home from a senior Ring agent. Selling now or forward planning — we welcome the connection." },
+      {
+        name: "description",
+        content:
+          "A confidential, no-obligation written appraisal of your home from a senior Ring agent. Selling now or forward planning — we welcome the connection.",
+      },
       { property: "og:title", content: "Request an appraisal — Ring Real Estate" },
       { property: "og:description", content: "Confidential. No obligation. Senior agent only." },
     ],
@@ -87,7 +91,9 @@ function AppraisalPage() {
       setSubmitted(true);
       if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setServerError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again.",
+      );
     }
   };
 
@@ -116,9 +122,19 @@ function AppraisalPage() {
         <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
           <span>140 Shepherds Hill Rd, Bellevue Heights</span>
           <span className="text-border">·</span>
-          <a href="tel:+61883703211" className="hover:text-[var(--ringgreen-deep)] transition-colors">(08) 8370 3211</a>
+          <a
+            href="tel:+61883703211"
+            className="hover:text-[var(--ringgreen-deep)] transition-colors"
+          >
+            (08) 8370 3211
+          </a>
           <span className="text-border">·</span>
-          <a href="mailto:ring@ring-sa.com.au" className="hover:text-[var(--ringgreen-deep)] transition-colors">ring@ring-sa.com.au</a>
+          <a
+            href="mailto:ring@ring-sa.com.au"
+            className="hover:text-[var(--ringgreen-deep)] transition-colors"
+          >
+            ring@ring-sa.com.au
+          </a>
         </div>
       </div>
 
@@ -135,7 +151,8 @@ function AppraisalPage() {
                   Thank you. Your request is with us.
                 </h3>
                 <p className="mt-5 text-muted-foreground leading-relaxed max-w-lg mx-auto">
-                  A senior Ring agent will be in touch within one business day to arrange a time. In the meantime, feel free to call us directly on (08) 8370 3211.
+                  A senior Ring agent will be in touch within one business day to arrange a time. In
+                  the meantime, feel free to call us directly on (08) 8370 3211.
                 </p>
               </div>
             ) : (
@@ -193,11 +210,7 @@ function AppraisalPage() {
 
                 <div className="grid sm:grid-cols-2 gap-5">
                   <Field label="Suburb">
-                    <input
-                      type="text"
-                      className={inputCls(false)}
-                      {...register("suburb")}
-                    />
+                    <input type="text" className={inputCls(false)} {...register("suburb")} />
                   </Field>
                   <Field label="Property type">
                     <select
@@ -229,6 +242,8 @@ function AppraisalPage() {
                               key={v}
                               type="button"
                               onClick={() => toggleInterest(v)}
+                              role="checkbox"
+                              aria-checked={on}
                               className={`group flex items-start gap-3 text-left px-4 py-3 border rounded-[2px] transition-all ${
                                 on
                                   ? "border-[var(--ringgreen-deep)] bg-[var(--ringgreen-tint)]"
@@ -261,12 +276,11 @@ function AppraisalPage() {
                   />
                 </Field>
 
-                {serverError && (
-                  <p className="text-sm text-red-600 text-center">{serverError}</p>
-                )}
+                {serverError && <p className="text-sm text-red-600 text-center">{serverError}</p>}
 
                 <p className="text-xs text-muted-foreground leading-relaxed text-center">
-                  Your details are kept strictly confidential and used only to respond to this enquiry.
+                  Your details are kept strictly confidential and used only to respond to this
+                  enquiry.
                 </p>
 
                 <div className="flex justify-center pt-2">
@@ -276,9 +290,13 @@ function AppraisalPage() {
                     className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-10 py-4 bg-[var(--ringgreen-deep)] text-white text-xs uppercase tracking-[0.22em] rounded-[2px] hover:opacity-90 disabled:opacity-50 transition-opacity"
                   >
                     {isSubmitting ? (
-                      <><Loader2 size={14} className="animate-spin" /> Sending…</>
+                      <>
+                        <Loader2 size={14} className="animate-spin" /> Sending…
+                      </>
                     ) : (
-                      <>Request appraisal <ArrowRight size={14} /></>
+                      <>
+                        Request appraisal <ArrowRight size={14} />
+                      </>
                     )}
                   </button>
                 </div>
@@ -293,9 +311,18 @@ function AppraisalPage() {
         <div className="container-page py-16 md:py-24">
           <div className="grid md:grid-cols-3 gap-10 md:gap-16 max-w-5xl mx-auto">
             {[
-              { t: "Confidential", c: "Your enquiry is held in confidence by a senior agent — never circulated." },
-              { t: "No obligation", c: "A written appraisal is yours to keep, whether you list with us or not." },
-              { t: "Senior agent only", c: "Every appraisal is conducted personally by a Ring principal — not delegated." },
+              {
+                t: "Confidential",
+                c: "Your enquiry is held in confidence by a senior agent — never circulated.",
+              },
+              {
+                t: "No obligation",
+                c: "A written appraisal is yours to keep, whether you list with us or not.",
+              },
+              {
+                t: "Senior agent only",
+                c: "Every appraisal is conducted personally by a Ring principal — not delegated.",
+              },
             ].map((p) => (
               <div key={p.t}>
                 <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
@@ -313,15 +340,23 @@ function AppraisalPage() {
       <section className="bg-[var(--ink)] text-white">
         <div className="container-page py-16 md:py-24 grid md:grid-cols-12 gap-10 items-end">
           <blockquote className="md:col-span-8 font-serif text-3xl md:text-4xl leading-[1.2] tracking-tight">
-            <span className="text-[var(--ringgreen)]">"</span>We will walk the property,
-            ask questions, and listen.<span className="text-[var(--ringgreen)]">"</span>
+            <span className="text-[var(--ringgreen)]">"</span>We will walk the property, ask
+            questions, and listen.<span className="text-[var(--ringgreen)]">"</span>
           </blockquote>
           <div className="md:col-span-4 space-y-3 text-sm">
-            <div className="text-white/60 uppercase tracking-[0.22em] text-[10px]">Speak with us directly</div>
-            <a href="tel:+61883703211" className="block text-xl hover:text-[var(--ringgreen)] transition-colors">
+            <div className="text-white/60 uppercase tracking-[0.22em] text-[10px]">
+              Speak with us directly
+            </div>
+            <a
+              href="tel:+61883703211"
+              className="block text-xl hover:text-[var(--ringgreen)] transition-colors"
+            >
               (08) 8370 3211
             </a>
-            <a href="mailto:ring@ring-sa.com.au" className="block text-base text-white/80 hover:text-[var(--ringgreen)] transition-colors">
+            <a
+              href="mailto:ring@ring-sa.com.au"
+              className="block text-base text-white/80 hover:text-[var(--ringgreen)] transition-colors"
+            >
               ring@ring-sa.com.au
             </a>
           </div>
@@ -352,12 +387,19 @@ function Field({
   error?: string;
   children: React.ReactNode;
 }) {
+  const id = useId();
+  const control = isValidElement(children)
+    ? cloneElement(children as React.ReactElement<{ id?: string }>, {
+        id,
+      })
+    : children;
+
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+      <label htmlFor={id} className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         {label} {required && <span className="text-[var(--ringgreen-deep)]">*</span>}
       </label>
-      {children}
+      {control}
       {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
   );
