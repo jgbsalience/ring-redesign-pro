@@ -5,8 +5,8 @@ import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { listings } from "@/data/site";
-import { useMemo, useState } from "react";
-import { Search, ArrowUpRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Search, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/sold/")({
   head: () => ({
