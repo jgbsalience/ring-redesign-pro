@@ -143,17 +143,52 @@ function SoldIndex() {
         </div>
 
         {/* Grid */}
-        <div className="container-page mt-12 md:mt-16 pb-24 md:pb-32">
+        <div ref={gridRef} className="container-page mt-12 md:mt-16 pb-24 md:pb-32 scroll-mt-28">
           {filtered.length === 0 ? (
             <div className="py-24 text-center text-muted-foreground">
               No matching results. Try widening your filters.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 md:gap-y-16">
-              {filtered.map((l) => (
-                <ListingCard key={l.id} l={l} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 md:gap-y-16">
+                {pageItems.map((l) => (
+                  <ListingCard key={l.id} l={l} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="mt-14 flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    onClick={() => goToPage(Math.max(1, current - 1))}
+                    disabled={current === 1}
+                    className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
+                  >
+                    <ChevronLeft size={14} /> Prev
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => goToPage(n)}
+                      className={[
+                        "px-4 py-2 text-xs tracking-[0.2em] border transition-colors",
+                        n === current
+                          ? "bg-foreground text-background border-foreground"
+                          : "border-border hover:bg-secondary",
+                      ].join(" ")}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => goToPage(Math.min(totalPages, current + 1))}
+                    disabled={current === totalPages}
+                    className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
+                  >
+                    Next <ChevronRight size={14} />
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 
