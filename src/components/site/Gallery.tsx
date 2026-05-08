@@ -70,7 +70,9 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         onPointerUp={onMainPointerUp}
       >
         <img
-          src={images[active]}
+          src={cdnVariant(images[active], 1920, 1440)}
+          srcSet={buildCdnSrcSet(images[active])}
+          sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
           alt={alt}
           referrerPolicy="no-referrer"
           loading="eager"
