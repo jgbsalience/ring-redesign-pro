@@ -3,6 +3,7 @@ import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
+import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { listings } from "@/data/site";
 import { useMemo, useState } from "react";
 import { Search, ArrowUpRight } from "lucide-react";
@@ -163,6 +164,7 @@ function SoldIndex() {
           </div>
         </section>
       </div>
+      <PortfolioCarousel items={listings.filter((l) => l.status === "sold" && l.hero)} />
       <Footer />
     </div>
   );

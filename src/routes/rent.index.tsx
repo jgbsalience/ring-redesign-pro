@@ -3,6 +3,7 @@ import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsBrowser } from "@/components/site/ListingsBrowser";
+import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { ArrowRight } from "lucide-react";
@@ -89,6 +90,7 @@ function RentPage() {
           </div>
         </div>
       </div>
+      <PortfolioCarousel items={listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero)} />
       <Footer />
     </div>
   );
