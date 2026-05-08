@@ -259,7 +259,7 @@ function HomePage() {
   const featured = [
     ...featuredAll,
     ...forSale.filter((l) => !featuredAll.some((f) => f.id === l.id)),
-  ].slice(0, 16);
+  ];
   const sold = listings.filter((l) => l.status === "sold").slice(0, 16);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
