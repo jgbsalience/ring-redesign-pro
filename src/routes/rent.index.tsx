@@ -60,7 +60,7 @@ function RentPage() {
 
         <ListingsBrowser
           source={rentals}
-          pageSize={12}
+          pageSize={16}
           showTypeFilter={false}
           emptyMessage={
             <>

@@ -91,7 +91,7 @@ function BuyPage() {
           </div>
         </div>
 
-        <ListingsBrowser source={source} pageSize={12} />
+        <ListingsBrowser source={source} pageSize={16} />
       </div>
       <PortfolioCarousel items={listings.filter((l) => l.status === "for-sale" && l.hero)} />
       <Footer />
