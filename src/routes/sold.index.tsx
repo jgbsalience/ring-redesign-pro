@@ -106,7 +106,7 @@ function SoldIndex() {
               <Search size={16} className="opacity-50" />
               <input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => update({ q: e.target.value })}
                 placeholder="Suburb, address or postcode"
                 className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
               />
