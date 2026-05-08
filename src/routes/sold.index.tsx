@@ -59,6 +59,20 @@ function SoldIndex() {
     [sold]
   );
 
+  useEffect(() => {
+    setPage(1);
+  }, [query, suburb, type, beds]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const current = Math.min(page, totalPages);
+  const pageItems = filtered.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+
+  const goToPage = (n: number) => {
+    setPage(n);
+    if (typeof window !== "undefined") {
+      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
   return (
     <div className="bg-background text-foreground">
       <Header />
