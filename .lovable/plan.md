@@ -1,33 +1,28 @@
 ## Goal
+Every paragraph on the site renders in Inter (the sans body font), including the two decorative serif pull-quotes.
 
-Fix the header's contrast issues on scroll and adopt the supplied Ring logo (reverse / white-text variant) as the single brand mark across header and footer.
+## Approach
+One global CSS rule beats hunting 30+ files and prevents future regressions.
 
-## What changes
+In `src/styles.css`, inside the `@layer base` block (next to the existing `body { font-family: var(--font-sans) }` rule), add:
 
-### 1. Add the new logo asset
-- Copy `user-uploads://Ring-Real-Estate_Logo_2023_RGB_Colour_Rev.png` → `src/assets/ring-logo-rev.png`.
-- Keep the old `ring-logo.png` and `ring-logo-green.png` files in place for now (no other components reference them — safe to delete in a follow-up if desired).
+```css
+p {
+  font-family: var(--font-sans) !important;
+  font-style: normal;
+}
+```
 
-### 2. Header (`src/components/site/Header.tsx`)
-- Import the new reverse logo and use it in both the transparent (overlay) and scrolled states — no more `brightness-0 invert` filter hack.
-- Change the scrolled state from light glass (`bg-background/85` + dark text) to a **dark charcoal bar** so the white-text logo and nav always read with strong contrast:
-  - Background: solid `bg-[var(--ink)]/95` with `backdrop-blur-md` and a subtle bottom border in `border-white/10`.
-  - Text: white, with the green accent (`var(--ringgreen)`) on hover/active states.
-  - "Request Appraisal" CTA: switches from black-on-white to the brand green chip (`bg-[var(--ringgreen)] text-[var(--ink)]`) so it pops on the dark bar.
-- Overlay (transparent) state stays the same — white text on photo with the same logo.
-- Mobile sheet: keep the dark theme too (white text on `var(--ink)` background) so the logo and contrast match the bar above it.
-- "Est. 1978" tagline tightened to `text-white/60` for readable but quiet contrast.
+- `!important` overrides any inline `font-serif` utility on a `<p>`.
+- Resetting `font-style` neutralises the `italic` on the two pull-quotes so they don't look half-styled. Colour, size, and weight stay untouched.
 
-### 3. Footer (`src/components/site/Footer.tsx`)
-- Replace the imported `ring-logo.png` with the new `ring-logo-rev.png`. Footer already has a dark background, so the white-text logo will read correctly. Bump display height slightly (`h-12` → `h-14`) for parity with header proportions.
-
-### 4. QA
-- Load `/` (overlay header), scroll → confirm dark bar with crisp white logo + nav.
-- Load `/buy`, `/about`, `/contact` (non-overlay routes) → header is dark from the start, logo + nav legible.
-- Mobile: open the menu sheet and confirm dark theme + logo contrast.
-- Footer: confirm logo renders with the green ring + white wordmark cleanly on the dark footer.
+## Affected paragraphs (verified)
+- `src/routes/about.tsx:215` — serif italic green pull-quote → becomes Inter, upright, same green/size.
+- `src/components/site/ListingDetail.tsx:85` — same treatment.
+- All other `<p>` elements already inherit Inter; rule is a no-op for them but locks the behaviour in.
 
 ## Out of scope
-- No changes to nav structure, links, or routing.
-- No new design tokens — reusing existing `--ink`, `--ringgreen`, `--bone` variables from `src/styles.css`.
-- Old logo files left in `src/assets/` (can prune later if you want a clean tree).
+Headings, blockquotes, and `<div>`-based display text that use `font-serif` (e.g. hero titles, stat numbers) are intentionally serif and stay as-is. The rule only targets `<p>`.
+
+## Side fix
+Add the missing `useRef` import in `src/routes/index.tsx` (currently throwing `useRef is not defined` at SSR).
