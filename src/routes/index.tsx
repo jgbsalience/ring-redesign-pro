@@ -143,9 +143,9 @@ function LuxuryCarousel() {
             <img
               // Re-mount the active image each cycle so the Ken Burns animation restarts cleanly
               key={isActive ? `${s.id}-${i}` : s.id}
-              src={variant(1280, 960)}
+              src={variant(1920, 1440)}
               srcSet={srcSet}
-              sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
+              sizes="(min-width: 1280px) 2000px, (min-width: 768px) 100vw, 100vw"
               alt={`${s.address}, ${s.suburb}`}
               width={1200}
               height={1500}
