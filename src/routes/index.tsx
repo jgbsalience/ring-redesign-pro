@@ -34,12 +34,13 @@ const HERO_SLIDES = (() => {
 const HERO = HERO_SLIDES[0]?.hero ?? "";
 
 const LUXURY_SLIDES = [
-  { id: "4-college", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg", alt: "4 College Avenue, Bellevue Heights" },
-  { id: "58-brighton", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1920x1440.pg", alt: "58 Brighton Parade, Blackwood" },
-  { id: "1-menura", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/b0c08cc5-7628-42b1-b77f-c17b375ff327/cp-rect-1920x1440.pg", alt: "1 Menura Avenue, Glenalta" },
-  { id: "16-gannet", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/dc3fcad6-baa5-47e6-9a57-c1949d40ecc2/cp-rect-1920x1440.pg", alt: "16 Gannet Avenue, Glenalta" },
-  { id: "9-esplanade", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/e258eebb-0add-4cb9-99ba-54a318f272b0/cp-rect-1920x1440.pg", alt: "9 Esplanade, Sellicks Beach" },
+  { id: "4-college", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg", address: "4 College Avenue", suburb: "Bellevue Heights", caption: "A truly wonderful home, offered for the very first time." },
+  { id: "58-brighton", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/10d0da4a-6e2d-4245-a273-082adff2f09b/cp-rect-1920x1440.pg", address: "58 Brighton Parade", suburb: "Blackwood", caption: "Architectural calm in a treasured tree-lined pocket." },
+  { id: "1-menura", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/b0c08cc5-7628-42b1-b77f-c17b375ff327/cp-rect-1920x1440.pg", address: "1 Menura Avenue", suburb: "Glenalta", caption: "60s contemporary in a position-perfect setting." },
+  { id: "16-gannet", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/dc3fcad6-baa5-47e6-9a57-c1949d40ecc2/cp-rect-1920x1440.pg", address: "16 Gannet Avenue", suburb: "Glenalta", caption: "Family scale and garden privacy, beautifully kept." },
+  { id: "9-esplanade", hero: "https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/e258eebb-0add-4cb9-99ba-54a318f272b0/cp-rect-1920x1440.pg", address: "9 Esplanade", suburb: "Sellicks Beach", caption: "An unrepeatable absolute beachfront position." },
 ];
+
 
 function LuxuryCarousel() {
   const [i, setI] = useState(0);
@@ -110,7 +111,7 @@ function LuxuryCarousel() {
         <img
           key={s.id}
           src={s.hero}
-          alt={s.alt}
+          alt={`${s.address}, ${s.suburb}`}
           width={1200}
           height={1500}
           referrerPolicy="no-referrer"
@@ -120,16 +121,51 @@ function LuxuryCarousel() {
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${idx === i ? "opacity-100" : "opacity-0"}`}
         />
       ))}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
-        {LUXURY_SLIDES.map((_, idx) => (
-          <button
-            key={idx}
-            type="button"
-            aria-label={`Show image ${idx + 1}`}
-            onClick={() => setI(idx)}
-            className={`h-1 transition-all ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
-          />
-        ))}
+
+      {/* Gradient scrim for caption legibility */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+
+      {/* Caption */}
+      <div className="absolute inset-x-0 bottom-0 z-10 p-5 md:p-7 text-white">
+        <div className="relative h-[88px] md:h-[96px]">
+          {LUXURY_SLIDES.map((s, idx) => (
+            <div
+              key={s.id}
+              aria-hidden={idx !== i}
+              className={`absolute inset-0 transition-all duration-700 ease-out ${
+                idx === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+              }`}
+            >
+              <div className="text-[10px] uppercase tracking-[0.28em] text-white/70 flex items-center gap-2">
+                <span className="inline-block h-px w-6 bg-[var(--ringgreen)]" />
+                {s.suburb}
+              </div>
+              <div className="font-serif text-xl md:text-2xl leading-tight mt-1.5">
+                {s.address}
+              </div>
+              <div className="text-[12px] md:text-[13px] text-white/80 leading-snug mt-1 max-w-[26rem]">
+                {s.caption}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <div className="flex gap-1.5">
+            {LUXURY_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                aria-label={`Show image ${idx + 1}`}
+                onClick={() => setI(idx)}
+                className={`h-1 transition-all ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
+              />
+            ))}
+          </div>
+          <div className="text-[10px] uppercase tracking-[0.28em] text-white/60 tabular-nums">
+            {String(i + 1).padStart(2, "0")} / {String(LUXURY_SLIDES.length).padStart(2, "0")}
+          </div>
+        </div>
       </div>
     </div>
   );
