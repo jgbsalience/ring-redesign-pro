@@ -201,10 +201,18 @@ function AboutPage() {
             Adelaide's independent residential real estate agency, since 1978.
           </h2>
           <p>
-            Ring Real Estate was founded in Fullarton in 1978 by Geoffrey
-            Ring on a single, stubborn idea: that residential real estate in
-            Adelaide could be a profession of integrity, not a profession of
-            volume.
+            Our brand represents absolute integrity and our commitment to
+            Sellers and Buyers, Landlords and Tenants. We value our work and
+            the important role we have in managing these relationships and
+            creating successful outcomes. Where there is integrity, there will
+            be trust. Where there is trust, there will be an atmosphere for
+            success. Everything we do happens around that one essential human
+            value — Integrity. It is the foundation principle of our
+            working-culture, it simply goes without saying. Especially in a
+            professional services industry where performance varies greatly,
+            the environment is subjective, emotion can cloud reality, and the
+            market is always on the move — it is human integrity that earns
+            trust and delivers outcomes.
           </p>
           <p>
             Nearly five decades later, the offices have moved twice and the
