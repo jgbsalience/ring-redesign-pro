@@ -110,7 +110,7 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
             ))}
           </div>
 
-          <div className="mt-12 space-y-6 text-base md:text-lg leading-relaxed">
+          <div className="mt-12 space-y-6 text-base md:text-lg leading-relaxed font-sans">
             {listing.description.map((p, i) => <p key={i}>{p}</p>)}
           </div>
 
