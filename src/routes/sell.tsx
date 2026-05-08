@@ -91,9 +91,12 @@ function SellPage() {
               Ready when you are.
             </h2>
           </div>
-          <div className="md:col-span-4">
-            <Link to="/sell/appraisal" className="inline-flex items-center gap-3 px-7 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em]">
+          <div className="md:col-span-4 flex flex-col gap-3">
+            <Link to="/sell/appraisal" className="inline-flex items-center justify-between gap-3 px-7 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--ringgreen-deep)] hover:text-white transition-colors">
               Request appraisal <ArrowRight size={14} />
+            </Link>
+            <Link to="/sell/set-to-sell" className="inline-flex items-center justify-between gap-3 px-7 py-4 border border-white/20 text-xs uppercase tracking-[0.22em] hover:border-[var(--ringgreen)] hover:text-[var(--ringgreen)] transition-colors">
+              Discover Set to Sell <ArrowRight size={14} />
             </Link>
           </div>
         </div>
