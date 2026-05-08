@@ -193,6 +193,69 @@ function AboutPage() {
       </section>
 
       <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
+        <div className="md:col-span-5">
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">The difference</div>
+          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+            How did we<br /><span className="italic">come to be?</span>
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Established in 1976, Ring Partners Real Estate was built by John
+            and Sandra Ring — a family business servicing their local
+            Blackwood District community. Their reputation and success grew
+            quickly as a result of the trusted care for their clients and
+            customers, the manner in which they went about their work, and a
+            philosophy of going the extra mile.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Integrity was at the heart of their work — John managed Real
+            Estate Sales, Valuations, Land Economy and Development, and
+            Sandra, Accounting and Property Management. Together they became
+            one of the most successful independently owned real estate
+            businesses in Adelaide. One of their mottos was 'Good Agency
+            Practice Will Prevail'. We are proud to say that, to this day,
+            all of their spirited company mottos are at the forefront of who
+            we are now and into the future.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Their son Stephen joined the family business in 1992 with the
+            goal of carrying on the tradition. It was one of the most
+            tumultuous decades to begin a career, with Australia and
+            particularly South Australia moving through a recessive economic
+            cycle. Stephen immersed himself in real estate, learning and
+            studying while working with mentors whose teachings and
+            philosophies still inspire his work today. Stephen endeavoured to
+            consolidate the Ring brand as one of the most respected names in
+            the industry, and to learn the skills that have enabled him to be
+            among the elite real estate agents in South Australia.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Today, Stephen has exceeded his goals with a wealth of knowledge
+            to match his consistent performance, energy and passion for
+            helping people to have real estate success. With a committed team
+            behind him, Stephen is the Principal Director of Ring Real Estate
+            with a clear vision to carry on the tradition of sound values and
+            to be at the forefront of professional real estate service.
+          </p>
+        </div>
+        <div className="md:col-span-7 space-y-8">
+          {[
+            { t: "Your agent answers the phone", b: "Not a junior, not a call centre. The person whose name is on your listing." },
+            { t: "We see the home before we price it", b: "Often twice. We will not put a number to a property we have walked through once at dusk." },
+            { t: "Photography is commissioned, not templated", b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra." },
+            { t: "We tell you what isn't working", b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end." },
+          ].map((d) => (
+            <div key={d.t} className="flex gap-6 border-b border-border pb-8">
+              <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
+              <div>
+                <h3 className="font-serif text-xl">{d.t}</h3>
+                <p className="mt-2 text-muted-foreground leading-relaxed">{d.b}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">Our story · Adelaide, since 1978</div>
         </div>
@@ -300,68 +363,7 @@ function AboutPage() {
       </section>
 
       {/* What makes us different */}
-      <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
-        <div className="md:col-span-5">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">The difference</div>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
-            How did we<br /><span className="italic">come to be?</span>
-          </h2>
-          <p className="mt-6 text-muted-foreground leading-relaxed">
-            Established in 1976, Ring Partners Real Estate was built by John
-            and Sandra Ring — a family business servicing their local
-            Blackwood District community. Their reputation and success grew
-            quickly as a result of the trusted care for their clients and
-            customers, the manner in which they went about their work, and a
-            philosophy of going the extra mile.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Integrity was at the heart of their work — John managed Real
-            Estate Sales, Valuations, Land Economy and Development, and
-            Sandra, Accounting and Property Management. Together they became
-            one of the most successful independently owned real estate
-            businesses in Adelaide. One of their mottos was 'Good Agency
-            Practice Will Prevail'. We are proud to say that, to this day,
-            all of their spirited company mottos are at the forefront of who
-            we are now and into the future.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Their son Stephen joined the family business in 1992 with the
-            goal of carrying on the tradition. It was one of the most
-            tumultuous decades to begin a career, with Australia and
-            particularly South Australia moving through a recessive economic
-            cycle. Stephen immersed himself in real estate, learning and
-            studying while working with mentors whose teachings and
-            philosophies still inspire his work today. Stephen endeavoured to
-            consolidate the Ring brand as one of the most respected names in
-            the industry, and to learn the skills that have enabled him to be
-            among the elite real estate agents in South Australia.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Today, Stephen has exceeded his goals with a wealth of knowledge
-            to match his consistent performance, energy and passion for
-            helping people to have real estate success. With a committed team
-            behind him, Stephen is the Principal Director of Ring Real Estate
-            with a clear vision to carry on the tradition of sound values and
-            to be at the forefront of professional real estate service.
-          </p>
-        </div>
-        <div className="md:col-span-7 space-y-8">
-          {[
-            { t: "Your agent answers the phone", b: "Not a junior, not a call centre. The person whose name is on your listing." },
-            { t: "We see the home before we price it", b: "Often twice. We will not put a number to a property we have walked through once at dusk." },
-            { t: "Photography is commissioned, not templated", b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra." },
-            { t: "We tell you what isn't working", b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end." },
-          ].map((d) => (
-            <div key={d.t} className="flex gap-6 border-b border-border pb-8">
-              <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
-              <div>
-                <h3 className="font-serif text-xl">{d.t}</h3>
-                <p className="mt-2 text-muted-foreground leading-relaxed">{d.b}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* moved: How did we come to be? — now beneath the banner */}
 
       {/* Full team */}
       <section className="bg-secondary/50 py-24 md:py-32">
