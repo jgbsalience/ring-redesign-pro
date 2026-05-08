@@ -496,7 +496,7 @@ function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-colors group"
+                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--ringgreen)_45%,transparent)] group"
               >
                 <Search size={14} className="md:hidden" />
                 Search
