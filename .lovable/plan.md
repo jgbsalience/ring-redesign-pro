@@ -1,46 +1,41 @@
 ## Goal
-Create a new `/sell/set-to-sell` route that retells Ring's signature **Set to Sell** strategy (their fourth method, combining Private Treaty + Auction + Tender) in our editorial design language. The user's message references the methods-of-sale URL but calls it "set to sell" — both pages were scraped and the content is woven together so a visitor understands the three traditional methods *and* why Set to Sell unifies them.
 
-## Source content (scraped via Firecrawl)
-- **Methods of sale**: Private Treaty, Auction, Tender — definitions + SA legislative note (Statutes Amendment Act 2007, Section 24A) on under-quoting / price representation.
-- **Set to Sell**: Ring's trademarked Private Treaty–Tender hybrid; "step-by-step plan to sell your home for the optimum outcome within 28 days"; bullets — 8 winning features, 4 selling phases, more buyer enquiry, fail-safe; lineage from "Set Sale" trademark (2000–2010) → Stephen Ring / RING Real Estate.
+Make the homepage hero carousel feel cinematic: long, soft crossfades with a slow, almost-imperceptible Ken Burns zoom on the active slide — pacing that reads as luxury rather than a slideshow. Add a suttle zoomin animation thats slow
 
-## Page structure (top → bottom)
+## Current behaviour
 
-1. **Hero** — full-bleed luxury image with dark scrim, in line with `sell.appraisal.tsx` hero. Eyebrow "The fourth method", serif H1 "Set to Sell.", thin ringgreen rule, subline "A Private Treaty–Tender strategy designed to sell your home in 28 days — with less risk and less stress.", quiet ™ note.
+- 1200ms opacity-only crossfade, `ease-in-out`
+- 4500ms interval (slides change quickly)
+- Static images, no motion within a slide
+- Caption fades 700ms (already good)
 
-2. **Pillar intro** (light) — two-col grid:
-   - Left: serif H2 "Not a method. A discipline." + 3 paragraphs paraphrasing the "removes restrictions / unique / compelling" copy.
-   - Right: meta strip (same divider style as appraisal page) — Format · Timeframe · Negotiation · Marketing · Authorisation.
+## Proposed changes — `src/routes/index.tsx` (LuxuryCarousel only)
 
-3. **The four methods** — editorial four-card grid (`md:grid-cols-4`) with numbered eyebrows 01–04: Private Treaty, Auction, Tender, **Set to Sell** (4th highlighted with `ringgreen-tint` background). Each card: tagline + 2–3 sentence explainer drawn from scraped content. The Set to Sell card spans full width on mobile and visually anchors the row.
-
-4. **Why it works** — three-up promise row (mirrors appraisal page reassurance pattern): "More buyer enquiry", "Seller in control", "Optimum outcome in 28 days". Each with `ring-mark` eyebrow + short copy.
-
-5. **The 8 winning features** — `md:grid-cols-2` list of 8 numbered tiles (01–08) with serif headings + one-line descriptions. Numbers in ringgreen, bordered tiles. Items derived from the scraped framing: e.g., Tailored to your home, Optimum selling time, Greater enquiry, Buyer empowerment, Seller control, Ethical negotiation, Transparent consultation, Fail-safe structure.
-
-6. **The 4 selling phases** — horizontal stepper / four-column timeline (Prepare → Present → Negotiate → Settle) with serif phase names, day-range badges (Days 1–7, 8–14, 15–21, 22–28) in ringgreen, and a one-line description each.
-
-7. **Heritage strip** — short editorial paragraph on the Set Sale lineage (2000–2010, 500+ consultants → refined under Stephen Ring / Ring Real Estate today). Pull-quote treatment with serif italic + ringgreen mark.
-
-8. **Compliance note** — small print panel summarising SA's Statutes Amendment Act 2007 / Section 24A — no under-quoting, "price guide" only valid in Auction. Sets us apart as transparent. Styled as a bordered notice block.
-
-9. **Closing CTA** — dark `bg-[var(--ink)]` band reusing the appraisal page's pattern: serif quote "Let's design a strategy for your home." + two CTAs: "Request appraisal" (→ /sell/appraisal) primary, "Speak with us" (tel:) secondary.
-
-## Design tokens (matches site)
-- Serif headings: `font-serif tracking-tight`
-- Body: Inter (global)
-- Accent: `var(--ringgreen)` for rules, numbered eyebrows, focus, highlighted card; `var(--ringgreen-deep)` for inline accents
-- Spacing: `container-page`, `py-20 md:py-28` between sections
-- Reuse `<Header />`, `<Footer />`; eyebrows use `.ring-mark`
-- No new components needed — pure presentation in the route file.
-
-## Files to change
-- **Create** `src/routes/sell.set-to-sell.tsx` — route at `/sell/set-to-sell` with `head()` meta (unique title/description/og tags).
-- **Edit** `src/routes/sell.tsx` — if the existing sell index references the methods/strategy, add a `<Link to="/sell/set-to-sell">` CTA in the relevant section so the new page is reachable.
-- **Edit** `src/components/site/Header.tsx` — add a link to "Set to Sell" within the Sell nav area (only if there's an existing dropdown/sub-nav pattern; otherwise leave header untouched and rely on in-page links from `/sell`).
+1. **Pacing**
+  - Increase autoplay interval `4500ms → 7000ms` so each image has time to breathe.
+  - Lengthen crossfade `duration-[1200ms] → duration-[1800ms]`.
+  - Swap easing from `ease-in-out` to a custom cubic-bezier `[0.22,0.61,0.36,1]` (a soft "ease-out-expo"-ish curve) for a more filmic fade.
+2. **Ken Burns motion**
+  - Wrap each `<img>` in a positioned container so the image itself can transform without affecting layout.
+  - Active slide: scale from `1.04 → 1.10` over ~9s with a slight translate (e.g. `translate-x-[-1%] translate-y-[1%]`) — direction alternates per slide index (even slides drift one way, odd slides the other) for visual variety.
+  - Inactive slides reset to base scale instantly when hidden, so the motion always begins fresh on entry.
+  - Implement via a single keyframe defined inline in `src/styles.css` (`@keyframes kenburns-a` / `kenburns-b`) and applied with conditional class names. Animation only runs on the active slide (`animation-play-state: running` when active, `paused` otherwise). Respect `prefers-reduced-motion` — disable the zoom entirely.
+3. **Crossfade polish**
+  - Add `will-change: opacity, transform` to the image layer for smoother GPU compositing.
+  - Slight scale-in on enter (1.02 → 1) layered with the opacity fade, so new slides bloom in rather than appear. Outgoing slide stays at its current zoom while fading.
+4. **Preload next image**
+  - Set `loading="eager"` (and remove `lazy`) on the slide immediately after the current one, so the next crossfade is never blocked by a network fetch. All others stay lazy.
+5. **Caption sync**
+  - Keep current 700ms caption transition but bump to 900ms with the same cubic-bezier so caption motion matches the image easing.
 
 ## Out of scope
-- No backend, no Supabase changes.
-- No images generated; reuse an existing `LUXURY_SLIDES` hero URL already in the codebase.
-- Methods-of-sale is not given its own route — its content is folded into the four-method grid on the Set to Sell page.
+
+- No new dependencies, no Framer Motion.
+- No layout / aspect ratio changes.
+- Caption content, swipe handlers, dot pagination, counter — all unchanged.
+- Other carousels (listings, etc.) — unchanged unless you ask.
+
+## Files
+
+- `src/routes/index.tsx` — pacing, classes, preload flag.
+- `src/styles.css` — add two `@keyframes` (kenburns-a, kenburns-b), a `.kenburns-active` utility, and a `prefers-reduced-motion` override.
