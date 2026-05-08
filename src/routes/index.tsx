@@ -121,6 +121,9 @@ function LuxuryCarousel() {
           `${variant(1280, 960)} 1280w`,
           `${variant(1600, 1200)} 1600w`,
           `${variant(1920, 1440)} 1920w`,
+          `${variant(2400, 1800)} 2400w`,
+          `${variant(3200, 2400)} 3200w`,
+          `${variant(4000, 3000)} 4000w`,
         ].join(", ");
         const isActive = idx === i;
         const isNext = idx === (i + 1) % LUXURY_SLIDES.length;
