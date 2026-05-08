@@ -460,7 +460,7 @@ function HomePage() {
               </div>
 
               {/* Beds */}
-              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-colors cursor-pointer">
+              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-shadow cursor-pointer focus-within:bg-[var(--ringgreen)]/5 focus-within:ring-2 focus-within:ring-[var(--ringgreen)] focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--ringgreen)_35%,transparent)] focus-within:z-10">
                 <BedDouble size={16} className="text-muted-foreground" aria-hidden="true" />
                 <span className="sr-only">Beds</span>
                 {mounted ? (
