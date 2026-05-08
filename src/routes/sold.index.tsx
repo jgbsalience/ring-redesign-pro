@@ -113,7 +113,7 @@ function SoldIndex() {
             </div>
             <select
               value={suburb}
-              onChange={(e) => setSuburb(e.target.value)}
+              onChange={(e) => update({ suburb: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>All suburbs</option>
