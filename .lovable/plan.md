@@ -1,59 +1,48 @@
+# Refresh listing data + correct agents from ring-sa.com.au
+
 ## Goal
-Adopt the "Integrity" editorial slide design (the 4:5 hero with subtle Ken-Burns motion, dark scrim, and suburb-mark + serif address + caption overlay) as the universal property-listing card design across the site. Sizes adapt by context — grid card, scrolling strip, hero — so it stays elegant at any width.
 
-## What "this design" means (the source pattern)
-- Aspect 4:5 image surface, slow zoom in, dark gradient scrim from bottom.
-- Overlay copy stacked over the image (no separate white footer):
-  - Tiny ringgreen rule + suburb (uppercase, wide-tracked).
-  - Serif address.
-  - Caption / one-liner — replaced per context: price for available stock, sold price for sold, weekly rent for rentals.
-- Hover lifts subtly; whole tile is a link to the right `/buy|/rent|/sold` page.
-- A small status pill (For Sale / Sold / etc.) and Featured chip stay in the top-left, as on today's `ListingCard`.
+Every property listing page on the site shows the correct agent(s) and accurate details, sourced from the live ring-sa.com.au listing page. make UI chnages and supabase chnages 
 
-## Files to change
+## Current state
 
-### 1. `src/components/site/ListingCard.tsx` — rebuild as the new universal card
-- Replace the current 4:3 image + white footer layout with the editorial overlay style: 4:5 surface, scrim, overlaid suburb / address / price.
-- Keep accepting `size` prop with three sizes that scale type and overlay padding only — the markup is the same so it reads as one design system.
-  - `sm` → strip / dense grids (320–380px wide). Smaller serif (text-lg), tighter padding.
-  - `md` → default grid card (≈ third-width). Serif text-xl–2xl. **This matches the source slide.**
-  - `lg` → first/feature card or single-up. Serif text-3xl, generous padding, subtle Ken-Burns enabled.
-- Show beds/baths/cars on a thin row beneath the price *inside the overlay* at `md`/`lg`; hide at `sm` (already noisy).
-- Agent thumbnail row removed from the card face — it competes with the editorial composition. Keep agent attribution on the listing detail page where it belongs.
-- Status pill + Featured chip: keep, restyled to sit on the dark image with `bg-background/95` (unchanged) and a smaller scale at `sm`.
-- Small Ken-Burns motion (re-using the existing `kenburns-base` / `kenburns-active-a` classes from styles.css) only at `lg` to keep grid pages calm.
-- Image: use `srcSet` swap of the multiarray `cp-rect-XxY.pg` filename (same trick as `LuxuryCarousel`) for crisp images at every size.
+- 69 listings live in `src/data/ring.json` (the Supabase `listings` table is empty; the site reads from JSON via `src/data/site.ts`).
+- Agent assignments today: 56 listings → Stephen + Luke, 12 → Stephen only, 1 → Soozie. This was a defaulted guess, not scraped.
+- Each listing in `ring.json` already has its source `url` (e.g. `https://ring-sa.com.au/buy-residential-real-estate/house-1-menura-avenue-glenalta-sa-1127412251`).
+- Spot-fetch of one page confirms agent blocks are present at the bottom (name, phone, email, photo). Sample:
+  ```
+  #### Stephen Ring  →  stephen@ring-sa.com.au
+  #### Luke Bull    →  luke@ring-sa.com.au
+  ```
+- Five known agents: stephen-ring, luke-bull, soozie-bice, rachel-brooke, toni-dalcin.
 
-### 2. Replace ad-hoc card markup with the new component everywhere
+## What we'll do
 
-- **Homepage `RecentSalesStrip` (`src/routes/index.tsx`)** — currently inlines its own 4:5 card. Replace with `<ListingCard l={l} size="sm" />` so it matches the design exactly. Keep the auto-scrolling strip behaviour.
-- **Homepage "Featured residences" grid (`src/routes/index.tsx`)** — already uses `ListingCard`; just inherits the new design at `md`. First card on `lg` screens spans 2 cols and uses `size="lg"` to feel like a hero slide.
-- **`src/components/site/ListingsBrowser.tsx`** (powers `/buy`, `/rent`, `/sold`) — already uses `ListingCard`. No call-site change; new design flows in. Tighten grid gaps slightly so the taller 4:5 cards breathe.
-- **`src/routes/listings.tsx` `ListingDbCard`** — duplicate of the old card design for the DB-backed `/listings` page. Delete the local component and import the shared `ListingCard`, mapping the `Row` to a `Listing` shape (or accept `Row` via a small adapter). Keeps one source of truth.
-- **`src/routes/sold.index.tsx`** — already uses `ListingCard`; inherits.
-- **`src/routes/team.$agentId.tsx`** — already uses `ListingCard`; inherits.
-- **`src/routes/sell.tsx`** (lines around 72) — small inline card with 4:3 image. Replace with `<ListingCard size="sm" />` so the visual language is consistent on the sell page too.
-- **Homepage `LuxuryCarousel`** itself stays as-is — it's the design we're standardising on, so it remains the canonical hero for the editorial section.
+1. Build a one-off Node script (`scripts/refresh-listings.mjs`, not shipped) that:
+  - Reads `src/data/ring.json`.
+  - For each of the 69 listings, fetches its source URL (via Firecrawl — the connector is already linked to this project — falling back to plain `fetch` on rate-limit).
+  - Parses the markdown/HTML to extract:
+    - **Agents**: every `#### <name>` block paired with an `@ring-sa.com.au` email → map email local-part to our agent ids (`stephen` → stephen-ring, `luke` → luke-bull, `soozie` → soozie-bice, `rachel` → rachel-brooke, `toni` → toni-dalcin). This is the authoritative agent assignment.
+    - **Price** (incl. "Contact Agent" / range), **beds/baths/cars/land**, **headline** (title), **description** paragraphs, **status** (for-sale / sold / for-rent / leased — derived from the URL path), **inspections**.
+    - Hero + gallery image URLs (re-confirm).
+  - Writes the merged result back to `src/data/ring.json`. Keys not present in the scrape are preserved from the existing record (no data loss).
+  - Logs a per-listing diff summary (agents added/removed, fields changed) so we can review.
+2. Run the script once from the sandbox. Review the diff log. Commit the refreshed `ring.json`.
+3. Verify on the site:
+  - `/buy/<id>` detail pages render the correct agent card(s) (the existing `ListingDetail` already reads `agentIds`).
+  - `/team/<agent>` listing counts update accordingly.
+  - Spot-check 3–5 listings against the live ring-sa.com.au pages.
 
-### 3. Sizing rules (the "change size accordingly" part)
 
-| Context | Size | Width | Overlay type | Motion |
-|---|---|---|---|---|
-| Homepage featured first card (≥lg) | `lg` | 2/3 width | Suburb + address (3xl) + caption + price + bbc row | Ken-Burns |
-| Homepage featured remaining + browser grid | `md` | ~1/3 width | Suburb + address (2xl) + price + bbc row | None |
-| Recent sales strip + sell page rail | `sm` | 320–380px | Suburb + address (lg) + price | None |
 
-### 4. Tokens / styles
-- No new colours. Use `--ringgreen` for the rule and price emphasis (already in use).
-- Add a small reusable scrim utility in `src/styles.css` (`.editorial-scrim` → the `from-black/75 via-black/35 to-transparent` gradient currently inlined in `LuxuryCarousel`) so it isn't duplicated five times.
+## Risks / things to confirm before I start
 
-## Out of scope
-- No backend changes.
-- Listing **detail** pages stay as-is (the design is for browse/list contexts).
-- `LuxuryCarousel` keeps its current placement on the homepage Integrity section.
-- No copy changes — only visual structure.
+- **Agent roster completeness**: are stephen/luke/soozie/rachel/toni the full team? If a listing legitimately belongs to someone else, we'd need to add them.
+- **Stale listings**: some of the 69 may have been removed from ring-sa.com.au (404). The script will keep the existing JSON record for those and flag them in the log so you can decide whether to drop them.
+- **Throughput**: 69 sequential fetches via Firecrawl — expect ~2–4 minutes runtime.
 
-## Risk / things to validate after build
-- Taller 4:5 cards make existing 3-up grids ~33% taller — confirm on `/buy`, `/rent`, `/sold`, and the homepage Featured section.
-- Recent sales strip auto-scroll step uses `card.offsetWidth + 24` — still correct since cards stay at fixed widths.
-- `/listings` page deleting `ListingDbCard` — make sure the `Row` → `ListingCard` adapter covers all fields the card reads (hero, address, suburb, state, price, beds/baths/cars, status, featured, id).
+## Technical notes
+
+- Firecrawl connection is already linked (`std_01kqsdq3w3fmhrfgf9vfgscx1z`). Script will use `process.env.FIRECRAWL_API_KEY` server-side only.
+- Agent matching is by **email local-part**, not name string, to avoid typos.
+- `ring.json` is the single source of truth for site listings; `src/data/site.ts` already maps `agentSlugs` → `agentIds` and resolves them via `getAgent()`.
