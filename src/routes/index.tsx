@@ -253,7 +253,12 @@ function RecentSalesStrip({ sold }: { sold: typeof listings }) {
 }
 
 function HomePage() {
-  const featured = listings.filter((l) => l.featured).slice(0, 3);
+  const featuredAll = listings.filter((l) => l.featured);
+  const forSale = listings.filter((l) => l.status === "for-sale");
+  const featured = [
+    ...featuredAll,
+    ...forSale.filter((l) => !featuredAll.some((f) => f.id === l.id)),
+  ].slice(0, 16);
   const sold = listings.filter((l) => l.status === "sold").slice(0, 16);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -652,11 +657,9 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featured.map((l, idx) => (
-              <div key={l.id} className={idx === 0 ? "lg:col-span-2 lg:row-span-1" : ""}>
-                <ListingCard l={l} size={idx === 0 ? "lg" : "md"} />
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {featured.map((l) => (
+              <ListingCard key={l.id} l={l} size="sm" />
             ))}
           </div>
         </div>
