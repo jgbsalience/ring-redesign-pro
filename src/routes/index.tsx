@@ -670,7 +670,11 @@ function HomePage() {
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>
-        <RecentSalesStrip sold={sold} />
+        <div className="container-page grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          {sold.slice(0, 16).map((l) => (
+            <ListingCard key={l.id} l={l} size="sm" />
+          ))}
+        </div>
       </section>
 
       {/* METHODS OF SALE */}
