@@ -1,52 +1,46 @@
 ## Goal
-Rebuild `/sell/appraisal` to match Ring's actual request-appraisal page content while elevating it visually to match our editorial site design (Fraunces serif headings, Inter body, ringgreen accent, full-bleed imagery, generous whitespace).
+Create a new `/sell/set-to-sell` route that retells Ring's signature **Set to Sell** strategy (their fourth method, combining Private Treaty + Auction + Tender) in our editorial design language. The user's message references the methods-of-sale URL but calls it "set to sell" — both pages were scraped and the content is woven together so a visitor understands the three traditional methods *and* why Set to Sell unifies them.
 
-## Reference content (from ring-sa.com.au)
-- Headline: "Find out the true Market Value of your property."
-- Subhead: "Selling Now or forward planning… We welcome the connection."
-- Form fields: Name*, Address, Phone*, Email*, Interested In* (multi-select checkboxes), Comments
-- Interested-in options:
-  1. I only want to know the Market Value of my home
-  2. I need advice on the method of sale
-  3. I need presentation and/or home preparation advice
-  4. I want to know how the market is trending in my area
-  5. I want to know the best time to sell
-- Office footer card: 140 Shepherds Hill Road, Bellevue Heights SA 5050 · (08) 8370 3211 · ring@ring-sa.com.au
+## Source content (scraped via Firecrawl)
+- **Methods of sale**: Private Treaty, Auction, Tender — definitions + SA legislative note (Statutes Amendment Act 2007, Section 24A) on under-quoting / price representation.
+- **Set to Sell**: Ring's trademarked Private Treaty–Tender hybrid; "step-by-step plan to sell your home for the optimum outcome within 28 days"; bullets — 8 winning features, 4 selling phases, more buyer enquiry, fail-safe; lineage from "Set Sale" trademark (2000–2010) → Stephen Ring / RING Real Estate.
 
 ## Page structure (top → bottom)
 
-1. **Hero band** — full-bleed luxury property image (reuse one of the existing `LUXURY_SLIDES` images already in the codebase) with dark scrim. Eyebrow "Appraisal request", serif H1 "Find out the true market value of your home.", short sub-line, and a thin ringgreen rule. Sits behind the dark Header.
+1. **Hero** — full-bleed luxury image with dark scrim, in line with `sell.appraisal.tsx` hero. Eyebrow "The fourth method", serif H1 "Set to Sell.", thin ringgreen rule, subline "A Private Treaty–Tender strategy designed to sell your home in 28 days — with less risk and less stress.", quiet ™ note.
 
-2. **Two-column intro + meta strip** (light section)
-   - Left: editorial copy — "A quiet conversation about your home." paragraph, second paragraph about the 7-day written appraisal, third sentence "It costs nothing. It commits to nothing."
-   - Right: meta list — Cost · Time on site · Written response · Conducted by (Senior agent) — same divider styling already used on the page.
+2. **Pillar intro** (light) — two-col grid:
+   - Left: serif H2 "Not a method. A discipline." + 3 paragraphs paraphrasing the "removes restrictions / unique / compelling" copy.
+   - Right: meta strip (same divider style as appraisal page) — Format · Timeframe · Negotiation · Marketing · Authorisation.
 
-3. **Form section** — `bg-secondary/50`, generous padding, two-column on desktop:
-   - Left rail: small serif heading "We welcome the connection.", supporting line, and the 4-line office card (address / phone / email) styled like Contact page.
-   - Right: the form itself (col-span-7).
-     - Name* / Phone* (two cols)
-     - Email* / Property address (two cols)
-     - Suburb / Property type (select)
-     - **Interested in*** — 5 checkbox tiles (label-wrapped, bordered, hover ringgreen) — improvement over Ring's plain checkboxes.
-     - Comments textarea
-     - Privacy line + dark CTA button "Request appraisal →" matching site button style.
-   - Client-side validation: required markers shown via `*`, basic HTML5 `required` attributes; inline success state on submit (no backend wired).
+3. **The four methods** — editorial four-card grid (`md:grid-cols-4`) with numbered eyebrows 01–04: Private Treaty, Auction, Tender, **Set to Sell** (4th highlighted with `ringgreen-tint` background). Each card: tagline + 2–3 sentence explainer drawn from scraped content. The Set to Sell card spans full width on mobile and visually anchors the row.
 
-4. **Reassurance row** — three short pillars with `ring-mark` bullets: "Confidential", "No obligation", "Senior agent only" — short copy beneath each. Mirrors the site's editorial three-up pattern used on Sell/About pages.
+4. **Why it works** — three-up promise row (mirrors appraisal page reassurance pattern): "More buyer enquiry", "Seller in control", "Optimum outcome in 28 days". Each with `ring-mark` eyebrow + short copy.
 
-5. **Closing CTA strip** — dark band (`bg-[var(--ink)] text-white`) with serif quote "We will walk the property, ask questions, and listen." plus phone/email links — matches the dark CTA pattern used on the home page.
+5. **The 8 winning features** — `md:grid-cols-2` list of 8 numbered tiles (01–08) with serif headings + one-line descriptions. Numbers in ringgreen, bordered tiles. Items derived from the scraped framing: e.g., Tailored to your home, Optimum selling time, Greater enquiry, Buyer empowerment, Seller control, Ethical negotiation, Transparent consultation, Fail-safe structure.
 
-## Design tokens & components
-- Serif H1/H2: `font-serif tracking-tight`
-- Body: Inter (already global)
-- Accent: `var(--ringgreen)` for rules, eyebrow mark, focus rings, checkbox active state
-- Buttons: solid foreground style already used (`bg-foreground text-background`, uppercase tracking)
-- Inputs: white `bg-background`, border-bottom only on focus to keep the editorial feel; consistent with Contact page if present
-- Reuse `<Header />` and `<Footer />`; eyebrow uses the existing `.ring-mark` dot
+6. **The 4 selling phases** — horizontal stepper / four-column timeline (Prepare → Present → Negotiate → Settle) with serif phase names, day-range badges (Days 1–7, 8–14, 15–21, 22–28) in ringgreen, and a one-line description each.
+
+7. **Heritage strip** — short editorial paragraph on the Set Sale lineage (2000–2010, 500+ consultants → refined under Stephen Ring / Ring Real Estate today). Pull-quote treatment with serif italic + ringgreen mark.
+
+8. **Compliance note** — small print panel summarising SA's Statutes Amendment Act 2007 / Section 24A — no under-quoting, "price guide" only valid in Auction. Sets us apart as transparent. Styled as a bordered notice block.
+
+9. **Closing CTA** — dark `bg-[var(--ink)]` band reusing the appraisal page's pattern: serif quote "Let's design a strategy for your home." + two CTAs: "Request appraisal" (→ /sell/appraisal) primary, "Speak with us" (tel:) secondary.
+
+## Design tokens (matches site)
+- Serif headings: `font-serif tracking-tight`
+- Body: Inter (global)
+- Accent: `var(--ringgreen)` for rules, numbered eyebrows, focus, highlighted card; `var(--ringgreen-deep)` for inline accents
+- Spacing: `container-page`, `py-20 md:py-28` between sections
+- Reuse `<Header />`, `<Footer />`; eyebrows use `.ring-mark`
+- No new components needed — pure presentation in the route file.
 
 ## Files to change
-- `src/routes/sell.appraisal.tsx` — full rewrite implementing the structure above. Keep the existing route export and `head()` meta (refresh title/description copy to mirror new headline).
+- **Create** `src/routes/sell.set-to-sell.tsx` — route at `/sell/set-to-sell` with `head()` meta (unique title/description/og tags).
+- **Edit** `src/routes/sell.tsx` — if the existing sell index references the methods/strategy, add a `<Link to="/sell/set-to-sell">` CTA in the relevant section so the new page is reachable.
+- **Edit** `src/components/site/Header.tsx` — add a link to "Set to Sell" within the Sell nav area (only if there's an existing dropdown/sub-nav pattern; otherwise leave header untouched and rely on in-page links from `/sell`).
 
 ## Out of scope
-- No backend submission (no Supabase table, no email send) — form is presentation-only with a success toast on submit, matching the existing Contact form pattern. Hook-up can be a follow-up if desired.
-- Header/Footer remain unchanged.
+- No backend, no Supabase changes.
+- No images generated; reuse an existing `LUXURY_SLIDES` hero URL already in the codebase.
+- Methods-of-sale is not given its own route — its content is folded into the four-method grid on the Set to Sell page.
