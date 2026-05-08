@@ -67,19 +67,9 @@ function SellPage() {
               <Stat n="$220m+" l="Sold last year" />
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-x-8 gap-y-14">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {sold.map((l) => (
-              <Link key={l.id} to="/sold/$listingId" params={{ listingId: l.id }} className="hover-lift">
-                <div className="aspect-[4/3] img-zoom bg-muted">
-                  <img src={l.hero} alt="" className="w-full h-full object-cover" />
-                </div>
-                <div className="mt-5">
-                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{l.suburb}</div>
-                  <div className="font-serif text-xl mt-1">{l.address}</div>
-                  <div className="mt-2 text-[var(--ringgreen)] font-medium">{l.price}</div>
-                  {l.priceNote && <div className="text-xs text-muted-foreground mt-1">{l.priceNote}</div>}
-                </div>
-              </Link>
+              <ListingCard key={l.id} l={l} size="md" />
             ))}
           </div>
         </div>
