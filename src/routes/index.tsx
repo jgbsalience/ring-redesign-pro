@@ -496,7 +496,7 @@ function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-foreground text-background px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)] hover:text-[var(--ink)] transition-colors group"
+                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-colors group"
               >
                 <Search size={14} className="md:hidden" />
                 Search
