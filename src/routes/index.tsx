@@ -253,7 +253,12 @@ function RecentSalesStrip({ sold }: { sold: typeof listings }) {
 }
 
 function HomePage() {
-  const featured = listings.filter((l) => l.featured).slice(0, 3);
+  const featuredAll = listings.filter((l) => l.featured);
+  const forSale = listings.filter((l) => l.status === "for-sale");
+  const featured = [
+    ...featuredAll,
+    ...forSale.filter((l) => !featuredAll.some((f) => f.id === l.id)),
+  ].slice(0, 16);
   const sold = listings.filter((l) => l.status === "sold").slice(0, 16);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
