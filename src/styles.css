@@ -122,6 +122,11 @@
     letter-spacing: -0.02em;
   }
 
+  p {
+    font-family: var(--font-sans) !important;
+    font-style: normal;
+  }
+
   /* ---------------------------------------------------------------- */
   /* Brand-green focus ring for everything keyboard-reachable          */
   /* ---------------------------------------------------------------- */
