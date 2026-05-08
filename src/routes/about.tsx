@@ -307,8 +307,42 @@ function AboutPage() {
             How did we<br /><span className="italic">come to be?</span>
           </h2>
           <p className="mt-6 text-muted-foreground leading-relaxed">
-            Most of our clients come to us after a campaign elsewhere that
-            felt rushed, generic, or transactional. Here is what changes.
+            Established in 1976, Ring Partners Real Estate was built by John
+            and Sandra Ring — a family business servicing their local
+            Blackwood District community. Their reputation and success grew
+            quickly as a result of the trusted care for their clients and
+            customers, the manner in which they went about their work, and a
+            philosophy of going the extra mile.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Integrity was at the heart of their work — John managed Real
+            Estate Sales, Valuations, Land Economy and Development, and
+            Sandra, Accounting and Property Management. Together they became
+            one of the most successful independently owned real estate
+            businesses in Adelaide. One of their mottos was 'Good Agency
+            Practice Will Prevail'. We are proud to say that, to this day,
+            all of their spirited company mottos are at the forefront of who
+            we are now and into the future.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Their son Stephen joined the family business in 1992 with the
+            goal of carrying on the tradition. It was one of the most
+            tumultuous decades to begin a career, with Australia and
+            particularly South Australia moving through a recessive economic
+            cycle. Stephen immersed himself in real estate, learning and
+            studying while working with mentors whose teachings and
+            philosophies still inspire his work today. Stephen endeavoured to
+            consolidate the Ring brand as one of the most respected names in
+            the industry, and to learn the skills that have enabled him to be
+            among the elite real estate agents in South Australia.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Today, Stephen has exceeded his goals with a wealth of knowledge
+            to match his consistent performance, energy and passion for
+            helping people to have real estate success. With a committed team
+            behind him, Stephen is the Principal Director of Ring Real Estate
+            with a clear vision to carry on the tradition of sound values and
+            to be at the forefront of professional real estate service.
           </p>
         </div>
         <div className="md:col-span-7 space-y-8">
