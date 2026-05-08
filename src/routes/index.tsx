@@ -409,7 +409,7 @@ function HomePage() {
               className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] ring-1 ring-[var(--ringgreen)]/50 border-t-2 border-[var(--ringgreen)]"
             >
               {/* Query */}
-              <div className="relative">
+              <div className="relative transition-shadow focus-within:bg-[var(--ringgreen)]/5 focus-within:ring-2 focus-within:ring-[var(--ringgreen)] focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--ringgreen)_35%,transparent)] focus-within:z-10">
                 <label className="flex items-center gap-3 px-5 py-4">
                   <MapPin size={16} className="text-muted-foreground shrink-0" aria-hidden="true" />
                   <span className="sr-only">Where</span>
@@ -460,7 +460,7 @@ function HomePage() {
               </div>
 
               {/* Beds */}
-              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-colors cursor-pointer">
+              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-shadow cursor-pointer focus-within:bg-[var(--ringgreen)]/5 focus-within:ring-2 focus-within:ring-[var(--ringgreen)] focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--ringgreen)_35%,transparent)] focus-within:z-10">
                 <BedDouble size={16} className="text-muted-foreground" aria-hidden="true" />
                 <span className="sr-only">Beds</span>
                 {mounted ? (
@@ -496,7 +496,7 @@ function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-colors group"
+                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--ringgreen)_45%,transparent)] group"
               >
                 <Search size={14} className="md:hidden" />
                 Search
