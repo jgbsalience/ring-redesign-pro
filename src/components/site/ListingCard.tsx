@@ -60,6 +60,8 @@ function srcSetFor(hero: string) {
     `${v(960, 1200)} 960w`,
     `${v(1280, 1600)} 1280w`,
     `${v(1600, 2000)} 1600w`,
+    `${v(1920, 2400)} 1920w`,
+    `${v(2400, 3000)} 2400w`,
   ].join(", ");
 }
 
@@ -92,7 +94,7 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
         <img
           src={l.hero}
           srcSet={srcSetFor(l.hero)}
-          sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 90vw"
+          sizes="(min-width: 1280px) 800px, (min-width: 768px) 50vw, 95vw"
           alt={l.address}
           loading="lazy"
           referrerPolicy="no-referrer"
