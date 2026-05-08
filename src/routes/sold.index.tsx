@@ -123,7 +123,7 @@ function SoldIndex() {
             </select>
             <select
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => update({ type: e.target.value })}
               className="bg-background px-4 py-3 text-sm outline-none"
             >
               <option>Any type</option>
