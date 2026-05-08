@@ -304,7 +304,7 @@ function AboutPage() {
         <div className="md:col-span-5">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">The difference</div>
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
-            What you'll notice<br /><span className="italic">in the first week.</span>
+            How did we<br /><span className="italic">come to be?</span>
           </h2>
           <p className="mt-6 text-muted-foreground leading-relaxed">
             Most of our clients come to us after a campaign elsewhere that
