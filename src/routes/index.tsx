@@ -795,6 +795,14 @@ function HomePage() {
         </div>
       </section>
 
+      <PortfolioCarousel
+        items={[
+          ...listings.filter((l) => l.featured && l.hero),
+          ...listings.filter((l) => l.status === "for-sale" && l.hero && !l.featured),
+          ...listings.filter((l) => l.status === "sold" && l.hero),
+        ]}
+      />
+
       <Footer />
     </div>
   );
