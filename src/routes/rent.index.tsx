@@ -90,6 +90,7 @@ function RentPage() {
           </div>
         </div>
       </div>
+      <PortfolioCarousel items={listings.filter((l) => (l.status === "for-rent" || l.status === "leased") && l.hero)} />
       <Footer />
     </div>
   );
