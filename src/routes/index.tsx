@@ -658,11 +658,23 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {featured.map((l) => (
-              <ListingCard key={l.id} l={l} size="sm" />
-            ))}
+          <div className="relative">
+            <div className="featured-scroll max-h-[78vh] overflow-y-auto pr-2 -mr-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                {featured.map((l) => (
+                  <ListingCard key={l.id} l={l} size="sm" />
+                ))}
+              </div>
+            </div>
+            {featured.length > 8 && (
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-secondary/80 to-transparent" />
+            )}
           </div>
+          {featured.length > 8 && (
+            <div className="mt-4 text-[10px] uppercase tracking-[0.28em] text-muted-foreground text-center">
+              Scroll for more · {featured.length} residences
+            </div>
+          )}
         </div>
       </section>
 
