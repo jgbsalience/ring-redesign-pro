@@ -215,10 +215,15 @@ function AboutPage() {
             trust and delivers outcomes.
           </p>
           <p>
-            Nearly five decades later, the offices have moved twice and the
-            faces have grown into a team. The idea has not changed. We
-            remain deliberately small, deliberately senior, and deliberately
-            slow when slowness produces the better result.
+            It's why we are Successfully Independent & Proud of It. While
+            others come and go, since 1976 it has been our dedicated work
+            ethic, professional manner and our commitment to caring for client
+            and customer relations that have developed long standing and
+            trusting relationships where our services are valued and
+            consistently referred — in any profession, there really is no
+            greater reward than your work being referred to another. It is
+            important to us to be considered as a valued member and
+            contributor of our exciting industry and our local community.
           </p>
           <p className="font-serif italic text-2xl md:text-3xl text-[var(--ringgreen)] leading-snug">
             Our working passion
