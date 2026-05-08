@@ -645,8 +645,12 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
-            {featured.map((l) => <ListingCard key={l.id} l={l} />)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {featured.map((l, idx) => (
+              <div key={l.id} className={idx === 0 ? "lg:col-span-2 lg:row-span-1" : ""}>
+                <ListingCard l={l} size={idx === 0 ? "lg" : "md"} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
