@@ -251,7 +251,7 @@ function RecentSalesStrip({ sold }: { sold: typeof listings }) {
 
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
-  const sold = listings.filter((l) => l.status === "sold").slice(0, 15);
+  const sold = listings.filter((l) => l.status === "sold").slice(0, 16);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -674,7 +674,11 @@ function HomePage() {
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>
-        <RecentSalesStrip sold={sold} />
+        <div className="container-page grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          {sold.slice(0, 16).map((l) => (
+            <ListingCard key={l.id} l={l} size="sm" />
+          ))}
+        </div>
       </section>
 
       {/* METHODS OF SALE */}
