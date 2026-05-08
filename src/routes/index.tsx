@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
@@ -44,17 +44,65 @@ const LUXURY_SLIDES = [
 function LuxuryCarousel() {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchActive = useRef(false);
+
   useEffect(() => {
     if (paused) return;
     const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 4500);
     return () => clearInterval(id);
   }, [paused]);
+
+  const go = (delta: number) =>
+    setI((n) => (n + delta + LUXURY_SLIDES.length) % LUXURY_SLIDES.length);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStartX.current = t.clientX;
+    touchStartY.current = t.clientY;
+    touchActive.current = true;
+    setPaused(true);
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    // Once a clear horizontal gesture is detected, prevent vertical scroll hijack.
+    if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+      e.preventDefault?.();
+    }
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!touchActive.current || touchStartX.current === null || touchStartY.current === null) {
+      touchActive.current = false;
+      setPaused(false);
+      return;
+    }
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX.current;
+    const dy = t.clientY - touchStartY.current;
+    const SWIPE = 40;
+    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
+      go(dx < 0 ? 1 : -1);
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchActive.current = false;
+    setPaused(false);
+  };
+
   return (
     <div
-      className="mt-10 relative overflow-hidden bg-muted group"
+      className="mt-10 relative overflow-hidden bg-muted group touch-pan-y select-none"
       style={{ aspectRatio: "4 / 5" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
+      role="group"
       aria-roledescription="carousel"
       aria-label="Recent Ring residences"
     >
@@ -86,6 +134,7 @@ function LuxuryCarousel() {
     </div>
   );
 }
+
 
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
