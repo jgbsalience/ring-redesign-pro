@@ -44,6 +44,9 @@ export function ListingsBrowser({
   const page = search.page ?? 1;
 
   const update = (patch: Partial<ListingsSearch>, resetPage = true) => {
+    // Filter changes replace history (avoid back-button spam).
+    // Page changes push history so browser back/forward navigates pages.
+    const isPageOnly = !resetPage && Object.keys(patch).length === 1 && "page" in patch;
     navigate({
       to: ".",
       search: (prev: Record<string, unknown>) => ({
@@ -51,7 +54,7 @@ export function ListingsBrowser({
         ...patch,
         ...(resetPage ? { page: 1 } : {}),
       }),
-      replace: true,
+      replace: !isPageOnly,
     } as never);
   };
 

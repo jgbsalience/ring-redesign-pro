@@ -44,10 +44,11 @@ function SoldIndex() {
   const gridRef = useRef<HTMLDivElement>(null);
 
   const update = (patch: Partial<typeof search>, resetPage = true) => {
+    const isPageOnly = !resetPage && Object.keys(patch).length === 1 && "page" in patch;
     navigate({
       to: "/sold",
       search: (prev: typeof search) => ({ ...prev, ...patch, ...(resetPage ? { page: 1 } : {}) }),
-      replace: true,
+      replace: !isPageOnly,
     });
   };
 
