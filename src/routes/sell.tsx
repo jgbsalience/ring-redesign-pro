@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
+import { ListingCard } from "@/components/site/ListingCard";
 import { ArrowRight } from "lucide-react";
 
 const SELL_SLIDES = listings
