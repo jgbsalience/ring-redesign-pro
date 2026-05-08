@@ -206,9 +206,68 @@ function LuxuryCarousel() {
 }
 
 
+function RecentSalesStrip({ sold }: { sold: typeof listings }) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const card = el.querySelector<HTMLElement>("[data-card]");
+      const step = (card?.offsetWidth ?? 320) + 24; // gap-6 = 24px
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+      el.scrollTo({ left: atEnd ? 0 : el.scrollLeft + step, behavior: "smooth" });
+    }, 4000);
+    return () => clearInterval(id);
+  }, [paused]);
+
+  return (
+    <div
+      ref={scrollerRef}
+      className="overflow-x-auto no-scrollbar"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <div className="container-page flex gap-6 pb-4 min-w-max">
+        {sold.map((l) => (
+          <Link
+            key={l.id}
+            to="/sold/$listingId"
+            params={{ listingId: l.id }}
+            data-card
+            className="w-[320px] md:w-[380px] shrink-0 group hover-lift"
+          >
+            <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
+              <img
+                src={l.hero}
+                alt={l.address}
+                referrerPolicy="no-referrer"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="mt-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{l.suburb}</div>
+              <div className="font-serif text-xl mt-1 group-hover:text-[var(--ringgreen)] transition-colors">{l.address}</div>
+              <div className="mt-2 text-sm font-medium text-[var(--ringgreen)]">{l.price}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function HomePage() {
   const featured = listings.filter((l) => l.featured).slice(0, 3);
-  const sold = listings.filter((l) => l.status === "sold");
+  const sold = listings.filter((l) => l.status === "sold").slice(0, 15);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -626,35 +685,7 @@ function HomePage() {
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>
-        <div className="overflow-x-auto no-scrollbar">
-          <div className="container-page flex gap-6 pb-4 min-w-max">
-            {sold.map((l) => (
-              <Link
-                key={l.id}
-                to="/sold/$listingId"
-                params={{ listingId: l.id }}
-                className="w-[320px] md:w-[380px] shrink-0 group hover-lift"
-              >
-                <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
-                  <img
-                    src={l.hero}
-                    alt={l.address}
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="mt-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    {l.suburb}
-                  </div>
-                  <div className="font-serif text-xl mt-1 group-hover:text-[var(--ringgreen)] transition-colors">{l.address}</div>
-                  <div className="mt-2 text-sm font-medium text-[var(--ringgreen)]">{l.price}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <RecentSalesStrip sold={sold} />
       </section>
 
       {/* METHODS OF SALE */}
