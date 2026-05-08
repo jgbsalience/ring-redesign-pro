@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/ring-logo.png";
+import logo from "@/assets/ring-logo-rev.png";
 
 export function Footer() {
   return (
@@ -9,7 +9,7 @@ export function Footer() {
           <img
             src={logo}
             alt="Ring Real Estate"
-            className="h-16 w-auto brightness-0 invert"
+            className="h-20 w-auto"
           />
           <p className="mt-6 max-w-md text-sm opacity-70 leading-relaxed">
             Adelaide's independent residential agency since 1978. A small,

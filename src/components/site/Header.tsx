@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import logo from "@/assets/ring-logo-green.png";
+import logo from "@/assets/ring-logo-rev.png";
 
 const nav = [
   { to: "/buy", label: "Buy" },
@@ -27,10 +27,10 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
   return (
     <header
       className={[
-        "fixed top-0 inset-x-0 z-50 transition-all duration-500",
+        "fixed top-0 inset-x-0 z-50 transition-all duration-500 text-white",
         transparent
-          ? "bg-transparent text-white"
-          : "bg-background/85 backdrop-blur-md text-foreground border-b border-border/60",
+          ? "bg-transparent"
+          : "bg-[var(--ink)]/95 backdrop-blur-md border-b border-white/10",
       ].join(" ")}
     >
       <div className="container-page flex items-center justify-between h-16 md:h-20">
@@ -38,12 +38,9 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
           <img
             src={logo}
             alt="Ring Real Estate"
-            className={[
-              "h-10 md:h-12 w-auto transition",
-              transparent ? "brightness-0 invert" : "",
-            ].join(" ")}
+            className="h-10 md:h-12 w-auto"
           />
-          <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] opacity-70 mt-0.5">
+          <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] text-white/60 mt-0.5">
             Est. 1978
           </span>
         </Link>
@@ -53,8 +50,8 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
             <Link
               key={n.to}
               to={n.to}
-              className="relative py-1 hover:opacity-100 opacity-90 transition-opacity"
-              activeProps={{ className: "opacity-100" }}
+              className="relative py-1 text-white/85 hover:text-[var(--ringgreen)] transition-colors"
+              activeProps={{ className: "text-white" }}
             >
               {n.label}
             </Link>
@@ -62,12 +59,12 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
         </nav>
 
         <div className="hidden md:flex items-center gap-5">
-          <a href="tel:+61883703211" className="text-sm opacity-90 hover:opacity-100">
+          <a href="tel:+61883703211" className="text-sm text-white/85 hover:text-[var(--ringgreen)] transition-colors">
             (08) 8370 3211
           </a>
           <Link
             to="/sell/appraisal"
-            className="text-xs uppercase tracking-[0.18em] px-4 py-2.5 bg-foreground text-background hover:bg-foreground/90 transition"
+            className="text-xs uppercase tracking-[0.18em] px-4 py-2.5 bg-[var(--ringgreen)] text-[var(--ink)] hover:bg-white transition-colors"
           >
             Request Appraisal
           </Link>
@@ -89,7 +86,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
       {/* Mobile sheet */}
       <div
         className={[
-          "md:hidden fixed inset-x-0 top-16 bottom-0 bg-background text-foreground transition-all duration-500",
+          "md:hidden fixed inset-x-0 top-16 bottom-0 bg-[var(--ink)] text-white transition-all duration-500",
           open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none",
         ].join(" ")}
       >
@@ -99,21 +96,21 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
               key={n.to}
               to={n.to}
               onClick={() => setOpen(false)}
-              className="font-serif text-4xl tracking-tight"
+              className="font-serif text-4xl tracking-tight hover:text-[var(--ringgreen)] transition-colors"
             >
               {n.label}
             </Link>
           ))}
-          <div className="mt-8 pt-8 border-t border-border space-y-3 text-sm">
+          <div className="mt-8 pt-8 border-t border-white/10 space-y-3 text-sm">
             <a href="tel:+61883703211" className="block">(08) 8370 3211</a>
-            <a href="mailto:ring@ring-sa.com.au" className="block opacity-70">
+            <a href="mailto:ring@ring-sa.com.au" className="block text-white/70">
               ring@ring-sa.com.au
             </a>
           </div>
           <Link
             to="/sell/appraisal"
             onClick={() => setOpen(false)}
-            className="mt-4 inline-block text-xs uppercase tracking-[0.2em] px-5 py-3 bg-foreground text-background w-fit"
+            className="mt-4 inline-block text-xs uppercase tracking-[0.2em] px-5 py-3 bg-[var(--ringgreen)] text-[var(--ink)] w-fit"
           >
             Request Appraisal
           </Link>
