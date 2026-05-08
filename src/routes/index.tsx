@@ -119,22 +119,40 @@ function LuxuryCarousel() {
           `${variant(1600, 1200)} 1600w`,
           `${variant(1920, 1440)} 1920w`,
         ].join(", ");
+        const isActive = idx === i;
+        const isNext = idx === (i + 1) % LUXURY_SLIDES.length;
+        const eager = idx === 0 || isNext;
+        const motion = idx % 2 === 0 ? "kenburns-active-a" : "kenburns-active-b";
         return (
-          <img
+          <div
             key={s.id}
-            src={variant(1280, 960)}
-            srcSet={srcSet}
-            sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
-            alt={`${s.address}, ${s.suburb}`}
-            width={1200}
-            height={1500}
-            referrerPolicy="no-referrer"
-            loading={idx === 0 ? "eager" : "lazy"}
-            fetchPriority={idx === 0 ? "high" : "low"}
-            decoding="async"
-            draggable={false}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${idx === i ? "opacity-100" : "opacity-0"}`}
-          />
+            aria-hidden={!isActive}
+            className="absolute inset-0 overflow-hidden"
+            style={{
+              opacity: isActive ? 1 : 0,
+              transition: "opacity 1800ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+              willChange: "opacity",
+            }}
+          >
+            <img
+              // Re-mount the active image each cycle so the Ken Burns animation restarts cleanly
+              key={isActive ? `${s.id}-${i}` : s.id}
+              src={variant(1280, 960)}
+              srcSet={srcSet}
+              sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
+              alt={`${s.address}, ${s.suburb}`}
+              width={1200}
+              height={1500}
+              referrerPolicy="no-referrer"
+              loading={eager ? "eager" : "lazy"}
+              fetchPriority={idx === 0 ? "high" : "low"}
+              decoding="async"
+              draggable={false}
+              className={`absolute inset-0 w-full h-full object-cover kenburns-base ${
+                isActive ? motion : ""
+              }`}
+            />
+          </div>
         );
       })}
 
