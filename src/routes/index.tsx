@@ -279,12 +279,11 @@ function HomePage() {
 
   function runSearch(q?: string) {
     const dest = intent === "rent" ? "/rent" : intent === "sold" ? "/sold" : "/buy";
-    const params = new URLSearchParams();
     const term = (q ?? query).trim();
-    if (term) params.set("q", term);
-    if (beds !== "any") params.set("beds", beds);
-    const search = params.toString();
-    navigate({ to: dest, search: search ? (Object.fromEntries(params) as never) : ({} as never) });
+    const search: Record<string, string | number> = {};
+    if (term) search.q = term;
+    if (beds !== "any") search.beds = beds;
+    navigate({ to: dest, search: search as never });
   }
 
   useEffect(() => { setMounted(true); }, []);
