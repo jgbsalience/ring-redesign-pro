@@ -164,6 +164,7 @@ function SoldIndex() {
           </div>
         </section>
       </div>
+      <PortfolioCarousel items={listings.filter((l) => l.status === "sold" && l.hero)} />
       <Footer />
     </div>
   );
