@@ -1,14 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { canonical } from "@/lib/seo";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { listings } from "@/data/site";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { listingsSearchSchema } from "@/lib/listingsSearch";
+import { useMemo, useRef } from "react";
 import { Search, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/sold/")({
+  validateSearch: zodValidator(listingsSearchSchema),
   head: () => ({
     meta: [
       { title: "Recently sold — Ring Real Estate Adelaide" },
