@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
