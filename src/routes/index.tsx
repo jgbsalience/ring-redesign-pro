@@ -107,20 +107,36 @@ function LuxuryCarousel() {
       aria-roledescription="carousel"
       aria-label="Recent Ring residences"
     >
-      {LUXURY_SLIDES.map((s, idx) => (
-        <img
-          key={s.id}
-          src={s.hero}
-          alt={`${s.address}, ${s.suburb}`}
-          width={1200}
-          height={1500}
-          referrerPolicy="no-referrer"
-          loading={idx === 0 ? "eager" : "lazy"}
-          decoding="async"
-          draggable={false}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${idx === i ? "opacity-100" : "opacity-0"}`}
-        />
-      ))}
+      {LUXURY_SLIDES.map((s, idx) => {
+        // CDN paths end in `cp-rect-1920x1440.pg` — swap the size segment
+        // to request appropriately scaled variants without losing fidelity.
+        const variant = (w: number, h: number) =>
+          s.hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
+        const srcSet = [
+          `${variant(640, 480)} 640w`,
+          `${variant(960, 720)} 960w`,
+          `${variant(1280, 960)} 1280w`,
+          `${variant(1600, 1200)} 1600w`,
+          `${variant(1920, 1440)} 1920w`,
+        ].join(", ");
+        return (
+          <img
+            key={s.id}
+            src={variant(1280, 960)}
+            srcSet={srcSet}
+            sizes="(min-width: 1280px) 1200px, (min-width: 768px) 90vw, 100vw"
+            alt={`${s.address}, ${s.suburb}`}
+            width={1200}
+            height={1500}
+            referrerPolicy="no-referrer"
+            loading={idx === 0 ? "eager" : "lazy"}
+            fetchPriority={idx === 0 ? "high" : "low"}
+            decoding="async"
+            draggable={false}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out ${idx === i ? "opacity-100" : "opacity-0"}`}
+          />
+        );
+      })}
 
       {/* Gradient scrim for caption legibility */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
