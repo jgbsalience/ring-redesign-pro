@@ -626,35 +626,7 @@ function HomePage() {
             All recent sales <ArrowUpRight size={16} />
           </Link>
         </div>
-        <div className="overflow-x-auto no-scrollbar">
-          <div className="container-page flex gap-6 pb-4 min-w-max">
-            {sold.map((l) => (
-              <Link
-                key={l.id}
-                to="/sold/$listingId"
-                params={{ listingId: l.id }}
-                className="w-[320px] md:w-[380px] shrink-0 group hover-lift"
-              >
-                <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
-                  <img
-                    src={l.hero}
-                    alt={l.address}
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="mt-4">
-                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    {l.suburb}
-                  </div>
-                  <div className="font-serif text-xl mt-1 group-hover:text-[var(--ringgreen)] transition-colors">{l.address}</div>
-                  <div className="mt-2 text-sm font-medium text-[var(--ringgreen)]">{l.price}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <RecentSalesStrip sold={sold} />
       </section>
 
       {/* METHODS OF SALE */}
