@@ -77,7 +77,7 @@ function SoldIndex() {
   const pageItems = filtered.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const goToPage = (n: number) => {
-    setPage(n);
+    update({ page: n }, false);
     if (typeof window !== "undefined") {
       gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
