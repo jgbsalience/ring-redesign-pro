@@ -33,13 +33,23 @@ export const Route = createFileRoute("/sold/")({
 });
 
 function SoldIndex() {
-  const [query, setQuery] = useState("");
-  const [suburb, setSuburb] = useState("All suburbs");
-  const [type, setType] = useState("Any type");
-  const [beds, setBeds] = useState("Any");
-  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+  const search = Route.useSearch();
+  const query = search.q;
+  const suburb = search.suburb;
+  const type = search.type;
+  const beds = search.beds;
+  const page = search.page;
   const PAGE_SIZE = 16;
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const update = (patch: Partial<typeof search>, resetPage = true) => {
+    navigate({
+      to: "/sold",
+      search: (prev) => ({ ...prev, ...patch, ...(resetPage ? { page: 1 } : {}) }),
+      replace: true,
+    });
+  };
 
   const sold = useMemo(() => listings.filter((l) => l.status === "sold"), []);
 
@@ -61,10 +71,6 @@ function SoldIndex() {
     () => Array.from(new Set(sold.map((l) => l.suburb).filter(Boolean))).sort(),
     [sold]
   );
-
-  useEffect(() => {
-    setPage(1);
-  }, [query, suburb, type, beds]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const current = Math.min(page, totalPages);
