@@ -49,6 +49,12 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
 
   useEffect(() => {
     if (paused || total < 2) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
     timer.current = setInterval(next, 5500);
     return () => {
       if (timer.current) clearInterval(timer.current);
@@ -76,7 +82,7 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
           </div>
           <Link
             to="/buy"
-            className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all opacity-90 hover:opacity-100"
+            className="text-sm inline-flex items-center gap-2 hover:gap-3 opacity-90 hover:opacity-100 transition-[gap,opacity] duration-200"
           >
             Browse the portfolio <ArrowUpRight size={16} />
           </Link>
@@ -177,7 +183,7 @@ export function PortfolioCarousel({ items }: { items: Listing[] }) {
                 onClick={() => setI(idx)}
                 aria-label={`Show ${l.address}, ${l.suburb}`}
                 className={[
-                  "relative aspect-[4/3] overflow-hidden bg-black/40 transition-all",
+                  "relative aspect-[4/3] overflow-hidden bg-black/40 transition-opacity duration-200",
                   idx === i
                     ? "ring-2 ring-[var(--ringgreen)] opacity-100"
                     : "opacity-50 hover:opacity-100",

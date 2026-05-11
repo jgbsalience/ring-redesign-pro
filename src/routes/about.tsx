@@ -434,7 +434,7 @@ function AboutPage() {
               },
             ].map((m) => (
               <li key={m.y} className="relative">
-                <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-secondary/40" />
+                <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-background" />
                 <div className="font-serif text-3xl md:text-4xl text-[var(--ringgreen)]">{m.y}</div>
                 <h3 className="font-serif text-xl md:text-2xl mt-2">{m.t}</h3>
                 <p className="mt-2 text-muted-foreground max-w-2xl leading-relaxed">{m.d}</p>
@@ -522,7 +522,7 @@ function AboutPage() {
             </div>
             <div className="md:col-span-5 grid gap-3">
               <a
-                href="tel:0883703211"
+                href="tel:+61883703211"
                 className="group flex items-center justify-between gap-4 px-7 py-5 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:opacity-90"
               >
                 <span className="flex items-center gap-3">
@@ -613,11 +613,18 @@ function FaqSection() {
                             {isOpen ? <Minus size={18} /> : <Plus size={18} />}
                           </span>
                         </button>
-                        {isOpen && (
-                          <div className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl">
-                            {f.a}
+                        <div
+                          aria-hidden={!isOpen}
+                          className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                            isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                          }`}
+                        >
+                          <div className="overflow-hidden">
+                            <div className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl">
+                              {f.a}
+                            </div>
                           </div>
-                        )}
+                        </div>
                       </div>
                     );
                   })}

@@ -192,6 +192,8 @@ function Lightbox({
   const last = useRef({ x: 0, y: 0 });
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const MIN = 1;
   const MAX = 5;
@@ -231,14 +233,56 @@ function Lightbox({
     });
   };
 
+  // Focus close button on mount
   useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const FOCUSABLE =
+      'a[href],button:not([disabled]),input,textarea,select,[tabindex]:not([tabindex="-1"])';
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight") next();
-      else if (e.key === "ArrowLeft") prev();
-      else if (e.key === "+" || e.key === "=") zoomBy(1.25);
-      else if (e.key === "-" || e.key === "_") zoomBy(1 / 1.25);
-      else if (e.key === "0") reset();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        next();
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        prev();
+        return;
+      }
+      if (e.key === "+" || e.key === "=") {
+        zoomBy(1.25);
+        return;
+      }
+      if (e.key === "-" || e.key === "_") {
+        zoomBy(1 / 1.25);
+        return;
+      }
+      if (e.key === "0") {
+        reset();
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const nodes = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
+        if (nodes.length === 0) return;
+        const first = nodes[0];
+        const lastEl = nodes[nodes.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            lastEl.focus();
+          }
+        } else {
+          if (document.activeElement === lastEl) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -281,7 +325,13 @@ function Lightbox({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col animate-fade-in select-none">
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Gallery — ${alt}`}
+      className="fixed inset-0 z-[100] bg-black/95 flex flex-col animate-fade-in select-none"
+    >
       <div className="flex items-center justify-between px-5 md:px-8 py-4 text-white/80 text-[10px] uppercase tracking-[0.25em] z-10">
         <span>
           {active + 1} / {total}
@@ -315,6 +365,7 @@ function Lightbox({
             <RotateCcw size={16} />
           </button>
           <button
+            ref={closeButtonRef}
             type="button"
             aria-label="Close"
             onClick={onClose}
@@ -372,6 +423,8 @@ function Lightbox({
             <button
               key={src + i}
               onClick={() => setActive(i)}
+              aria-label={`View image ${i + 1} of ${total}`}
+              aria-current={i === active ? "true" : undefined}
               className={[
                 "h-16 w-24 shrink-0 overflow-hidden transition-opacity",
                 i === active

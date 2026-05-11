@@ -98,7 +98,7 @@ function SellPage() {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {sold.map((l) => (
+            {sold.slice(0, 6).map((l) => (
               <ListingCard key={l.id} l={l} size="md" />
             ))}
           </div>

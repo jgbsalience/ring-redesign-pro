@@ -26,7 +26,7 @@ const SIZE = {
     rule: "w-5",
     suburb: "text-[10px] tracking-[0.24em]",
     price: "text-sm",
-    showSpecs: false,
+    showSpecs: true,
     pill: "text-[9px] px-2 py-0.5",
   },
   md: {
@@ -98,8 +98,7 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
     <Link
       to={to}
       params={{ listingId: l.id }}
-      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform"
-      style={{ aspectRatio: "4 / 5" }}
+      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform aspect-[4/5]"
       aria-label={`${l.address}, ${l.suburb} — ${l.price}`}
     >
       {l.hero ? (

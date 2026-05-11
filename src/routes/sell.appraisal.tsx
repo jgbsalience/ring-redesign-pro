@@ -102,7 +102,11 @@ function AppraisalPage() {
       <Header />
 
       {/* INTRO */}
-      <section className="container-page pt-32 md:pt-40 pb-14 md:pb-16">
+      <section
+        id="main-content"
+        tabIndex={-1}
+        className="container-page pt-32 md:pt-40 pb-14 md:pb-16 focus:outline-none"
+      >
         <div className="max-w-3xl mx-auto text-center">
           <div className="mx-auto h-px w-12 bg-[var(--ringgreen-deep)]" />
           <div className="mt-5 text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
@@ -287,7 +291,7 @@ function AppraisalPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-10 py-4 bg-[var(--ringgreen-deep)] text-white text-xs uppercase tracking-[0.22em] rounded-[2px] hover:opacity-90 disabled:opacity-50 transition-opacity"
+                    className="inline-flex w-full sm:w-auto items-center justify-center gap-3 px-10 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] rounded-[2px] hover:bg-[var(--ringgreen)]/90 disabled:opacity-50 transition-opacity"
                   >
                     {isSubmitting ? (
                       <>

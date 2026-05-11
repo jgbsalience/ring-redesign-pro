@@ -244,7 +244,11 @@ function ListingsPage() {
     <div className="bg-background text-foreground min-h-screen flex flex-col">
       <Header />
 
-      <section className="bg-secondary/40 border-b border-border">
+      <section
+        id="main-content"
+        tabIndex={-1}
+        className="bg-secondary/40 border-b border-border focus:outline-none"
+      >
         <div className="container-page py-16 md:py-20">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
             Adelaide listings · live
@@ -403,7 +407,7 @@ function ListingsPage() {
           "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
           "inline-flex items-center gap-2 px-5 py-3",
           "bg-foreground text-background text-[11px] uppercase tracking-[0.2em]",
-          "shadow-lg hover:opacity-90 transition-all duration-300",
+          "shadow-lg hover:opacity-90 transition-[opacity,transform] duration-300",
           showJumpButton
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none",
@@ -589,7 +593,7 @@ function FiltersBar({
         <select
           id="min-price"
           aria-label="Minimum price"
-          className="bg-background px-4 py-3 text-sm"
+          className="bg-background border border-border px-4 py-3 text-sm"
           value={search.minPrice}
           onChange={(e) => update("minPrice", Number(e.target.value))}
         >
@@ -604,7 +608,7 @@ function FiltersBar({
         <select
           id="max-price"
           aria-label="Maximum price"
-          className="bg-background px-4 py-3 text-sm"
+          className="bg-background border border-border px-4 py-3 text-sm"
           value={search.maxPrice}
           onChange={(e) => update("maxPrice", Number(e.target.value))}
         >
@@ -619,7 +623,7 @@ function FiltersBar({
         <select
           id="beds"
           aria-label="Minimum bedrooms"
-          className="bg-background px-4 py-3 text-sm"
+          className="bg-background border border-border px-4 py-3 text-sm"
           value={search.beds}
           onChange={(e) => update("beds", Number(e.target.value))}
         >
@@ -634,7 +638,7 @@ function FiltersBar({
         <select
           id="baths"
           aria-label="Minimum bathrooms"
-          className="bg-background px-4 py-3 text-sm"
+          className="bg-background border border-border px-4 py-3 text-sm"
           value={search.baths}
           onChange={(e) => update("baths", Number(e.target.value))}
         >

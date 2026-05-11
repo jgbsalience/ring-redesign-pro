@@ -42,7 +42,6 @@ const HERO_SLIDES = (() => {
   }
   return pool;
 })();
-const HERO = HERO_SLIDES[0]?.hero ?? "";
 
 const LUXURY_SLIDES = [
   {
@@ -281,7 +280,7 @@ function LuxuryCarousel() {
             <div
               key={s.id}
               aria-hidden={idx !== i}
-              className={`absolute inset-0 transition-all duration-[900ms] [transition-timing-function:cubic-bezier(0.22,0.61,0.36,1)] ${
+              className={`absolute inset-0 transition-[opacity,transform] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,0.61,0.36,1)] ${
                 idx === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
               }`}
             >
@@ -304,8 +303,9 @@ function LuxuryCarousel() {
                 key={idx}
                 type="button"
                 aria-label={`Show image ${idx + 1}`}
+                aria-current={idx === i ? "true" : undefined}
                 onClick={() => setI(idx)}
-                className={`h-1 transition-all ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
+                className={`relative h-1 transition-[width,background-color] before:content-[''] before:absolute before:-inset-y-3 before:-inset-x-1 ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
               />
             ))}
           </div>
@@ -313,50 +313,6 @@ function LuxuryCarousel() {
             {String(i + 1).padStart(2, "0")} / {String(LUXURY_SLIDES.length).padStart(2, "0")}
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function RecentSalesStrip({ sold }: { sold: typeof listings }) {
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-    const id = setInterval(() => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      const card = el.querySelector<HTMLElement>("[data-card]");
-      const step = (card?.offsetWidth ?? 320) + 24; // gap-6 = 24px
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
-      el.scrollTo({ left: atEnd ? 0 : el.scrollLeft + step, behavior: "smooth" });
-    }, 4000);
-    return () => clearInterval(id);
-  }, [paused]);
-
-  return (
-    <div
-      ref={scrollerRef}
-      className="overflow-x-auto no-scrollbar"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={() => setPaused(true)}
-      onTouchEnd={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
-      <div className="container-page flex gap-6 pb-4 min-w-max">
-        {sold.map((l) => (
-          <div key={l.id} data-card className="w-[300px] md:w-[340px] shrink-0">
-            <ListingCard l={l} size="sm" />
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -416,7 +372,9 @@ function HomePage() {
 
       {/* HERO */}
       <section
-        className="relative min-h-[100svh] w-full overflow-hidden group/hero"
+        id="main-content"
+        tabIndex={-1}
+        className="relative min-h-[100svh] w-full overflow-hidden group/hero focus:outline-none"
         aria-roledescription="carousel"
         aria-label="Featured properties"
         onMouseEnter={() => setPaused(true)}
@@ -486,9 +444,9 @@ function HomePage() {
 
           {/* Search bar */}
           <div className="mt-14 reveal reveal-4 max-w-4xl">
-            {/* Intent tabs */}
+            {/* Intent toggle */}
             <div
-              role="tablist"
+              role="group"
               aria-label="Search type"
               className="inline-flex gap-px bg-[var(--ringgreen)]/25 backdrop-blur p-px ring-1 ring-[var(--ringgreen)]/40"
             >
@@ -504,8 +462,7 @@ function HomePage() {
                   <button
                     key={t.id}
                     type="button"
-                    role="tab"
-                    aria-selected={active}
+                    aria-pressed={active}
                     onClick={() => setIntent(t.id)}
                     className={[
                       "px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
@@ -632,7 +589,7 @@ function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--ringgreen)_45%,transparent)] group"
+                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--ringgreen)_45%,transparent)] group"
               >
                 <Search size={14} className="md:hidden" />
                 Search
@@ -681,20 +638,19 @@ function HomePage() {
           )}
           <span
             className="hidden sm:flex items-center gap-1.5 pointer-events-auto"
-            role="tablist"
+            role="group"
             aria-label="Featured property slides"
           >
             {HERO_SLIDES.map((s, i) => (
               <button
                 key={i}
                 type="button"
-                role="tab"
                 onClick={() => setSlide(i)}
                 aria-label={`Show slide ${i + 1} of ${HERO_SLIDES.length}: ${s.address}, ${s.suburb}`}
-                aria-selected={i === slide}
                 aria-current={i === slide ? "true" : undefined}
                 className={[
-                  "h-px transition-all duration-500 focus:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50",
+                  "relative h-px transition-[width,background-color] duration-500 focus:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50",
+                  "before:content-[''] before:absolute before:-inset-y-3 before:-inset-x-1",
                   i === slide ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70",
                 ].join(" ")}
               />
@@ -717,7 +673,7 @@ function HomePage() {
             </div>
             <Link
               to="/about"
-              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
             >
               Meet the team <ArrowUpRight size={16} />
             </Link>
@@ -734,7 +690,7 @@ function HomePage() {
                   <TeamMemberImage
                     agent={a}
                     size="lg"
-                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                    className="grayscale group-hover:grayscale-0 transition-[filter] duration-700"
                   />
                 </div>
                 <div className="mt-3">
@@ -768,17 +724,14 @@ function HomePage() {
               A single word, given as a promise — and kept, transaction after transaction,
               generation after generation.
             </h2>
-            <p
-              className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl"
-              style={{ fontFamily: '"Roboto", -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
+            <p className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
               Ring Real Estate has remained deliberately small since the day we opened our doors in
               Fullarton. We sell fewer homes than the franchises around us, and we sell them better
               — by hand, by name, with the patience that good outcomes require.
             </p>
             <Link
               to="/about"
-              className="mt-10 inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 hover:gap-3 transition-all"
+              className="mt-10 inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 hover:gap-3 transition-[gap,color]"
             >
               Read our story <ArrowRight size={14} />
             </Link>
@@ -800,29 +753,17 @@ function HomePage() {
             </div>
             <Link
               to="/buy"
-              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
             >
               View all listings <ArrowUpRight size={16} />
             </Link>
           </div>
 
-          <div className="relative">
-            <div className="featured-scroll max-h-[78vh] overflow-y-auto pr-2 -mr-2">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                {featured.map((l) => (
-                  <ListingCard key={l.id} l={l} size="sm" />
-                ))}
-              </div>
-            </div>
-            {featured.length > 8 && (
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-secondary/80 to-transparent" />
-            )}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {featured.slice(0, 8).map((l) => (
+              <ListingCard key={l.id} l={l} size="sm" />
+            ))}
           </div>
-          {featured.length > 8 && (
-            <div className="mt-4 text-[10px] uppercase tracking-[0.28em] text-muted-foreground text-center">
-              Scroll for more · {featured.length} residences
-            </div>
-          )}
         </div>
       </section>
 
@@ -839,7 +780,7 @@ function HomePage() {
           </div>
           <Link
             to="/sold"
-            className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
+            className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
           >
             All recent sales <ArrowUpRight size={16} />
           </Link>
@@ -889,54 +830,6 @@ function HomePage() {
                 <div className="font-serif text-xl mt-8">{m.t}</div>
                 <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{m.d}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* TEAM PREVIEW */}
-      <section className="bg-secondary/50 py-24 md:py-32">
-        <div className="container-page">
-          <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-                Our inner circle
-              </div>
-              <h2 className="font-serif text-4xl md:text-6xl mt-3 tracking-tight">
-                Senior, every time.
-              </h2>
-            </div>
-            <Link
-              to="/about"
-              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
-            >
-              Meet the team <ArrowUpRight size={16} />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {agents.map((a) => (
-              <Link
-                key={a.id}
-                to="/team/$agentId"
-                params={{ agentId: a.id }}
-                className="hover-lift block group"
-              >
-                <div className="aspect-[3/4] img-zoom bg-muted">
-                  <TeamMemberImage
-                    agent={a}
-                    size="lg"
-                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
-                  />
-                </div>
-                <div className="mt-4">
-                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">
-                    {a.name}
-                  </div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
-                    {a.role}
-                  </div>
-                </div>
-              </Link>
             ))}
           </div>
         </div>

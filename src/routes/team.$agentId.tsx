@@ -118,7 +118,7 @@ function AgentPage() {
                 {agent.name.split(" ")[0]}'s current listings
               </h2>
               <Link
-                to="/buy"
+                to="/listings"
                 className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
               >
                 All listings <ArrowRight size={14} />
@@ -145,17 +145,19 @@ function AgentPage() {
                 key={a.id}
                 to="/team/$agentId"
                 params={{ agentId: a.id }}
-                className="hover-lift block"
+                className="hover-lift block group"
               >
                 <div className="aspect-[3/4] img-zoom bg-muted">
                   <TeamMemberImage
                     agent={a}
                     size="lg"
-                    className="grayscale hover:grayscale-0 transition-all duration-700"
+                    className="grayscale group-hover:grayscale-0 transition-[filter] duration-700"
                   />
                 </div>
                 <div className="mt-4">
-                  <div className="font-serif text-lg">{a.name}</div>
+                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">
+                    {a.name}
+                  </div>
                   <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
                     {a.role}
                   </div>

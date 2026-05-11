@@ -78,7 +78,11 @@ function ContactPage() {
   return (
     <div className="bg-background text-foreground">
       <Header />
-      <section className="pt-28 md:pt-36 container-page pb-24 md:pb-32">
+      <section
+        id="main-content"
+        tabIndex={-1}
+        className="pt-28 md:pt-36 container-page pb-24 md:pb-32 focus:outline-none"
+      >
         <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <span className="ring-mark" /> &nbsp;Get in touch
         </div>
@@ -206,7 +210,7 @@ function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-foreground text-background text-xs uppercase tracking-[0.22em] hover:bg-foreground/90 disabled:opacity-50 transition-opacity"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--ringgreen)]/90 disabled:opacity-50 transition-opacity"
               >
                 {isSubmitting ? (
                   <>
