@@ -39,11 +39,6 @@ export const Route = createFileRoute("/team/$agentId")({
       </div>
     </div>
   ),
-  errorComponent: ({ error }) => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div>{error.message}</div>
-    </div>
-  ),
   component: AgentPage,
 });
 

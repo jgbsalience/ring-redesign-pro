@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { checkCronAuth } from "@/lib/cron-auth";
 
 const NOMINATIM = "https://nominatim.openstreetmap.org/search";
 const UA = "RingRealEstateAdelaide/1.0 (admin@ring-sa.com.au)";
@@ -26,21 +27,11 @@ async function geocodeOne(query: string) {
   return { lat, lon };
 }
 
-function authorized(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const bearer = request.headers.get("authorization");
-  const headerSecret = request.headers.get("x-cron-secret");
-  if (bearer === `Bearer ${secret}`) return true;
-  if (headerSecret === secret) return true;
-  return false;
-}
-
 export const Route = createFileRoute("/api/public/jobs/geocode-listings")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!authorized(request)) {
+        if (!checkCronAuth(request)) {
           return new Response("Unauthorized", { status: 401 });
         }
 

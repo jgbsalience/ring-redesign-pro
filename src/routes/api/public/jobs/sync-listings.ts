@@ -22,6 +22,7 @@ import Firecrawl from "@mendable/firecrawl-js";
 import { z } from "zod";
 import { upsertFirecrawlListings, type UpsertReport } from "@/lib/firecrawl/upsert.server";
 import type { FirecrawlDoc } from "@/lib/firecrawl/mapper";
+import { checkCronAuth } from "@/lib/cron-auth";
 
 /* ---------------- Config ---------------- */
 
@@ -61,15 +62,6 @@ function unauthorized(msg = "Unauthorized") {
   });
 }
 
-function checkAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const auth = request.headers.get("authorization");
-  if (auth && auth.replace(/^Bearer\s+/i, "") === secret) return true;
-  const xs = request.headers.get("x-cron-secret");
-  return xs === secret;
-}
-
 async function crawlSection(
   firecrawl: Firecrawl,
   status: Status,
@@ -98,7 +90,7 @@ export const Route = createFileRoute("/api/public/jobs/sync-listings")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!checkAuth(request)) return unauthorized();
+        if (!checkCronAuth(request)) return unauthorized();
 
         if (!process.env.FIRECRAWL_API_KEY) {
           return new Response(JSON.stringify({ error: "FIRECRAWL_API_KEY not configured" }), {

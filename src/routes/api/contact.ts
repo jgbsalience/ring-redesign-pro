@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 
-const ContactSchema = z.object({
+export const ContactSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().email(),
@@ -10,7 +10,7 @@ const ContactSchema = z.object({
   enquiryType: z.string().min(1),
   message: z.string().min(1),
   // honeypot — must be empty
-  website: z.literal("").optional(),
+  website: z.string().optional().default(""),
 });
 
 function json(data: unknown, status = 200) {
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/contact")({
         const { firstName, lastName, email, phone, enquiryType, message, website } = result.data;
 
         // Reject honeypot fills silently
-        if (website) return json({ ok: true });
+        if (website.trim()) return json({ ok: true });
 
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY;

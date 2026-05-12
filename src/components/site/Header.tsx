@@ -53,8 +53,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
               to={n.to}
               className="relative py-1 text-white/85 hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-1 after:h-px after:bg-[var(--ringgreen)] after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
               activeProps={{
-                className:
-                  "text-white after:scale-x-100 after:bg-[var(--ringgreen)]",
+                className: "text-white after:scale-x-100 after:bg-[var(--ringgreen)]",
               }}
             >
               {n.label}

@@ -55,10 +55,5 @@ export const Route = createFileRoute("/sold/$listingId")({
       </div>
     </div>
   ),
-  errorComponent: ({ error }) => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div>{error.message}</div>
-    </div>
-  ),
   component: SoldListingRouteComponent,
 });

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 
-const AppraisalSchema = z.object({
+export const AppraisalSchema = z.object({
   name: z.string().min(1),
   phone: z.string().min(6),
   email: z.string().email(),
@@ -12,7 +12,7 @@ const AppraisalSchema = z.object({
   interests: z.array(z.string()).min(0),
   comments: z.string().optional(),
   // honeypot — must be empty
-  website: z.literal("").optional(),
+  website: z.string().optional().default(""),
 });
 
 function json(data: unknown, status = 200) {
@@ -51,7 +51,7 @@ export const Route = createFileRoute("/api/appraisal")({
         } = result.data;
 
         // Reject honeypot fills silently
-        if (website) return json({ ok: true });
+        if (website.trim()) return json({ ok: true });
 
         const supabaseUrl = process.env.SUPABASE_URL;
         const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY;

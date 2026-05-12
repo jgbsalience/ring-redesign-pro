@@ -210,6 +210,13 @@ function ListingsPage() {
     return () => io.disconnect();
   }, []);
 
+  // Log query errors to console
+  useEffect(() => {
+    if (error) {
+      console.error("[listings] query error:", error);
+    }
+  }, [error]);
+
   const showJumpButton = filtersChanged && resultsOffscreen;
   const jumpToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -277,7 +284,7 @@ function ListingsPage() {
       <div ref={resultsRef} className="container-page mt-8 flex-1 scroll-mt-24">
         {error ? (
           <div className="text-center py-32 text-destructive">
-            Couldn't load listings: {error.message}
+            Couldn't load listings. Please try again later.
           </div>
         ) : showInitialSkeleton ? (
           <>
