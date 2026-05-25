@@ -41,7 +41,7 @@ const searchSchema = z.object({
   maxPrice: fallback(z.number().int().min(0), 0).default(0),
   beds: fallback(z.number().int().min(0).max(10), 0).default(0),
   baths: fallback(z.number().int().min(0).max(10), 0).default(0),
-  q: fallback(z.string(), "").default(""),
+  q: fallback(z.string().max(200), "").default(""),
   sort: fallback(z.enum(SORTS), "featured").default("featured"),
   view: fallback(z.enum(VIEWS), "grid").default("grid"),
   page: fallback(z.number().int().min(1).max(500), 1).default(1),
@@ -135,14 +135,22 @@ async function fetchListings(search: SearchParams): Promise<{ rows: Row[]; count
   if (search.beds > 0) query = query.gte("beds", search.beds);
   if (search.baths > 0) query = query.gte("baths", search.baths);
   if (search.q.trim()) {
-    const term = `%${search.q.trim()}%`;
-    query = query.or(
-      `address.ilike.${term},suburb.ilike.${term},postcode.ilike.${term},headline.ilike.${term}`,
-    );
+    // Strip PostgREST reserved chars to prevent filter-string injection,
+    // then wrap in % for ILIKE matching.
+    const safe = search.q.trim().replace(/[,()*\\]/g, " ").slice(0, 200);
+    if (safe.trim()) {
+      const term = `%${safe}%`;
+      query = query.or(
+        `address.ilike.${term},suburb.ilike.${term},postcode.ilike.${term},headline.ilike.${term}`,
+      );
+    }
   }
 
   const { data, count, error } = await query;
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("[listings] supabase query error", error);
+    throw new Error("Unable to load listings. Please try again.");
+  }
   return { rows: (data ?? []) as Row[], count: count ?? 0 };
 }
 
@@ -210,13 +218,6 @@ function ListingsPage() {
     return () => io.disconnect();
   }, []);
 
-  // Log query errors to console
-  useEffect(() => {
-    if (error) {
-      console.error("[listings] query error:", error);
-    }
-  }, [error]);
-
   const showJumpButton = filtersChanged && resultsOffscreen;
   const jumpToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -240,6 +241,11 @@ function ListingsPage() {
     placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
+
+  // Log query errors to console (raw error already logged in fetchListings)
+  useEffect(() => {
+    if (error) console.error("[listings] query error:", error);
+  }, [error]);
 
   const rows = data?.rows ?? [];
   const count = data?.count ?? 0;
