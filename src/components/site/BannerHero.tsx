@@ -64,7 +64,7 @@ export function BannerHero({
           <div className="text-[10px] uppercase tracking-[0.32em] opacity-80">
             <span className="ring-mark" /> &nbsp;{kicker}
           </div>
-          <h1 className="font-serif text-[2.6rem] sm:text-5xl md:text-7xl leading-[0.95] tracking-tight mt-5">
+          <h1 className="text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95] font-serif">
             {title}
           </h1>
           {subtitle && (
