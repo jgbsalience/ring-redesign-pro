@@ -90,7 +90,7 @@ function SoldIndex() {
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
             <span className="ring-mark" /> &nbsp;Recent results
           </div>
-          <h1 className="font-serif text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95]">
+          <h1 className="text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95] font-serif">
             Quietly,
             <br />
             exceptionally.

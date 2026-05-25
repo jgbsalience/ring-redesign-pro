@@ -266,7 +266,7 @@ function ListingsPage() {
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
             Adelaide listings · live
           </div>
-          <h1 className="font-serif text-4xl md:text-6xl tracking-tight mt-4 leading-[1.05]">
+          <h1 className="text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95] font-serif">
             Homes for sale, rent, <span className="italic">and recently sold.</span>
           </h1>
           <p className="mt-5 max-w-2xl text-muted-foreground leading-relaxed">
