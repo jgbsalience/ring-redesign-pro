@@ -91,9 +91,9 @@ function SoldIndex() {
             <span className="ring-mark" /> &nbsp;Recent results
           </div>
           <h1 className="text-5xl md:text-7xl tracking-tight mt-4 leading-[0.95] font-serif">
-            Quietly,
+            Recently Sold
             <br />
-            exceptionally.
+            Properties
           </h1>
           <p className="mt-6 max-w-2xl text-muted-foreground leading-relaxed">
             A selection of recently sold residential properties — handled with the same patience and
