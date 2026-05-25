@@ -218,13 +218,6 @@ function ListingsPage() {
     return () => io.disconnect();
   }, []);
 
-  // Log query errors to console
-  useEffect(() => {
-    if (error) {
-      console.error("[listings] query error:", error);
-    }
-  }, [error]);
-
   const showJumpButton = filtersChanged && resultsOffscreen;
   const jumpToResults = () => {
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -248,6 +241,11 @@ function ListingsPage() {
     placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
+
+  // Log query errors to console (raw error already logged in fetchListings)
+  useEffect(() => {
+    if (error) console.error("[listings] query error:", error);
+  }, [error]);
 
   const rows = data?.rows ?? [];
   const count = data?.count ?? 0;
