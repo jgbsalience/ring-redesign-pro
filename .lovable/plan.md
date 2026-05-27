@@ -7,6 +7,7 @@ Replace the current "Our inner circle" two-column row layout on `/about` with a 
 File: `src/routes/about.tsx`, the section starting at line 369.
 
 Grid:
+
 - `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16`
 - Iterates over `agents` (no slicing — every agent appears).
 - Each card is a vertical stack: portrait → name → role → contact links → "View profile" CTA.
@@ -27,6 +28,7 @@ Grid:
 ```
 
 Consistency rules:
+
 - Portraits all `aspect-[3/4]`, `object-cover`, same image component/size — no grayscale filter so every agent reads equally.
 - Role label normalized to `text-[10px] uppercase tracking-[0.28em] text-muted-foreground`.
 - Phone/email use `lucide-react` `Phone` and `Mail` icons (already imported).

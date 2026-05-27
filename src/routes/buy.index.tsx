@@ -9,6 +9,7 @@ import { BannerHero } from "@/components/site/BannerHero";
 import { listings } from "@/data/site";
 import { listingsSearchSchema } from "@/lib/listingsSearch";
 import { useMemo, useState } from "react";
+import * as Tabs from "@radix-ui/react-tabs";
 
 const BUY_SLIDES = listings.filter((l) => l.status === "for-sale" && l.hero).slice(0, 6);
 
@@ -80,26 +81,24 @@ function BuyPage() {
       />
       <div className="pt-14 md:pt-20">
         <div className="container-page">
-          <div className="mt-2 md:mt-4 flex items-center gap-1 border-b border-border overflow-x-auto">
-            {STATUSES.map((s) => {
-              const active = s.id === status;
-              return (
-                <button
+          <Tabs.Root
+            value={status}
+            onValueChange={(v) => setStatus(v as StatusId)}
+            className="mt-2 md:mt-4 border-b border-border"
+          >
+            <Tabs.List className="flex items-center gap-1 overflow-x-auto">
+              {STATUSES.map((s) => (
+                <Tabs.Trigger
                   key={s.id}
-                  onClick={() => setStatus(s.id)}
-                  className={[
-                    "px-5 md:px-6 py-3 text-xs uppercase tracking-[0.22em] -mb-px border-b-2 transition-colors whitespace-nowrap",
-                    active
-                      ? "border-foreground text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground",
-                  ].join(" ")}
+                  value={s.id}
+                  className="px-5 md:px-6 py-3 text-xs uppercase tracking-[0.22em] border-b-2 -mb-[1px] transition-colors whitespace-nowrap border-transparent text-muted-foreground hover:text-foreground data-[state=active]:border-foreground data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-inset"
                 >
                   {s.label}
                   <span className="ml-2 text-[10px] opacity-60">{counts[s.id]}</span>
-                </button>
-              );
-            })}
-          </div>
+                </Tabs.Trigger>
+              ))}
+            </Tabs.List>
+          </Tabs.Root>
         </div>
 
         <ListingsBrowser source={source} pageSize={16} />

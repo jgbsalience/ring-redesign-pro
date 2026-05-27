@@ -6,13 +6,16 @@
 ## Accessibility review (WCAG 2.1)
 
 ### Scope
+
 - `src/routes/contact.tsx`, contact form
 
 ### Summary
+
 - Must-fix: 1
 - Recommended: 1
 
 ### Must-fix
+
 1. **Issue**: Submit button is icon-only with no accessible name.
    - **WCAG**: 4.1.2 Name, Role, Value
    - **Where**: `<button type="submit">` wrapping SVG only
@@ -20,11 +23,13 @@
    - **Fix**: Add `aria-label="Send message"` or include visually hidden text “Send”.
 
 ### Recommended
+
 1. **Issue**: Inline error for `email` is red text only.
    - **WCAG**: 1.4.1 Use of Color; 3.3.1 Error Identification
    - **Fix**: Add error text with an icon or prefix “Error:” and associate via `aria-describedby` on the input.
 
 ### Verification
+
 - Keyboard: Tab through fields, submit with Enter, dismiss errors with focus intact.
 - Screen reader: Confirm button name and error announcement on invalid submit.
 ```

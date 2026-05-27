@@ -14,10 +14,10 @@ disable-model-invocation: true
 
 ## Choose a path
 
-| Situation | Path |
-|-----------|------|
-| Building or editing UI | **Implementation** |
-| Auditing existing UI or a diff | **Review** |
+| Situation                      | Path               |
+| ------------------------------ | ------------------ |
+| Building or editing UI         | **Implementation** |
+| Auditing existing UI or a diff | **Review**         |
 
 For a compact criterion list, see [checklist.md](checklist.md). For sample outputs and prompts, see [examples.md](examples.md).
 
@@ -57,13 +57,16 @@ Copy and fill:
 ## Accessibility review (WCAG 2.1)
 
 ### Scope
+
 - ...
 
 ### Summary
+
 - Must-fix: N
 - Recommended: N
 
 ### Must-fix
+
 1. **Issue**: ...
    - **WCAG** (if known): ...
    - **Where**: ...
@@ -71,9 +74,11 @@ Copy and fill:
    - **Fix**: ...
 
 ### Recommended
+
 1. ...
 
 ### Verification
+
 - Keyboard: ...
 - Screen reader (optional): ...
 ```

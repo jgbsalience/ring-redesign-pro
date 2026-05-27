@@ -11,7 +11,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --font-serif: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -45,6 +45,8 @@
 }
 
 :root {
+  color-scheme: light;
+
   --radius: 0.25rem;
 
   /* Editorial palette */
@@ -53,7 +55,7 @@
   --stone: oklch(0.93 0.018 132);
   --stone-2: oklch(0.86 0.022 134);
   --ringgreen: oklch(0.76 0.22 138);
-  --ringgreen-soft: oklch(0.93 0.10 138);
+  --ringgreen-soft: oklch(0.93 0.1 138);
   --ringgreen-deep: oklch(0.55 0.18 142);
   --ringgreen-tint: oklch(0.975 0.035 138);
   --ringgreen-line: oklch(0.86 0.13 138);
@@ -80,6 +82,8 @@
 }
 
 .dark {
+  color-scheme: dark;
+
   --background: var(--ink);
   --foreground: var(--bone);
   --card: oklch(0.22 0.01 250);
@@ -116,7 +120,10 @@
     font-feature-settings: "ss01", "cv11";
   }
 
-  h1, h2, h3, .serif {
+  h1,
+  h2,
+  h3,
+  .serif {
     font-family: var(--font-serif);
     font-optical-sizing: auto;
     letter-spacing: -0.02em;
@@ -129,12 +136,20 @@
 
   /* Cinematic Ken Burns motion for the homepage hero carousel */
   @keyframes kenburns-a {
-    0%   { transform: scale(1.04) translate3d(0%, 0%, 0); }
-    100% { transform: scale(1.12) translate3d(-1.5%, 1%, 0); }
+    0% {
+      transform: scale(1.04) translate3d(0%, 0%, 0);
+    }
+    100% {
+      transform: scale(1.12) translate3d(-1.5%, 1%, 0);
+    }
   }
   @keyframes kenburns-b {
-    0%   { transform: scale(1.04) translate3d(0%, 0%, 0); }
-    100% { transform: scale(1.12) translate3d(1.5%, -1%, 0); }
+    0% {
+      transform: scale(1.04) translate3d(0%, 0%, 0);
+    }
+    100% {
+      transform: scale(1.12) translate3d(1.5%, -1%, 0);
+    }
   }
   .kenburns-base {
     transform: scale(1.04);
@@ -148,8 +163,12 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .kenburns-active-a,
-    .kenburns-active-b { animation: none; }
-    .kenburns-base { transform: none; }
+    .kenburns-active-b {
+      animation: none;
+    }
+    .kenburns-base {
+      transform: none;
+    }
     .reveal {
       animation: none;
       opacity: 1;
@@ -201,7 +220,9 @@
   /* Link interactions                                                 */
   /* ---------------------------------------------------------------- */
   a {
-    transition: color 0.18s ease, text-decoration-color 0.18s ease;
+    transition:
+      color 0.18s ease,
+      text-decoration-color 0.18s ease;
   }
   a:hover {
     color: var(--ringgreen-deep);
@@ -220,7 +241,10 @@
   input,
   textarea,
   select {
-    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    transition:
+      border-color 0.18s ease,
+      box-shadow 0.18s ease,
+      background-color 0.18s ease;
   }
   input:hover:not(:focus):not(:disabled),
   textarea:hover:not(:focus):not(:disabled),
@@ -235,10 +259,12 @@
   /* ---------------------------------------------------------------- */
   .card-interactive {
     position: relative;
+    /* Identity base prevents stacking context from forming only on hover */
+    translate: 0;
     transition:
       border-color 0.2s ease,
       box-shadow 0.25s ease,
-      transform 0.25s cubic-bezier(0.2, 0.65, 0.2, 1),
+      translate 0.25s cubic-bezier(0.2, 0.65, 0.2, 1),
       background-color 0.2s ease;
     border: 1px solid var(--color-border);
   }
@@ -247,7 +273,7 @@
     box-shadow:
       0 1px 0 0 var(--ringgreen-line),
       0 12px 28px -18px color-mix(in oklab, var(--ringgreen-deep) 45%, transparent);
-    transform: translateY(-2px);
+    translate: 0 -2px;
   }
   .card-interactive:focus-within {
     border-color: var(--ringgreen-deep);
@@ -255,7 +281,7 @@
     outline: none;
   }
   .card-interactive:active {
-    transform: translateY(0);
+    translate: 0;
     background-color: var(--ringgreen-tint);
   }
 
@@ -308,10 +334,13 @@
   }
 }
 
-
 @layer utilities {
-  .font-serif { font-family: var(--font-serif); }
-  .font-sans { font-family: var(--font-sans); }
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
 
   .container-page {
     width: 100%;
@@ -321,34 +350,55 @@
   }
 
   @media (min-width: 768px) {
-    .container-page { padding-inline: 2.5rem; }
+    .container-page {
+      padding-inline: 2.5rem;
+    }
   }
 
   .reveal {
     opacity: 0;
-    transform: translateY(16px);
+    translate: 0 16px;
     animation: reveal 0.9s cubic-bezier(0.2, 0.65, 0.2, 1) forwards;
   }
-  .reveal-2 { animation-delay: 0.1s; }
-  .reveal-3 { animation-delay: 0.2s; }
-  .reveal-4 { animation-delay: 0.3s; }
+  .reveal-2 {
+    animation-delay: 0.1s;
+  }
+  .reveal-3 {
+    animation-delay: 0.2s;
+  }
+  .reveal-4 {
+    animation-delay: 0.3s;
+  }
 
   @keyframes reveal {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
   }
 
   .hover-lift {
-    transition: transform 0.5s cubic-bezier(0.2, 0.65, 0.2, 1), box-shadow 0.5s;
+    /* Identity base prevents stacking context from forming only on hover */
+    translate: 0;
+    transition:
+      translate 0.5s cubic-bezier(0.2, 0.65, 0.2, 1),
+      box-shadow 0.5s;
   }
   .hover-lift:hover {
-    transform: translateY(-4px);
+    translate: 0 -4px;
   }
 
-  .img-zoom { overflow: hidden; }
-  .img-zoom > img {
-    transition: transform 0.9s cubic-bezier(0.2, 0.65, 0.2, 1);
+  .img-zoom {
+    overflow: hidden;
   }
-  .img-zoom:hover > img { transform: scale(1.05); }
+  .img-zoom > img {
+    /* Identity base prevents stacking context from forming only on hover */
+    scale: 1;
+    transition: scale 0.9s cubic-bezier(0.2, 0.65, 0.2, 1);
+  }
+  .img-zoom:hover > img {
+    scale: 1.05;
+  }
 
   .ring-mark {
     display: inline-block;
@@ -363,20 +413,44 @@
   /* ---------------------------------------------------------------- */
   /* Solid green backgrounds + foreground tokens                       */
   /* ---------------------------------------------------------------- */
-  .bg-green        { background-color: var(--ringgreen); }
-  .bg-green-tint   { background-color: var(--ringgreen-tint); }
-  .bg-green-soft   { background-color: var(--ringgreen-soft); }
-  .bg-green-deep   { background-color: var(--ringgreen-deep); }
-  .bg-ink          { background-color: var(--ink); }
-  .bg-bone         { background-color: var(--bone); }
+  .bg-green {
+    background-color: var(--ringgreen);
+  }
+  .bg-green-tint {
+    background-color: var(--ringgreen-tint);
+  }
+  .bg-green-soft {
+    background-color: var(--ringgreen-soft);
+  }
+  .bg-green-deep {
+    background-color: var(--ringgreen-deep);
+  }
+  .bg-ink {
+    background-color: var(--ink);
+  }
+  .bg-bone {
+    background-color: var(--bone);
+  }
 
-  .text-green       { color: var(--ringgreen-deep); }
-  .text-green-bright{ color: var(--ringgreen); }
-  .text-on-green    { color: var(--ink); }
-  .text-on-ink      { color: var(--bone); }
+  .text-green {
+    color: var(--ringgreen-deep);
+  }
+  .text-green-bright {
+    color: var(--ringgreen);
+  }
+  .text-on-green {
+    color: var(--ink);
+  }
+  .text-on-ink {
+    color: var(--bone);
+  }
 
-  .border-green      { border-color: var(--ringgreen-line); }
-  .border-green-deep { border-color: var(--ringgreen-deep); }
+  .border-green {
+    border-color: var(--ringgreen-line);
+  }
+  .border-green-deep {
+    border-color: var(--ringgreen-deep);
+  }
 
   /* ---------------------------------------------------------------- */
   /* Gradients                                                         */
@@ -405,7 +479,12 @@
 
   /* Animated gradient sweep — pair with `.text-gradient-green` for headlines */
   .text-gradient-green {
-    background-image: linear-gradient(90deg, var(--ringgreen-deep), var(--ringgreen), var(--ringgreen-deep));
+    background-image: linear-gradient(
+      90deg,
+      var(--ringgreen-deep),
+      var(--ringgreen),
+      var(--ringgreen-deep)
+    );
     background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -415,8 +494,12 @@
     animation: gradient-pan 6s linear infinite;
   }
   @keyframes gradient-pan {
-    0%   { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
   }
 
   /* ---------------------------------------------------------------- */
@@ -439,10 +522,18 @@
     box-shadow: 0 16px 40px -18px color-mix(in oklab, var(--ink) 70%, transparent);
   }
 
-  .ring-green       { box-shadow: 0 0 0 2px var(--ringgreen); }
-  .ring-green-soft  { box-shadow: 0 0 0 3px var(--ringgreen-soft); }
-  .ring-green-deep  { box-shadow: 0 0 0 2px var(--ringgreen-deep); }
-  .ring-green-inset { box-shadow: inset 0 0 0 1px var(--ringgreen-line); }
+  .ring-green {
+    box-shadow: 0 0 0 2px var(--ringgreen);
+  }
+  .ring-green-soft {
+    box-shadow: 0 0 0 3px var(--ringgreen-soft);
+  }
+  .ring-green-deep {
+    box-shadow: 0 0 0 2px var(--ringgreen-deep);
+  }
+  .ring-green-inset {
+    box-shadow: inset 0 0 0 1px var(--ringgreen-line);
+  }
 
   /* ---------------------------------------------------------------- */
   /* Decorative                                                        */
@@ -483,35 +574,114 @@
 
   /* Hover-lift with green-tinted shadow */
   .hover-lift-green {
+    /* Identity base prevents stacking context from forming only on hover */
+    translate: 0;
     transition:
-      transform 0.35s cubic-bezier(0.2, 0.65, 0.2, 1),
+      translate 0.35s cubic-bezier(0.2, 0.65, 0.2, 1),
       box-shadow 0.35s ease,
       border-color 0.2s ease;
   }
   .hover-lift-green:hover {
-    transform: translateY(-3px);
+    translate: 0 -3px;
     box-shadow: 0 18px 40px -22px color-mix(in oklab, var(--ringgreen-deep) 55%, transparent);
   }
 
-  /* Custom scroll for the featured residences strip */
+  /* Custom scroll for the featured residences strip.
+     scrollbar-width: thin is REQUIRED on macOS to force overlay scrollbars
+     to actually render — without it, scrollbar-color is ignored. */
   .featured-scroll {
+    --scrollbar-thumb: var(--ringgreen);
+    --scrollbar-track: transparent;
     scrollbar-width: thin;
-    scrollbar-color: var(--ringgreen) transparent;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     scroll-behavior: smooth;
     scroll-snap-type: y proximity;
   }
-  .featured-scroll::-webkit-scrollbar {
-    width: 8px;
+
+  /* Legacy fallback — only activates in browsers without standard scrollbar-color.
+     Custom properties cascade here automatically, no color duplication needed. */
+  @supports not (scrollbar-color: auto) {
+    .featured-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .featured-scroll::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    .featured-scroll::-webkit-scrollbar-thumb {
+      background: color-mix(in oklab, var(--scrollbar-thumb) 70%, transparent);
+      border-radius: 9999px;
+    }
+    .featured-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb);
+    }
   }
-  .featured-scroll::-webkit-scrollbar-track {
-    background: transparent;
+
+  /* ---------------------------------------------------------------- */
+  /* Hero Parallax Layers (Variation C)                                */
+  /* ---------------------------------------------------------------- */
+  .hero-parallax-container {
+    view-timeline-name: --hero-view;
   }
-  .featured-scroll::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--ringgreen) 70%, transparent);
-    border-radius: 9999px;
+  .hero-layer-3 {
+    position: absolute;
+    inset-inline: 0;
+    top: -75vh;
+    height: 175vh;
+    animation: parallax-layer-3 linear both;
+    animation-timeline: --hero-view;
+    animation-range: exit 0% exit 100%;
   }
-  .featured-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--ringgreen);
+  .hero-layer-2 {
+    position: absolute;
+    inset-inline: 0;
+    top: -45vh;
+    height: 145vh;
+    animation: parallax-layer-2 linear both;
+    animation-timeline: --hero-view;
+    animation-range: exit 0% exit 100%;
+    mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+  }
+  .hero-layer-1 {
+    /* Front text moves down slightly for depth compression */
+    animation: parallax-layer-1 linear both;
+    animation-timeline: --hero-view;
+    animation-range: exit 0% exit 100%;
+  }
+  @keyframes parallax-layer-3 {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(75vh);
+    }
+  }
+  @keyframes parallax-layer-2 {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(45vh);
+    }
+  }
+  @keyframes parallax-layer-1 {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(20vh);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-layer-3,
+    .hero-layer-2,
+    .hero-layer-1 {
+      animation: none;
+      top: 0;
+      height: 100%;
+    }
+    .hero-layer-2 {
+      mask-image: none;
+    }
   }
 }
-

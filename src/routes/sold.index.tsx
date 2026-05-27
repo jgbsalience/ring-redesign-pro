@@ -8,7 +8,8 @@ import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
 import { listings } from "@/data/site";
 import { listingsSearchSchema } from "@/lib/listingsSearch";
 import { useMemo, useRef } from "react";
-import { Search, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown, Check } from "lucide-react";
+import * as Select from "@radix-ui/react-select";
 
 export const Route = createFileRoute("/sold/")({
   validateSearch: zodValidator(listingsSearchSchema),
@@ -111,40 +112,32 @@ function SoldIndex() {
                 className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
               />
             </div>
-            <select
+            <CustomSelect
               value={suburb}
-              onChange={(e) => update({ suburb: e.target.value })}
-              className="bg-background px-4 py-3 text-sm outline-none"
-            >
-              <option>All suburbs</option>
-              {soldSuburbs.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-            <select
+              onValueChange={(v) => update({ suburb: v })}
+              ariaLabel="Suburb"
+              placeholder="All suburbs"
+              options={[
+                { value: "All suburbs", label: "All suburbs" },
+                ...soldSuburbs.map((s) => ({ value: s, label: s })),
+              ]}
+            />
+            <CustomSelect
               value={type}
-              onChange={(e) => update({ type: e.target.value })}
-              className="bg-background px-4 py-3 text-sm outline-none"
-            >
-              <option>Any type</option>
-              <option>House</option>
-              <option>Townhouse</option>
-              <option>Apartment</option>
-              <option>Land</option>
-              <option>Villa</option>
-            </select>
-            <select
+              onValueChange={(v) => update({ type: v })}
+              ariaLabel="Property type"
+              placeholder="Any type"
+              options={["Any type", "House", "Townhouse", "Apartment", "Land", "Villa"].map(
+                (t) => ({ value: t, label: t }),
+              )}
+            />
+            <CustomSelect
               value={beds}
-              onChange={(e) => update({ beds: e.target.value })}
-              className="bg-background px-4 py-3 text-sm outline-none"
-            >
-              <option>Any</option>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
+              onValueChange={(v) => update({ beds: v })}
+              ariaLabel="Bedrooms"
+              placeholder="Any"
+              options={["Any", "1", "2", "3", "4", "5"].map((b) => ({ value: b, label: b }))}
+            />
             <div className="bg-foreground text-background px-6 py-3 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center">
               {filtered.length} results
             </div>
@@ -227,5 +220,58 @@ function SoldIndex() {
       <PortfolioCarousel items={listings.filter((l) => l.status === "sold" && l.hero)} />
       <Footer />
     </div>
+  );
+}
+
+function CustomSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder,
+  ariaLabel,
+  className = "",
+}: {
+  value: string;
+  onValueChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  placeholder: string;
+  ariaLabel: string;
+  className?: string;
+}) {
+  return (
+    <Select.Root value={value} onValueChange={onValueChange}>
+      <Select.Trigger
+        className={`bg-background border border-border px-4 py-3 text-sm flex items-center justify-between gap-2 focus:outline-none focus:ring-2 focus:ring-[var(--ringgreen)] focus:ring-inset ${className}`}
+        aria-label={ariaLabel}
+      >
+        <Select.Value placeholder={placeholder} />
+        <Select.Icon>
+          <ChevronDown size={14} className="opacity-50" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="bg-background border border-border shadow-xl z-50 min-w-[var(--radix-select-trigger-width)]"
+          position="popper"
+          sideOffset={4}
+          align="start"
+        >
+          <Select.Viewport className="p-1">
+            {options.map((opt) => (
+              <Select.Item
+                key={opt.value}
+                value={opt.value}
+                className="text-sm px-8 py-2 cursor-pointer outline-none data-[highlighted]:bg-secondary data-[highlighted]:text-foreground relative flex items-center"
+              >
+                <Select.ItemIndicator className="absolute left-2 flex items-center justify-center">
+                  <Check size={14} />
+                </Select.ItemIndicator>
+                <Select.ItemText>{opt.label}</Select.ItemText>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   );
 }

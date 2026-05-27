@@ -5,9 +5,21 @@ import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
 import { TeamMemberImage } from "@/components/site/TeamMemberImage";
 import { PortfolioCarousel } from "@/components/site/PortfolioCarousel";
+import { LuxuryCarousel } from "@/components/site/LuxuryCarousel";
 import { JsonLd } from "@/components/site/JsonLd";
 import { listings, agents, testimonials } from "@/data/site";
-import { ArrowRight, ArrowUpRight, Search, ChevronDown, MapPin, BedDouble } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Search,
+  ChevronDown,
+  MapPin,
+  BedDouble,
+  Check,
+  Mouse,
+} from "lucide-react";
+import * as Tabs from "@radix-ui/react-tabs";
+import * as Select from "@radix-ui/react-select";
 import { canonical, localBusinessSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -81,243 +93,6 @@ const LUXURY_SLIDES = [
   },
 ];
 
-function LuxuryCarousel() {
-  const [i, setI] = useState(0);
-  const [pausedByInteraction, setPausedByInteraction] = useState(false);
-  const pointerStartX = useRef<number | null>(null);
-  const pointerStartY = useRef<number | null>(null);
-  const pointerActive = useRef(false);
-  const pointerIsTouch = useRef(false);
-
-  useEffect(() => {
-    if (pausedByInteraction) return;
-    if (LUXURY_SLIDES.length < 2) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-    const id = setInterval(() => setI((n) => (n + 1) % LUXURY_SLIDES.length), 7000);
-    return () => clearInterval(id);
-  }, [pausedByInteraction]);
-
-  const go = (delta: number) =>
-    setI((n) => (n + delta + LUXURY_SLIDES.length) % LUXURY_SLIDES.length);
-
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    pointerStartX.current = e.clientX;
-    pointerStartY.current = e.clientY;
-    pointerActive.current = true;
-    pointerIsTouch.current = e.pointerType === "touch";
-    setPausedByInteraction(true);
-  };
-  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!pointerActive.current || !pointerIsTouch.current) return;
-    if (pointerStartX.current === null || pointerStartY.current === null) return;
-    const dx = e.clientX - pointerStartX.current;
-    const dy = e.clientY - pointerStartY.current;
-    // Once a clear horizontal gesture is detected, prevent vertical scroll hijack.
-    if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
-      e.preventDefault?.();
-    }
-  };
-  const endPointerInteraction = (e?: React.PointerEvent<HTMLDivElement>) => {
-    if (
-      !pointerActive.current ||
-      pointerStartX.current === null ||
-      pointerStartY.current === null
-    ) {
-      pointerActive.current = false;
-      pointerIsTouch.current = false;
-      setPausedByInteraction(false);
-      return;
-    }
-
-    if (e && pointerIsTouch.current) {
-      const dx = e.clientX - pointerStartX.current;
-      const dy = e.clientY - pointerStartY.current;
-      const SWIPE = 40;
-      if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
-        go(dx < 0 ? 1 : -1);
-      }
-    }
-
-    pointerStartX.current = null;
-    pointerStartY.current = null;
-    pointerActive.current = false;
-    pointerIsTouch.current = false;
-    setPausedByInteraction(false);
-  };
-
-  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    endPointerInteraction(e);
-  };
-
-  const onPointerCancel = () => {
-    endPointerInteraction();
-  };
-
-  const onMouseEnter = () => {
-    setPausedByInteraction(true);
-  };
-
-  const onMouseLeave = () => {
-    if (!pointerActive.current) setPausedByInteraction(false);
-  };
-
-  const onBlurCapture = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
-      if (!pointerActive.current) setPausedByInteraction(false);
-    }
-  };
-
-  const onFocusCapture = () => {
-    setPausedByInteraction(true);
-  };
-
-  const onLegacyTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    // keep a touch-end fallback for browsers with inconsistent pointer-up behavior
-    if (
-      !pointerActive.current ||
-      pointerStartX.current === null ||
-      pointerStartY.current === null
-    ) {
-      pointerActive.current = false;
-      pointerIsTouch.current = false;
-      setPausedByInteraction(false);
-      return;
-    }
-    const t = e.changedTouches[0];
-    const dx = t.clientX - pointerStartX.current;
-    const dy = t.clientY - pointerStartY.current;
-    const SWIPE = 40;
-    if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy)) {
-      go(dx < 0 ? 1 : -1);
-    }
-    pointerStartX.current = null;
-    pointerStartY.current = null;
-    pointerActive.current = false;
-    pointerIsTouch.current = false;
-    setPausedByInteraction(false);
-  };
-
-  return (
-    <div
-      className="mt-10 relative overflow-hidden bg-muted group touch-pan-y select-none"
-      style={{ aspectRatio: "4 / 5" }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onFocusCapture={onFocusCapture}
-      onBlurCapture={onBlurCapture}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerCancel}
-      onTouchEnd={onLegacyTouchEnd}
-      role="group"
-      aria-roledescription="carousel"
-      aria-label="Recent Ring residences"
-    >
-      {LUXURY_SLIDES.map((s, idx) => {
-        // CDN paths end in `cp-rect-1920x1440.pg` — swap the size segment
-        // to request appropriately scaled variants without losing fidelity.
-        const variant = (w: number, h: number) =>
-          s.hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
-        const srcSet = [
-          `${variant(640, 480)} 640w`,
-          `${variant(960, 720)} 960w`,
-          `${variant(1280, 960)} 1280w`,
-          `${variant(1600, 1200)} 1600w`,
-          `${variant(1920, 1440)} 1920w`,
-          `${variant(2400, 1800)} 2400w`,
-          `${variant(3200, 2400)} 3200w`,
-          `${variant(4000, 3000)} 4000w`,
-        ].join(", ");
-        const isActive = idx === i;
-        const isNext = idx === (i + 1) % LUXURY_SLIDES.length;
-        const eager = idx === 0 || isNext;
-        const motion = idx % 2 === 0 ? "kenburns-active-a" : "kenburns-active-b";
-        return (
-          <div
-            key={s.id}
-            aria-hidden={!isActive}
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              opacity: isActive ? 1 : 0,
-              transition: "opacity 1800ms cubic-bezier(0.22, 0.61, 0.36, 1)",
-              willChange: "opacity",
-            }}
-          >
-            <img
-              // Re-mount the active image each cycle so the Ken Burns animation restarts cleanly
-              key={isActive ? `${s.id}-${i}` : s.id}
-              src={variant(1920, 1440)}
-              srcSet={srcSet}
-              sizes="(min-width: 1280px) 2000px, (min-width: 768px) 100vw, 100vw"
-              alt={`${s.address}, ${s.suburb}`}
-              width={1200}
-              height={1500}
-              referrerPolicy="no-referrer"
-              loading={eager ? "eager" : "lazy"}
-              fetchPriority={idx === 0 ? "high" : "low"}
-              decoding="async"
-              draggable={false}
-              className={`absolute inset-0 w-full h-full object-cover kenburns-base ${
-                isActive ? motion : ""
-              }`}
-            />
-          </div>
-        );
-      })}
-
-      {/* Gradient scrim for caption legibility */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
-
-      {/* Caption */}
-      <div className="absolute inset-x-0 bottom-0 z-10 p-5 md:p-7 text-white">
-        <div className="relative h-[88px] md:h-[96px]">
-          {LUXURY_SLIDES.map((s, idx) => (
-            <div
-              key={s.id}
-              aria-hidden={idx !== i}
-              className={`absolute inset-0 transition-[opacity,transform] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,0.61,0.36,1)] ${
-                idx === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-              }`}
-            >
-              <div className="text-[10px] uppercase tracking-[0.28em] text-white/70 flex items-center gap-2">
-                <span className="inline-block h-px w-6 bg-[var(--ringgreen)]" />
-                {s.suburb}
-              </div>
-              <div className="font-serif text-xl md:text-2xl leading-tight mt-1.5">{s.address}</div>
-              <div className="text-[12px] md:text-[13px] text-white/80 leading-snug mt-1 max-w-[26rem]">
-                {s.caption}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-3 flex items-center justify-between gap-4">
-          <div className="flex gap-1.5">
-            {LUXURY_SLIDES.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                aria-label={`Show image ${idx + 1}`}
-                aria-current={idx === i ? "true" : undefined}
-                onClick={() => setI(idx)}
-                className={`relative h-1 transition-[width,background-color] before:content-[''] before:absolute before:-inset-y-3 before:-inset-x-1 ${idx === i ? "w-6 bg-white" : "w-3 bg-white/50 hover:bg-white/80"}`}
-              />
-            ))}
-          </div>
-          <div className="text-[10px] uppercase tracking-[0.28em] text-white/60 tabular-nums">
-            {String(i + 1).padStart(2, "0")} / {String(LUXURY_SLIDES.length).padStart(2, "0")}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function HomePage() {
   const featuredAll = listings.filter((l) => l.featured);
   const forSale = listings.filter((l) => l.status === "for-sale");
@@ -326,6 +101,20 @@ function HomePage() {
     ...forSale.filter((l) => !featuredAll.some((f) => f.id === l.id)),
   ];
   const sold = listings.filter((l) => l.status === "sold").slice(0, 16);
+
+  const suburbsOfNote = [
+    {
+      name: "Bellevue Heights",
+      img: listings.find((l) => l.suburb === "Bellevue Heights" && l.hero)?.hero,
+    },
+    { name: "Blackwood", img: listings.find((l) => l.suburb === "Blackwood" && l.hero)?.hero },
+    { name: "Glenalta", img: listings.find((l) => l.suburb === "Glenalta" && l.hero)?.hero },
+    {
+      name: "Coromandel Valley",
+      img: listings.find((l) => l.suburb === "Coromandel Valley" && l.hero)?.hero,
+    },
+  ].filter((s) => s.img);
+
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -370,11 +159,11 @@ function HomePage() {
       <JsonLd schema={localBusinessSchema} />
       <Header overlay />
 
-      {/* HERO */}
+      {/* HERO — Variation C: Parallax Layers */}
       <section
         id="main-content"
         tabIndex={-1}
-        className="relative min-h-[100svh] w-full overflow-hidden group/hero focus:outline-none"
+        className="relative min-h-[100svh] w-full overflow-hidden group/hero focus:outline-none hero-parallax-container"
         aria-roledescription="carousel"
         aria-label="Featured properties"
         onMouseEnter={() => setPaused(true)}
@@ -384,21 +173,31 @@ function HomePage() {
           if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false);
         }}
       >
-        {HERO_SLIDES.map((l, i) => (
-          <img
-            key={l.id}
-            src={l.hero}
-            alt={l.address}
-            referrerPolicy="no-referrer"
-            loading={i === 0 ? "eager" : "lazy"}
-            className={[
-              "absolute inset-0 w-full h-full object-cover scale-105 transition-opacity duration-[1500ms] ease-in-out",
-              i === slide ? "opacity-100" : "opacity-0",
-            ].join(" ")}
-          />
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70 pointer-events-none" />
+        {/* Layer 3 (Back) - Atmospheric gradient */}
+        <div
+          className="absolute inset-0 bg-mesh-green hero-layer-3 pointer-events-none"
+          aria-hidden="true"
+        />
 
+        {/* Layer 2 (Mid) - Property photo */}
+        <div className="absolute inset-0 hero-layer-2 pointer-events-none" aria-hidden="true">
+          {HERO_SLIDES.map((l, i) => (
+            <img
+              key={l.id}
+              src={l.hero}
+              alt={l.address}
+              referrerPolicy="no-referrer"
+              loading={i === 0 ? "eager" : "lazy"}
+              className={[
+                "absolute inset-0 w-full h-full object-cover scale-105 transition-opacity duration-[1500ms] ease-in-out",
+                i === slide ? "opacity-100" : "opacity-0",
+              ].join(" ")}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/60" />
+        </div>
+
+        {/* Link overlay for active slide */}
         {current && (
           <Link
             to={
@@ -424,58 +223,56 @@ function HomePage() {
           </Link>
         )}
 
-        <div className="relative z-20 container-page min-h-[100svh] flex flex-col justify-end pb-24 pt-32 text-white pointer-events-none">
+        {/* Layer 1 (Front) - Text content */}
+        <div className="relative z-20 container-page min-h-[100svh] flex flex-col justify-end pb-32 md:pb-40 pt-32 text-white pointer-events-none hero-layer-1">
           <div className="max-w-4xl pointer-events-auto">
-            <div className="text-[10px] uppercase tracking-[0.32em] opacity-80 reveal">
+            <div className="text-[10px] uppercase tracking-[0.32em] opacity-80 reveal drop-shadow-sm">
               <span className="ring-mark" /> &nbsp;Adelaide · Established 1978
             </div>
-            <h1 className="font-serif text-[3.2rem] sm:text-[5rem] md:text-[7rem] leading-[0.92] tracking-tight mt-6 reveal reveal-2">
+            <h1 className="font-serif text-[3.2rem] sm:text-[5rem] md:text-[7rem] leading-[0.92] tracking-tight mt-6 reveal reveal-2 drop-shadow-2xl">
               The home
               <br />
               <span className="italic font-light">you have been</span>
               <br />
               looking for.
             </h1>
-            <p className="mt-8 max-w-xl text-base md:text-lg opacity-85 leading-relaxed reveal reveal-3">
+            <p className="mt-8 max-w-xl text-base md:text-lg opacity-90 leading-relaxed reveal reveal-3 drop-shadow-md">
               A small, senior team quietly selling and managing some of South Australia's most
               considered homes — for nearly five decades.
             </p>
           </div>
+        </div>
 
+        {/* Static UI - Search bar and bottom navigation */}
+        <div className="absolute inset-x-0 bottom-0 z-30 container-page pb-8 pointer-events-none">
           {/* Search bar */}
-          <div className="mt-14 reveal reveal-4 max-w-4xl">
+          <div className="reveal reveal-4 max-w-4xl pointer-events-auto">
             {/* Intent toggle */}
-            <div
-              role="group"
-              aria-label="Search type"
-              className="inline-flex gap-px bg-[var(--ringgreen)]/25 backdrop-blur p-px ring-1 ring-[var(--ringgreen)]/40"
+            <Tabs.Root
+              value={intent}
+              onValueChange={(v) => setIntent(v as "buy" | "rent" | "sold")}
+              className="inline-flex gap-px bg-ringgreen/25 backdrop-blur p-px ring-1 ring-ringgreen/40"
             >
-              {(
-                [
-                  { id: "buy", label: "For sale" },
-                  { id: "rent", label: "For rent" },
-                  { id: "sold", label: "Sold" },
-                ] as const
-              ).map((t) => {
-                const active = intent === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setIntent(t.id)}
-                    className={[
-                      "px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors",
-                      active
-                        ? "bg-[var(--ringgreen)] text-[var(--ink)]"
-                        : "text-white/85 hover:text-white hover:bg-[var(--ringgreen)]/30",
-                    ].join(" ")}
-                  >
-                    {t.label}
-                  </button>
-                );
-              })}
-            </div>
+              <Tabs.List className="flex">
+                {(
+                  [
+                    { id: "buy", label: "For sale" },
+                    { id: "rent", label: "For rent" },
+                    { id: "sold", label: "Sold" },
+                  ] as const
+                ).map((t) => {
+                  return (
+                    <Tabs.Trigger
+                      key={t.id}
+                      value={t.id}
+                      className="px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] transition-colors data-[state=active]:bg-ringgreen data-[state=active]:text-ink text-white/85 hover:text-white hover:bg-ringgreen/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset cursor-pointer"
+                    >
+                      {t.label}
+                    </Tabs.Trigger>
+                  );
+                })}
+              </Tabs.List>
+            </Tabs.Root>
 
             <form
               role="search"
@@ -484,10 +281,10 @@ function HomePage() {
                 setSuggestOpen(false);
                 runSearch();
               }}
-              className="bg-background/95 backdrop-blur text-foreground grid grid-cols-1 md:grid-cols-[1.4fr_auto_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] ring-1 ring-[var(--ringgreen)]/50 border-t-2 border-[var(--ringgreen)]"
+              className="mt-2 w-full md:w-[680px] bg-background/85 backdrop-blur-2xl border border-border shadow-2xl text-foreground grid grid-cols-1 md:grid-cols-[1fr_auto_auto] divide-y md:divide-y-0 md:divide-x divide-border"
             >
               {/* Query */}
-              <div className="relative transition-shadow focus-within:bg-[var(--ringgreen)]/5 focus-within:ring-2 focus-within:ring-[var(--ringgreen)] focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--ringgreen)_35%,transparent)] focus-within:z-10">
+              <div className="relative focus-within:z-10">
                 <label className="flex items-center gap-3 px-5 py-4">
                   <MapPin size={16} className="text-muted-foreground shrink-0" aria-hidden="true" />
                   <span className="sr-only">Where</span>
@@ -548,35 +345,57 @@ function HomePage() {
               </div>
 
               {/* Beds */}
-              <label className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-shadow cursor-pointer focus-within:bg-[var(--ringgreen)]/5 focus-within:ring-2 focus-within:ring-[var(--ringgreen)] focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--ringgreen)_35%,transparent)] focus-within:z-10">
+              <div className="relative flex items-center gap-2 px-5 py-4 hover:bg-secondary/40 transition-shadow cursor-pointer focus-within:bg-ringgreen/5 focus-within:ring-2 focus-within:ring-ringgreen focus-within:ring-inset focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-ringgreen)_25%,transparent),0_0_24px_color-mix(in_oklab,var(--color-ringgreen)_35%,transparent)] focus-within:z-10">
                 <BedDouble size={16} className="text-muted-foreground" aria-hidden="true" />
                 <span className="sr-only">Beds</span>
                 {mounted ? (
-                  <>
-                    <select
-                      value={beds}
-                      onChange={(e) => setBeds(e.target.value)}
-                      className="bg-transparent appearance-none pr-6 text-sm outline-none cursor-pointer"
-                      aria-label="Minimum bedrooms"
-                    >
-                      <option value="any">Any beds</option>
-                      <option value="1">1+ beds</option>
-                      <option value="2">2+ beds</option>
-                      <option value="3">3+ beds</option>
-                      <option value="4">4+ beds</option>
-                      <option value="5">5+ beds</option>
-                    </select>
-                    <ChevronDown
-                      size={14}
-                      className="text-muted-foreground absolute right-4 pointer-events-none"
-                    />
-                  </>
+                  <Select.Root value={beds} onValueChange={setBeds}>
+                    <Select.Trigger className="bg-transparent appearance-none text-sm outline-none cursor-pointer flex items-center justify-between gap-2 w-auto min-w-[80px] focus:outline-none">
+                      <Select.Value aria-label="Minimum bedrooms" />
+                      <Select.Icon>
+                        <ChevronDown size={14} className="text-muted-foreground" />
+                      </Select.Icon>
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Content
+                        className="bg-background border border-border shadow-xl z-50 min-w-[140px]"
+                        position="popper"
+                        sideOffset={4}
+                        align="start"
+                      >
+                        <Select.Viewport className="p-1">
+                          {[
+                            { v: "any", l: "Any beds" },
+                            { v: "1", l: "1+ beds" },
+                            { v: "2", l: "2+ beds" },
+                            { v: "3", l: "3+ beds" },
+                            { v: "4", l: "4+ beds" },
+                            { v: "5", l: "5+ beds" },
+                          ].map((opt) => (
+                            <Select.Item
+                              key={opt.v}
+                              value={opt.v}
+                              className="text-sm px-8 py-2 cursor-pointer outline-none data-[highlighted]:bg-secondary data-[highlighted]:text-foreground relative flex items-center"
+                            >
+                              <Select.ItemIndicator className="absolute left-2 flex items-center justify-center">
+                                <Check size={14} />
+                              </Select.ItemIndicator>
+                              <Select.ItemText>{opt.l}</Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
                 ) : (
-                  <span className="text-sm pr-6" aria-hidden="true">
-                    Any beds
+                  <span
+                    className="text-sm w-auto min-w-[80px] inline-flex items-center justify-between gap-2"
+                    aria-hidden="true"
+                  >
+                    Any beds <ChevronDown size={14} className="text-muted-foreground" />
                   </span>
                 )}
-              </label>
+              </div>
 
               {/* Browse all */}
               <Link
@@ -589,18 +408,17 @@ function HomePage() {
               {/* Submit */}
               <button
                 type="submit"
-                className="bg-[var(--ringgreen)] text-[var(--ink)] px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-[var(--ringgreen)]/90 transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--ringgreen)_45%,transparent)] group"
+                className="bg-ringgreen text-ink px-7 py-4 text-xs uppercase tracking-[0.22em] inline-flex items-center justify-center gap-2 hover:bg-ringgreen/90 transition-[background-color,box-shadow] focus:outline-none focus-visible:ring-2 focus-visible:ring-ringgreen focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-ringgreen)_30%,transparent),0_0_28px_color-mix(in_oklab,var(--color-ringgreen)_45%,transparent)] group cursor-pointer"
               >
                 <Search size={14} className="md:hidden" />
                 Search
-                <ArrowRight
-                  size={14}
-                  className="transition-transform group-hover:translate-x-0.5"
-                />
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
               </button>
             </form>
+          </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] uppercase tracking-[0.22em] text-white/70">
+          <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 pointer-events-none">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] uppercase tracking-[0.22em] text-white/70 pointer-events-auto max-w-4xl">
               <span className="opacity-70">Popular:</span>
               {["Bellevue Heights", "Coromandel Valley", "Blackwood", "Glenalta"].map((s) => (
                 <button
@@ -616,46 +434,53 @@ function HomePage() {
                 </button>
               ))}
             </div>
-          </div>
-        </div>
 
-        <div className="absolute z-20 bottom-6 right-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70 pointer-events-none">
-          {current && (
-            <Link
-              to={
-                current.status === "for-rent" || current.status === "leased"
-                  ? "/rent/$listingId"
-                  : current.status === "sold"
-                    ? "/sold/$listingId"
-                    : "/buy/$listingId"
-              }
-              params={{ listingId: current.id }}
-              aria-label={`View featured property: ${current.address}, ${current.suburb}`}
-              className="pointer-events-auto transition-opacity duration-500 hover:text-white border-b border-white/0 hover:border-white/60 pb-0.5 focus:outline-none focus-visible:text-white focus-visible:border-white/80"
-            >
-              {current.address} · {current.suburb} →
-            </Link>
-          )}
-          <span
-            className="hidden sm:flex items-center gap-1.5 pointer-events-auto"
-            role="group"
-            aria-label="Featured property slides"
-          >
-            {HERO_SLIDES.map((s, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setSlide(i)}
-                aria-label={`Show slide ${i + 1} of ${HERO_SLIDES.length}: ${s.address}, ${s.suburb}`}
-                aria-current={i === slide ? "true" : undefined}
-                className={[
-                  "relative h-px transition-[width,background-color] duration-500 focus:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50",
-                  "before:content-[''] before:absolute before:-inset-y-3 before:-inset-x-1",
-                  i === slide ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70",
-                ].join(" ")}
-              />
-            ))}
-          </span>
+            <div className="flex flex-col items-end gap-4 text-[10px] uppercase tracking-[0.25em] text-white/70 mt-4 md:mt-0">
+              <div className="flex items-center gap-4">
+                {current && (
+                  <Link
+                    to={
+                      current.status === "for-rent" || current.status === "leased"
+                        ? "/rent/$listingId"
+                        : current.status === "sold"
+                          ? "/sold/$listingId"
+                          : "/buy/$listingId"
+                    }
+                    params={{ listingId: current.id }}
+                    aria-label={`View featured property: ${current.address}, ${current.suburb}`}
+                    className="pointer-events-auto transition-opacity duration-500 hover:text-white border-b border-white/0 hover:border-white/60 pb-0.5 focus:outline-none focus-visible:text-white focus-visible:border-white/80 cursor-pointer"
+                  >
+                    {current.address} · {current.suburb} →
+                  </Link>
+                )}
+                <span
+                  className="hidden sm:flex items-center gap-1.5 pointer-events-auto"
+                  role="group"
+                  aria-label="Featured property slides"
+                >
+                  {HERO_SLIDES.map((s, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setSlide(i)}
+                      aria-label={`Show slide ${i + 1} of ${HERO_SLIDES.length}: ${s.address}, ${s.suburb}`}
+                      aria-current={i === slide ? "true" : undefined}
+                      className={[
+                        "relative h-px transition-[width,background-color] duration-500 focus:outline-none focus-visible:ring-1 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50 cursor-pointer",
+                        "before:content-[''] before:absolute before:-inset-y-3 before:-inset-x-1",
+                        i === slide ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70",
+                      ].join(" ")}
+                    />
+                  ))}
+                </span>
+              </div>
+
+              {/* Scroll Indicator */}
+              <div className="pointer-events-auto opacity-60 hidden md:flex flex-col items-center gap-2 mt-4 animate-bounce mix-blend-overlay">
+                <Mouse size={14} className="text-white" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -673,9 +498,13 @@ function HomePage() {
             </div>
             <Link
               to="/about"
-              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
+              className="group text-sm inline-flex items-center gap-2 transition-colors cursor-pointer"
             >
-              Meet the team <ArrowUpRight size={16} />
+              Meet the team{" "}
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
@@ -684,7 +513,7 @@ function HomePage() {
                 key={a.id}
                 to="/team/$agentId"
                 params={{ agentId: a.id }}
-                className="block group hover-lift"
+                className="block group hover-lift cursor-pointer"
               >
                 <div className="aspect-[3/4] img-zoom bg-muted overflow-hidden">
                   <TeamMemberImage
@@ -694,7 +523,7 @@ function HomePage() {
                   />
                 </div>
                 <div className="mt-3">
-                  <div className="font-serif text-base md:text-lg leading-tight group-hover:text-[var(--ringgreen)] transition-colors">
+                  <div className="font-serif text-base md:text-lg leading-tight group-hover:text-ringgreen transition-colors duration-200">
                     {a.name}
                   </div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
@@ -708,33 +537,80 @@ function HomePage() {
       </section>
 
       {/* INTEGRITY EDITORIAL */}
-      <section className="container-page py-28 md:py-44">
-        <div className="grid md:grid-cols-12 gap-10 md:gap-16">
-          <div className="md:col-span-4">
-            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-              <span className="ring-mark" /> &nbsp;Since 1978
-            </div>
-            <div className="mt-6 font-serif italic text-[var(--ringgreen)] text-3xl">
-              Integrity.
-            </div>
-            <LuxuryCarousel />
+      <section className="py-28 md:py-44 relative overflow-hidden bg-muted/20">
+        <div className="w-full flex flex-col md:flex-row relative">
+          <div className="w-full md:w-[60%] lg:w-[50%] reveal relative z-10 md:-ml-8">
+            <LuxuryCarousel className="mt-10" slides={LUXURY_SLIDES} />
           </div>
-          <div className="md:col-span-7 md:col-start-6">
-            <h2 className="font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight">
-              A single word, given as a promise — and kept, transaction after transaction,
-              generation after generation.
-            </h2>
-            <p className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-              Ring Real Estate has remained deliberately small since the day we opened our doors in
-              Fullarton. We sell fewer homes than the franchises around us, and we sell them better
-              — by hand, by name, with the patience that good outcomes require.
-            </p>
-            <Link
-              to="/about"
-              className="mt-10 inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 hover:gap-3 transition-[gap,color]"
-            >
-              Read our story <ArrowRight size={14} />
-            </Link>
+
+          <div className="w-full md:w-[55%] md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2 reveal-2 z-20 mt-12 md:mt-0">
+            <div className="bg-background/85 backdrop-blur-2xl p-10 md:p-16 lg:p-20 shadow-2xl border border-border mx-4 md:mx-8 lg:mr-[10%]">
+              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                <span className="ring-mark" /> &nbsp;Since 1978
+              </div>
+              <h2 className="mt-8 font-serif text-3xl md:text-5xl leading-[1.1] tracking-tight">
+                Integrity. <br />
+                <span className="italic font-light text-muted-foreground">A promise kept.</span>
+              </h2>
+              <p className="mt-8 text-base md:text-lg text-muted-foreground leading-relaxed">
+                Ring Real Estate has remained deliberately small since the day we opened our doors
+                in Fullarton. We sell fewer homes than the franchises around us, and we sell them
+                better — by hand, by name, with the patience that good outcomes require.
+              </p>
+              <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
+                We stand apart through our total refusal to compromise on standards, marketing, or
+                discretion.
+              </p>
+              <Link
+                to="/about"
+                className="group mt-10 inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 transition-colors cursor-pointer"
+              >
+                Read our story{" "}
+                <ArrowRight
+                  size={14}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SUBURBS OF NOTE */}
+      <section className="bg-background py-24 md:py-32">
+        <div className="container-page">
+          <div className="flex items-end justify-between flex-wrap gap-6 mb-12">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                <span className="ring-mark" /> &nbsp;Areas of expertise
+              </div>
+              <h2 className="font-serif text-3xl md:text-5xl mt-3 tracking-tight">
+                Suburbs of note
+              </h2>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {suburbsOfNote.map((s, i) => (
+              <Link
+                key={s.name}
+                to="/buy"
+                search={{ q: s.name }}
+                className="group relative aspect-[4/5] overflow-hidden hover-lift cursor-pointer block"
+              >
+                <img
+                  src={s.img}
+                  alt={`Real estate in ${s.name}`}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 editorial-scrim" />
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <h3 className="text-bone font-serif text-2xl drop-shadow-md">{s.name}</h3>
+                  <div className="text-ringgreen-soft text-xs uppercase tracking-[0.2em] mt-3 opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 flex items-center gap-2">
+                    Explore <ArrowRight size={12} />
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -753,9 +629,13 @@ function HomePage() {
             </div>
             <Link
               to="/buy"
-              className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
+              className="group text-sm inline-flex items-center gap-2 transition-colors cursor-pointer"
             >
-              View all listings <ArrowUpRight size={16} />
+              View all listings{" "}
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
             </Link>
           </div>
 
@@ -780,9 +660,13 @@ function HomePage() {
           </div>
           <Link
             to="/sold"
-            className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-[gap,color]"
+            className="group text-sm inline-flex items-center gap-2 transition-colors cursor-pointer"
           >
-            All recent sales <ArrowUpRight size={16} />
+            All recent sales{" "}
+            <ArrowUpRight
+              size={16}
+              className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
           </Link>
         </div>
         <div className="container-page grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
@@ -794,8 +678,8 @@ function HomePage() {
 
       {/* METHODS OF SALE */}
       <section className="container-page py-24 md:py-32">
-        <div className="grid md:grid-cols-12 gap-12">
-          <div className="md:col-span-4">
+        <div className="grid md:grid-cols-12 gap-12 lg:gap-20">
+          <div className="md:col-span-4 md:sticky md:top-32 self-start">
             <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
               Methods of sale
             </div>
@@ -807,7 +691,7 @@ function HomePage() {
               that will produce the strongest result, not the fastest commission.
             </p>
           </div>
-          <div className="md:col-span-8 grid sm:grid-cols-3 gap-px bg-border">
+          <div className="md:col-span-8 flex flex-col gap-6">
             {[
               {
                 n: "01",
@@ -825,52 +709,92 @@ function HomePage() {
                 d: "Quiet negotiation on a published price. The right approach for the right home.",
               },
             ].map((m) => (
-              <div key={m.n} className="bg-background p-8 md:p-10 hover-lift">
-                <div className="font-serif text-5xl text-[var(--ringgreen)]">{m.n}</div>
-                <div className="font-serif text-xl mt-8">{m.t}</div>
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{m.d}</p>
+              <div key={m.n} className="card-interactive bg-background p-10 md:p-14 group">
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-4 sm:gap-8">
+                  <div className="font-serif text-7xl text-ringgreen/20 group-hover:text-ringgreen transition-colors duration-500">
+                    {m.n}
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-2xl md:text-3xl">{m.t}</h3>
+                    <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+                      {m.d}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* TESTIMONIAL */}
-      <section className="container-page py-28 md:py-40">
-        <figure className="max-w-4xl mx-auto text-center">
-          <div className="font-serif text-6xl text-[var(--ringgreen)] leading-none">"</div>
-          <blockquote className="font-serif text-3xl md:text-5xl leading-[1.2] tracking-tight mt-6">
-            {testimonials[0].quote}
-          </blockquote>
-          <figcaption className="mt-10 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            {testimonials[0].author} · {testimonials[0].location}
-          </figcaption>
-        </figure>
+      {/* TESTIMONIALS */}
+      <section className="py-24 md:py-32 bg-secondary/30">
+        <div className="container-page">
+          <div className="text-center mb-16">
+            <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+              <span className="ring-mark" /> &nbsp;Client perspectives
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((t, i) => (
+              <figure
+                key={i}
+                className="bg-background p-10 border border-border flex flex-col justify-between hover-lift"
+              >
+                <div>
+                  <div className="font-serif text-5xl text-ringgreen/40 leading-none mb-6">"</div>
+                  <blockquote className="font-serif text-xl md:text-2xl leading-[1.3] tracking-tight">
+                    {t.quote}
+                  </blockquote>
+                </div>
+                <figcaption className="mt-12 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  <strong className="text-foreground">{t.author}</strong>
+                  <br />
+                  <span className="opacity-70 mt-1 block">{t.location}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* APPRAISAL CTA */}
-      <section className="bg-[var(--ink)] text-[var(--bone)]">
-        <div className="container-page py-24 md:py-36 grid md:grid-cols-12 gap-10 items-end">
+      <section className="relative overflow-hidden bg-ink text-bone">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://img.multiarray.com/realestatemanagerpm/00b8fc5b-fb0a-4f45-a58b-199da1ae3f2e/c2728d99-37f0-4373-8ddc-147cded542d9/cp-rect-1920x1440.pg"
+            alt="Interior view"
+            className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+          />
+          <div className="absolute inset-0 bg-gradient-green-ink opacity-90" />
+        </div>
+
+        <div className="container-page py-32 md:py-48 relative z-10 grid md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7">
-            <div className="text-[10px] uppercase tracking-[0.32em] opacity-60">
+            <div className="text-[10px] uppercase tracking-[0.32em] opacity-80">
               <span className="ring-mark" /> &nbsp;Considering selling?
             </div>
-            <h2 className="font-serif text-5xl md:text-7xl tracking-tight mt-6 leading-[1.02]">
+            <h2 className="font-serif text-5xl md:text-7xl tracking-tight mt-6 leading-[1.02] drop-shadow-lg">
               A confidential, considered
               <br />
               appraisal of your home.
             </h2>
           </div>
-          <div className="md:col-span-5">
-            <p className="opacity-75 leading-relaxed">
+          <div className="md:col-span-5 md:pl-10 md:border-l border-white/20 pt-8 md:pt-0">
+            <p className="opacity-80 leading-relaxed text-lg">
               No obligation. No franchise theatre. A senior agent will visit you, walk the home, and
               prepare a written appraisal grounded in recent comparable sales.
             </p>
             <Link
               to="/sell/appraisal"
-              className="mt-8 inline-flex items-center gap-3 px-7 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--ringgreen)]/90"
+              className="group mt-10 inline-flex items-center gap-3 px-8 py-5 bg-bone text-ink text-xs uppercase tracking-[0.22em] hover:bg-ringgreen-soft transition-[background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink cursor-pointer shadow-xl hover:shadow-2xl"
             >
-              Request appraisal <ArrowRight size={14} />
+              Request appraisal{" "}
+              <ArrowRight
+                size={14}
+                className="transition-transform duration-200 group-hover:translate-x-1"
+              />
             </Link>
           </div>
         </div>

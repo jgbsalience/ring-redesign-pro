@@ -10,7 +10,11 @@ import {
   LayoutGrid,
   Map as MapIcon,
   ArrowDown,
+  ChevronDown,
+  Check,
 } from "lucide-react";
+import * as Tabs from "@radix-ui/react-tabs";
+import * as Select from "@radix-ui/react-select";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingsMap } from "@/components/site/ListingsMap";
@@ -244,7 +248,9 @@ function ListingsPage() {
 
   // Log query errors to console (raw error already logged in fetchListings)
   useEffect(() => {
-    if (error) console.error("[listings] query error:", error);
+    if (error) {
+      console.error("[listings] query error:", error);
+    }
   }, [error]);
 
   const rows = data?.rows ?? [];
@@ -561,23 +567,23 @@ function FiltersBar({
       ].join(" ")}
     >
       {/* Status tabs */}
-      <div className="flex gap-2 border-b border-border">
-        {STATUSES.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => update("status", s)}
-            className={[
-              "px-5 py-3 text-xs uppercase tracking-[0.22em] border-b-2 -mb-px transition-colors",
-              search.status === s
-                ? "border-[var(--ringgreen)] text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground",
-            ].join(" ")}
-          >
-            {s === "buy" ? "For Sale" : s === "rent" ? "For Rent" : "Sold"}
-          </button>
-        ))}
-      </div>
+      <Tabs.Root
+        value={search.status}
+        onValueChange={(v) => update("status", v as StatusKey)}
+        className="border-b border-border"
+      >
+        <Tabs.List className="flex gap-2">
+          {STATUSES.map((s) => (
+            <Tabs.Trigger
+              key={s}
+              value={s}
+              className="px-5 py-3 text-xs uppercase tracking-[0.22em] border-b-2 -mb-[1px] transition-colors border-transparent text-muted-foreground hover:text-foreground data-[state=active]:border-[var(--ringgreen)] data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-inset"
+            >
+              {s === "buy" ? "For Sale" : s === "rent" ? "For Rent" : "Sold"}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+      </Tabs.Root>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_0.8fr_0.8fr_auto] gap-2 bg-secondary/60 p-2">
         <form
@@ -603,65 +609,55 @@ function FiltersBar({
           </button>
         </form>
 
-        <select
-          id="min-price"
-          aria-label="Minimum price"
-          className="bg-background border border-border px-4 py-3 text-sm"
-          value={search.minPrice}
-          onChange={(e) => update("minPrice", Number(e.target.value))}
-        >
-          <option value={0}>Min price</option>
-          {priceOptions(search.status).map((p) => (
-            <option key={`min-${p}`} value={p}>
-              {formatShortPrice(p)}+
-            </option>
-          ))}
-        </select>
+        <CustomSelect
+          value={search.minPrice.toString()}
+          onValueChange={(v) => update("minPrice", Number(v))}
+          ariaLabel="Minimum price"
+          placeholder="Min price"
+          options={[
+            { value: "0", label: "Min price" },
+            ...priceOptions(search.status).map((p) => ({
+              value: p.toString(),
+              label: `${formatShortPrice(p)}+`,
+            })),
+          ]}
+        />
 
-        <select
-          id="max-price"
-          aria-label="Maximum price"
-          className="bg-background border border-border px-4 py-3 text-sm"
-          value={search.maxPrice}
-          onChange={(e) => update("maxPrice", Number(e.target.value))}
-        >
-          <option value={0}>Max price</option>
-          {priceOptions(search.status).map((p) => (
-            <option key={`max-${p}`} value={p}>
-              up to {formatShortPrice(p)}
-            </option>
-          ))}
-        </select>
+        <CustomSelect
+          value={search.maxPrice.toString()}
+          onValueChange={(v) => update("maxPrice", Number(v))}
+          ariaLabel="Maximum price"
+          placeholder="Max price"
+          options={[
+            { value: "0", label: "Max price" },
+            ...priceOptions(search.status).map((p) => ({
+              value: p.toString(),
+              label: `up to ${formatShortPrice(p)}`,
+            })),
+          ]}
+        />
 
-        <select
-          id="beds"
-          aria-label="Minimum bedrooms"
-          className="bg-background border border-border px-4 py-3 text-sm"
-          value={search.beds}
-          onChange={(e) => update("beds", Number(e.target.value))}
-        >
-          <option value={0}>Any beds</option>
-          {[1, 2, 3, 4, 5].map((n) => (
-            <option key={n} value={n}>
-              {n}+ beds
-            </option>
-          ))}
-        </select>
+        <CustomSelect
+          value={search.beds.toString()}
+          onValueChange={(v) => update("beds", Number(v))}
+          ariaLabel="Minimum bedrooms"
+          placeholder="Any beds"
+          options={[
+            { value: "0", label: "Any beds" },
+            ...[1, 2, 3, 4, 5].map((n) => ({ value: n.toString(), label: `${n}+ beds` })),
+          ]}
+        />
 
-        <select
-          id="baths"
-          aria-label="Minimum bathrooms"
-          className="bg-background border border-border px-4 py-3 text-sm"
-          value={search.baths}
-          onChange={(e) => update("baths", Number(e.target.value))}
-        >
-          <option value={0}>Any baths</option>
-          {[1, 2, 3, 4].map((n) => (
-            <option key={n} value={n}>
-              {n}+ baths
-            </option>
-          ))}
-        </select>
+        <CustomSelect
+          value={search.baths.toString()}
+          onValueChange={(v) => update("baths", Number(v))}
+          ariaLabel="Minimum bathrooms"
+          placeholder="Any baths"
+          options={[
+            { value: "0", label: "Any baths" },
+            ...[1, 2, 3, 4].map((n) => ({ value: n.toString(), label: `${n}+ baths` })),
+          ]}
+        />
 
         <button
           type="button"
@@ -724,20 +720,75 @@ function FiltersBar({
           >
             Sort by
           </label>
-          <select
-            id="listing-sort"
-            className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.18em]"
+          <CustomSelect
             value={search.sort}
-            onChange={(e) => update("sort", e.target.value as SortKey)}
-          >
-            <option value="featured">Featured</option>
-            <option value="newest">Newest</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
+            onValueChange={(v) => update("sort", v as SortKey)}
+            ariaLabel="Sort by"
+            placeholder="Sort by"
+            className="text-xs uppercase tracking-[0.18em] py-2 px-3"
+            options={[
+              { value: "featured", label: "Featured" },
+              { value: "newest", label: "Newest" },
+              { value: "price-asc", label: "Price: Low to High" },
+              { value: "price-desc", label: "Price: High to Low" },
+            ]}
+          />
         </div>
       </div>
     </fieldset>
+  );
+}
+
+function CustomSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder,
+  ariaLabel,
+  className = "",
+}: {
+  value: string;
+  onValueChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  placeholder: string;
+  ariaLabel: string;
+  className?: string;
+}) {
+  return (
+    <Select.Root value={value} onValueChange={onValueChange}>
+      <Select.Trigger
+        className={`bg-background border border-border px-4 py-3 text-sm flex items-center justify-between gap-2 focus:outline-none focus:ring-2 focus:ring-[var(--ringgreen)] focus:ring-inset ${className}`}
+        aria-label={ariaLabel}
+      >
+        <Select.Value placeholder={placeholder} />
+        <Select.Icon>
+          <ChevronDown size={14} className="opacity-50" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="bg-background border border-border shadow-xl z-50 min-w-[var(--radix-select-trigger-width)]"
+          position="popper"
+          sideOffset={4}
+          align="start"
+        >
+          <Select.Viewport className="p-1">
+            {options.map((opt) => (
+              <Select.Item
+                key={opt.value}
+                value={opt.value}
+                className="text-sm px-8 py-2 cursor-pointer outline-none data-[highlighted]:bg-secondary data-[highlighted]:text-foreground relative flex items-center"
+              >
+                <Select.ItemIndicator className="absolute left-2 flex items-center justify-center">
+                  <Check size={14} />
+                </Select.ItemIndicator>
+                <Select.ItemText>{opt.label}</Select.ItemText>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   );
 }
 
