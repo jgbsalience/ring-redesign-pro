@@ -117,6 +117,7 @@ function SetToSellPage() {
   return (
     <div className="bg-background text-foreground">
       <Header />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
 
       {/* HERO */}
       <section className="relative isolate overflow-hidden h-[78vh] min-h-[560px] flex items-end">

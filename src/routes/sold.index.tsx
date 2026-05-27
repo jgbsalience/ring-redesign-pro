@@ -86,6 +86,7 @@ function SoldIndex() {
   return (
     <div className="bg-background text-foreground">
       <Header />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <div className="pt-28 md:pt-36">
         <div className="container-page">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">

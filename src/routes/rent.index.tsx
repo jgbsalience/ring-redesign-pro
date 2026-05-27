@@ -44,6 +44,7 @@ function RentPage() {
   return (
     <div className="bg-background text-foreground">
       <Header overlay />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <BannerHero
         slides={RENT_SLIDES}
         kicker="Property management"

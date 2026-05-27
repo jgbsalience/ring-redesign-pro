@@ -39,6 +39,11 @@ export const Route = createFileRoute("/team/$agentId")({
       </div>
     </div>
   ),
+  errorComponent: ({ error }) => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div>{error.message}</div>
+    </div>
+  ),
   component: AgentPage,
 });
 
@@ -49,6 +54,7 @@ function AgentPage() {
   return (
     <div className="bg-background text-foreground">
       <Header overlay={false} />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
 
       <section className="container-page pt-32 pb-16 md:pt-40 md:pb-24">
         <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
@@ -113,7 +119,7 @@ function AgentPage() {
                 {agent.name.split(" ")[0]}'s current listings
               </h2>
               <Link
-                to="/listings"
+                to="/buy"
                 className="text-sm inline-flex items-center gap-2 hover:gap-3 transition-all"
               >
                 All listings <ArrowRight size={14} />
@@ -140,19 +146,17 @@ function AgentPage() {
                 key={a.id}
                 to="/team/$agentId"
                 params={{ agentId: a.id }}
-                className="hover-lift block group"
+                className="hover-lift block"
               >
                 <div className="aspect-[3/4] img-zoom bg-muted">
                   <TeamMemberImage
                     agent={a}
                     size="lg"
-                    className="grayscale group-hover:grayscale-0 transition-[filter] duration-700"
+                    className="grayscale hover:grayscale-0 transition-all duration-700"
                   />
                 </div>
                 <div className="mt-4">
-                  <div className="font-serif text-lg group-hover:text-[var(--ringgreen)] transition-colors">
-                    {a.name}
-                  </div>
+                  <div className="font-serif text-lg">{a.name}</div>
                   <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-1">
                     {a.role}
                   </div>

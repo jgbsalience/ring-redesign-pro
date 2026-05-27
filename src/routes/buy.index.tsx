@@ -67,6 +67,7 @@ function BuyPage() {
   return (
     <div className="bg-background text-foreground">
       <Header overlay />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <BannerHero
         slides={BUY_SLIDES}
         kicker={heading.kicker}

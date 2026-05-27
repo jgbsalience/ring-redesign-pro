@@ -1,10 +1,9 @@
-import { useMemo } from "react";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useMemo, useState, useEffect } from "react";
+import { Link } from "@tanstack/react-router";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { ListingCard } from "@/components/site/ListingCard";
 import type { Listing } from "@/data/site";
 import { suburbs } from "@/data/site";
-import type { ListingsSearch } from "@/lib/listingsSearch";
 
 type Props = {
   source: Listing[];
@@ -21,6 +20,7 @@ const SORTS = [
   { id: "price-asc", label: "Price · Low to high" },
   { id: "beds-desc", label: "Most bedrooms" },
 ] as const;
+type SortId = (typeof SORTS)[number]["id"];
 
 const priceNum = (s: string) => {
   const m = s.replace(/,/g, "").match(/\$?\s*(\d+(\.\d+)?)/);
@@ -33,36 +33,22 @@ export function ListingsBrowser({
   showTypeFilter = true,
   emptyMessage,
 }: Props) {
-  const navigate = useNavigate();
-  // Loose read — works on any of the listings routes.
-  const search = useSearch({ strict: false }) as Partial<ListingsSearch>;
-  const query = search.q ?? "";
-  const suburb = search.suburb ?? "All suburbs";
-  const type = search.type ?? "Any type";
-  const beds = search.beds ?? "Any";
-  const sort = (search.sort ?? "newest") as ListingsSearch["sort"];
-  const page = search.page ?? 1;
-
-  const update = (patch: Partial<ListingsSearch>, resetPage = true) => {
-    // Filter changes replace history (avoid back-button spam).
-    // Page changes push history so browser back/forward navigates pages.
-    const isPageOnly = !resetPage && Object.keys(patch).length === 1 && "page" in patch;
-    navigate({
-      to: ".",
-      search: (prev: Record<string, unknown>) => ({
-        ...prev,
-        ...patch,
-        ...(resetPage ? { page: 1 } : {}),
-      }),
-      replace: !isPageOnly,
-    } as never);
-  };
+  const [query, setQuery] = useState("");
+  const [suburb, setSuburb] = useState("All suburbs");
+  const [type, setType] = useState("Any type");
+  const [beds, setBeds] = useState("Any");
+  const [sort, setSort] = useState<SortId>("newest");
+  const [page, setPage] = useState(1);
 
   const sourceSuburbs = useMemo(() => {
     const set = new Set<string>(suburbs);
     source.forEach((l) => l.suburb && set.add(l.suburb));
     return Array.from(set).sort();
   }, [source]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, suburb, type, beds, sort, source]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -96,7 +82,7 @@ export function ListingsBrowser({
             <Search size={16} className="opacity-50" />
             <input
               value={query}
-              onChange={(e) => update({ q: e.target.value })}
+              onChange={(e) => setQuery(e.target.value)}
               className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground"
               placeholder="Suburb, address or keyword"
             />
@@ -104,7 +90,7 @@ export function ListingsBrowser({
           <select
             className="bg-background px-4 py-3 text-sm"
             value={suburb}
-            onChange={(e) => update({ suburb: e.target.value })}
+            onChange={(e) => setSuburb(e.target.value)}
           >
             <option>All suburbs</option>
             {sourceSuburbs.map((s) => (
@@ -115,7 +101,7 @@ export function ListingsBrowser({
             <select
               className="bg-background px-4 py-3 text-sm"
               value={type}
-              onChange={(e) => update({ type: e.target.value })}
+              onChange={(e) => setType(e.target.value)}
             >
               {TYPES.map((t) => (
                 <option key={t}>{t}</option>
@@ -127,7 +113,7 @@ export function ListingsBrowser({
           <select
             className="bg-background px-4 py-3 text-sm"
             value={beds}
-            onChange={(e) => update({ beds: e.target.value })}
+            onChange={(e) => setBeds(e.target.value)}
           >
             {BEDS.map((b) => (
               <option key={b} value={b}>
@@ -138,7 +124,7 @@ export function ListingsBrowser({
           <select
             className="bg-background px-4 py-3 text-sm"
             value={sort}
-            onChange={(e) => update({ sort: e.target.value as ListingsSearch["sort"] })}
+            onChange={(e) => setSort(e.target.value as SortId)}
           >
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
@@ -175,7 +161,7 @@ export function ListingsBrowser({
       {totalPages > 1 && (
         <div className="container-page mt-14 flex items-center justify-center gap-2">
           <button
-            onClick={() => update({ page: Math.max(1, current - 1) }, false)}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={current === 1}
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
           >
@@ -184,7 +170,7 @@ export function ListingsBrowser({
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
             <button
               key={n}
-              onClick={() => update({ page: n }, false)}
+              onClick={() => setPage(n)}
               className={[
                 "px-4 py-2 text-xs tracking-[0.2em] border transition-colors",
                 n === current
@@ -196,7 +182,7 @@ export function ListingsBrowser({
             </button>
           ))}
           <button
-            onClick={() => update({ page: Math.min(totalPages, current + 1) }, false)}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={current === totalPages}
             className="inline-flex items-center gap-1 px-4 py-2 text-xs uppercase tracking-[0.2em] border border-border disabled:opacity-40 hover:bg-secondary transition-colors"
           >

@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { cloneElement, isValidElement, useId, useState } from "react";
+import { useState } from "react";
+import React from "react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { ArrowRight, MapPin, Phone, Mail, Clock, Loader2 } from "lucide-react";
+import { ArrowRight, MapPin, Phone, Mail, Clock, Loader2, Check, ChevronDown } from "lucide-react";
 import { listings } from "@/data/site";
 import { canonical } from "@/lib/seo";
 
@@ -41,14 +42,23 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+type Phase = "idle" | "submitting" | "success" | "done";
+
+const OFFICE_ITEMS = [
+  { Icon: MapPin, title: "Office", lines: ["140 Shepherds Hill Road", "Bellevue Heights SA 5050"] },
+  { Icon: Phone, title: "Telephone", lines: ["(08) 8370 3211"] },
+  { Icon: Mail, title: "Email", lines: ["ring@ring-sa.com.au"] },
+  { Icon: Clock, title: "Hours", lines: ["Mon – Fri · 8:30 – 5:30", "Sat · By appointment"] },
+] as const;
+
 function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { enquiryType: "Selling my home", website: "" },
@@ -56,6 +66,7 @@ function ContactPage() {
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null);
+    setPhase("submitting");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -66,23 +77,27 @@ function ContactPage() {
         const body = await res.json().catch(() => ({}));
         throw new Error((body as { error?: string }).error ?? "Something went wrong");
       }
-      setSubmitted(true);
-      if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+      // Show success state on the button briefly, then swap to the success panel
+      setPhase("success");
+      setTimeout(() => {
+        setPhase("done");
+        if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 900);
     } catch (err) {
+      setPhase("idle");
       setServerError(
         err instanceof Error ? err.message : "Something went wrong. Please try again.",
       );
     }
   };
 
+  const submitted = phase === "done";
+
   return (
     <div className="bg-background text-foreground">
       <Header />
-      <section
-        id="main-content"
-        tabIndex={-1}
-        className="pt-28 md:pt-36 container-page pb-24 md:pb-32 focus:outline-none"
-      >
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
+      <section className="pt-28 md:pt-36 container-page pb-24 md:pb-32">
         <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
           <span className="ring-mark" /> &nbsp;Get in touch
         </div>
@@ -92,30 +107,60 @@ function ContactPage() {
 
         <div className="mt-20 grid md:grid-cols-12 gap-12 lg:gap-20">
           <div className="md:col-span-5 space-y-10">
-            <Item
-              Icon={MapPin}
-              title="Office"
-              lines={["140 Shepherds Hill Road", "Bellevue Heights SA 5050"]}
-            />
-            <Item Icon={Phone} title="Telephone" lines={["(08) 8370 3211"]} />
-            <Item Icon={Mail} title="Email" lines={["ring@ring-sa.com.au"]} />
-            <Item
-              Icon={Clock}
-              title="Hours"
-              lines={["Mon – Fri · 8:30 – 5:30", "Sat · By appointment"]}
-            />
+            {OFFICE_ITEMS.map((item, i) => (
+              <Item
+                key={item.title}
+                Icon={item.Icon}
+                title={item.title}
+                lines={[...item.lines]}
+                delayMs={i * 100}
+              />
+            ))}
 
-            <div className="aspect-[4/3] bg-secondary overflow-hidden">
+            <div
+              className="group aspect-[4/3] bg-secondary overflow-hidden contact-info-stagger"
+              style={{ animationDelay: `${OFFICE_ITEMS.length * 100}ms` }}
+            >
               <img
                 src={listings[4]?.hero}
                 alt="Ring Real Estate studio"
-                className="w-full h-full object-cover grayscale"
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.02]"
               />
             </div>
+
+            {/* Map embed */}
+            <div
+              className="aspect-[4/3] bg-secondary overflow-hidden border border-border contact-info-stagger"
+              style={{ animationDelay: `${(OFFICE_ITEMS.length + 1) * 100}ms` }}
+            >
+              <iframe
+                title="Map showing Ring Real Estate office at 140 Shepherds Hill Road, Bellevue Heights"
+                src="https://maps.google.com/maps?q=140%20Shepherds%20Hill%20Road%2C%20Bellevue%20Heights%20SA%205050&t=m&z=15&output=embed&iwloc=near"
+                width="100%"
+                height="100%"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                style={{ border: 0, filter: "grayscale(0.4) contrast(0.95)" }}
+                aria-label="Map of Ring Real Estate office location"
+              />
+            </div>
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=140+Shepherds+Hill+Road+Bellevue+Heights+SA+5050"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-[var(--ringgreen-deep)] transition-colors -mt-4"
+            >
+              Get directions <ArrowRight size={12} />
+            </a>
           </div>
 
           {submitted ? (
             <div className="md:col-span-7 bg-secondary/50 p-8 md:p-12 flex flex-col justify-center text-center gap-5">
+              <div className="flex justify-center">
+                <div className="w-12 h-12 rounded-full bg-[var(--ringgreen)] flex items-center justify-center check-pop">
+                  <Check size={22} strokeWidth={2.5} className="text-[var(--ink)]" />
+                </div>
+              </div>
               <div className="text-[10px] uppercase tracking-[0.32em] text-[var(--ringgreen-deep)]">
                 Received
               </div>
@@ -136,7 +181,7 @@ function ContactPage() {
               className="md:col-span-7 bg-secondary/50 p-8 md:p-12 space-y-5 h-fit"
               noValidate
             >
-              {/* Honeypot — hidden from real users */}
+              {/* Honeypot */}
               <input
                 type="text"
                 tabIndex={-1}
@@ -179,6 +224,7 @@ function ContactPage() {
               <Field label="Phone" error={errors.phone?.message}>
                 <input
                   type="tel"
+                  inputMode="tel"
                   autoComplete="tel"
                   className={inputCls(!!errors.phone)}
                   {...register("phone")}
@@ -186,39 +232,59 @@ function ContactPage() {
               </Field>
 
               <Field label="I'm enquiring about">
-                <select
-                  className="mt-2 w-full bg-background px-4 py-3.5 text-sm outline-none focus:ring-1 focus:ring-[var(--ringgreen-deep)]"
-                  {...register("enquiryType")}
-                >
-                  <option>Selling my home</option>
-                  <option>Buying a home</option>
-                  <option>Renting a home</option>
-                  <option>Property management</option>
-                  <option>Something else</option>
-                </select>
+                <div className="relative">
+                  <select
+                    className={`${inputCls(false)} appearance-none pr-10 cursor-pointer`}
+                    {...register("enquiryType")}
+                  >
+                    <option>Selling my home</option>
+                    <option>Buying a home</option>
+                    <option>Renting a home</option>
+                    <option>Property management</option>
+                    <option>Something else</option>
+                  </select>
+                  <ChevronDown
+                    size={16}
+                    aria-hidden="true"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                  />
+                </div>
               </Field>
 
-              <Field label="Message" error={errors.message?.message}>
+              <Field label="Message" error={errors.message?.message} multiline>
                 <textarea
-                  className={`mt-2 w-full bg-background px-4 py-3.5 text-sm min-h-40 outline-none resize-y ${errors.message ? "ring-1 ring-red-500" : "focus:ring-1 focus:ring-[var(--ringgreen-deep)]"}`}
+                  className={`${inputCls(!!errors.message)} min-h-40 resize-y`}
                   {...register("message")}
                 />
               </Field>
 
-              {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+              {serverError && (
+                <p className="text-sm text-red-600" role="alert">
+                  {serverError}
+                </p>
+              )}
 
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:bg-[var(--ringgreen)]/90 disabled:opacity-50 transition-opacity"
+                disabled={phase === "submitting" || phase === "success"}
+                className={`w-full md:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs uppercase tracking-[0.22em] disabled:cursor-default transition-colors ${
+                  phase === "success"
+                    ? "bg-[var(--ringgreen)] text-[var(--ink)]"
+                    : "bg-foreground text-background hover:bg-[var(--ringgreen-deep)] disabled:opacity-70"
+                }`}
               >
-                {isSubmitting ? (
+                {phase === "submitting" ? (
                   <>
-                    <Loader2 size={14} className="animate-spin" /> Sending…
+                    <Loader2 size={14} className="animate-spin" aria-hidden="true" /> Sending…
+                  </>
+                ) : phase === "success" ? (
+                  <>
+                    <Check size={14} strokeWidth={2.5} className="check-pop" aria-hidden="true" />{" "}
+                    Sent
                   </>
                 ) : (
                   <>
-                    Send message <ArrowRight size={14} />
+                    Send message <ArrowRight size={14} aria-hidden="true" />
                   </>
                 )}
               </button>
@@ -232,8 +298,8 @@ function ContactPage() {
 }
 
 function inputCls(hasError: boolean) {
-  return `mt-2 w-full bg-background px-4 py-3.5 text-sm outline-none transition-all ${
-    hasError ? "ring-1 ring-red-500" : "focus:ring-1 focus:ring-[var(--ringgreen-deep)]"
+  return `peer mt-2 w-full bg-background px-4 py-3.5 text-sm outline-none border-b transition-colors ${
+    hasError ? "border-red-500" : "border-border focus:border-border"
   }`;
 }
 
@@ -241,33 +307,53 @@ function Field({
   label,
   error,
   children,
+  multiline = false,
 }: {
   label: string;
   error?: string;
   children: React.ReactNode;
+  multiline?: boolean;
 }) {
-  const id = useId();
-  const control = isValidElement(children)
-    ? cloneElement(children as React.ReactElement<{ id?: string }>, {
-        id,
-      })
-    : children;
-
   return (
     <div>
-      <label htmlFor={id} className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+      <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
         {label}
       </label>
-      {control}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      <div className="relative">
+        {children}
+        {/* Animated focus underline — grows from center */}
+        <span
+          aria-hidden="true"
+          className={`absolute left-0 right-0 ${multiline ? "bottom-0" : "bottom-0"} h-[2px] origin-center transition-transform duration-300 ease-out pointer-events-none ${
+            error
+              ? "bg-red-500 scale-x-100"
+              : "bg-[var(--ringgreen-deep)] scale-x-0 peer-focus:scale-x-100"
+          }`}
+        />
+      </div>
+      {error && (
+        <p className="mt-1 text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
 
-function Item({ Icon, title, lines }: { Icon: typeof MapPin; title: string; lines: string[] }) {
+function Item({
+  Icon,
+  title,
+  lines,
+  delayMs = 0,
+}: {
+  Icon: typeof MapPin;
+  title: string;
+  lines: string[];
+  delayMs?: number;
+}) {
   return (
-    <div className="flex gap-5">
-      <Icon size={20} className="text-[var(--ringgreen)] mt-1.5 shrink-0" />
+    <div className="flex gap-5 contact-info-stagger" style={{ animationDelay: `${delayMs}ms` }}>
+      <Icon size={20} className="text-[var(--ringgreen)] mt-1.5 shrink-0" aria-hidden="true" />
       <div>
         <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{title}</div>
         <div className="mt-2 space-y-1 text-base">

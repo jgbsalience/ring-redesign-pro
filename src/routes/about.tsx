@@ -193,6 +193,7 @@ function AboutPage() {
   return (
     <div className="bg-background text-foreground">
       <Header overlay />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
         <img
           src={listings[1]?.hero}
@@ -218,79 +219,6 @@ function AboutPage() {
       </section>
 
       <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
-        <div className="md:col-span-5">
-          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-            The difference
-          </div>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
-            How did we
-            <br />
-            <span className="italic">come to be?</span>
-          </h2>
-          <p className="mt-6 text-muted-foreground leading-relaxed">
-            Established in 1976, Ring Partners Real Estate was built by John and Sandra Ring — a
-            family business servicing their local Blackwood District community. Their reputation and
-            success grew quickly as a result of the trusted care for their clients and customers,
-            the manner in which they went about their work, and a philosophy of going the extra
-            mile.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Integrity was at the heart of their work — John managed Real Estate Sales, Valuations,
-            Land Economy and Development, and Sandra, Accounting and Property Management. Together
-            they became one of the most successful independently owned real estate businesses in
-            Adelaide. One of their mottos was 'Good Agency Practice Will Prevail'. We are proud to
-            say that, to this day, all of their spirited company mottos are at the forefront of who
-            we are now and into the future.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Their son Stephen joined the family business in 1992 with the goal of carrying on the
-            tradition. It was one of the most tumultuous decades to begin a career, with Australia
-            and particularly South Australia moving through a recessive economic cycle. Stephen
-            immersed himself in real estate, learning and studying while working with mentors whose
-            teachings and philosophies still inspire his work today. Stephen endeavoured to
-            consolidate the Ring brand as one of the most respected names in the industry, and to
-            learn the skills that have enabled him to be among the elite real estate agents in South
-            Australia.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Today, Stephen has exceeded his goals with a wealth of knowledge to match his consistent
-            performance, energy and passion for helping people to have real estate success. With a
-            committed team behind him, Stephen is the Principal Director of Ring Real Estate with a
-            clear vision to carry on the tradition of sound values and to be at the forefront of
-            professional real estate service.
-          </p>
-        </div>
-        <div className="md:col-span-7 space-y-8">
-          {[
-            {
-              t: "Your agent answers the phone",
-              b: "Not a junior, not a call centre. The person whose name is on your listing.",
-            },
-            {
-              t: "We see the home before we price it",
-              b: "Often twice. We will not put a number to a property we have walked through once at dusk.",
-            },
-            {
-              t: "Photography is commissioned, not templated",
-              b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra.",
-            },
-            {
-              t: "We tell you what isn't working",
-              b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end.",
-            },
-          ].map((d) => (
-            <div key={d.t} className="flex gap-6 border-b border-border pb-8">
-              <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
-              <div>
-                <h3 className="font-serif text-xl">{d.t}</h3>
-                <p className="mt-2 text-muted-foreground leading-relaxed">{d.b}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
           <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
             Our story · Adelaide, since 1978
@@ -301,27 +229,18 @@ function AboutPage() {
             Adelaide's independent residential real estate agency, since 1978.
           </h2>
           <p>
-            Our brand represents absolute integrity and our commitment to Sellers and Buyers,
-            Landlords and Tenants. We value our work and the important role we have in managing
-            these relationships and creating successful outcomes. Where there is integrity, there
-            will be trust. Where there is trust, there will be an atmosphere for success. Everything
-            we do happens around that one essential human value — Integrity. It is the foundation
-            principle of our working-culture, it simply goes without saying. Especially in a
-            professional services industry where performance varies greatly, the environment is
-            subjective, emotion can cloud reality, and the market is always on the move — it is
-            human integrity that earns trust and delivers outcomes.
+            Ring Real Estate was founded in Fullarton in 1978 by Geoffrey Ring on a single, stubborn
+            idea: that residential real estate in Adelaide could be a profession of integrity, not a
+            profession of volume.
           </p>
           <p>
-            It's why we are Successfully Independent & Proud of It. While others come and go, since
-            1976 it has been our dedicated work ethic, professional manner and our commitment to
-            caring for client and customer relations that have developed long standing and trusting
-            relationships where our services are valued and consistently referred — in any
-            profession, there really is no greater reward than your work being referred to another.
-            It is important to us to be considered as a valued member and contributor of our
-            exciting industry and our local community.
+            Nearly five decades later, the offices have moved twice and the faces have grown into a
+            team. The idea has not changed. We remain deliberately small, deliberately senior, and
+            deliberately slow when slowness produces the better result.
           </p>
           <p className="font-serif italic text-2xl md:text-3xl text-[var(--ringgreen)] leading-snug">
-            Our working passion
+            "We sell fewer homes than the franchises around us — and we sell them better, by hand,
+            by name, with the patience that good outcomes require."
           </p>
         </div>
       </section>
@@ -434,7 +353,7 @@ function AboutPage() {
               },
             ].map((m) => (
               <li key={m.y} className="relative">
-                <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-background" />
+                <span className="absolute -left-[42px] md:-left-[54px] top-1.5 w-3 h-3 rounded-full bg-[var(--ringgreen)] ring-4 ring-secondary/40" />
                 <div className="font-serif text-3xl md:text-4xl text-[var(--ringgreen)]">{m.y}</div>
                 <h3 className="font-serif text-xl md:text-2xl mt-2">{m.t}</h3>
                 <p className="mt-2 text-muted-foreground max-w-2xl leading-relaxed">{m.d}</p>
@@ -445,7 +364,125 @@ function AboutPage() {
       </section>
 
       {/* What makes us different */}
-      {/* moved: How did we come to be? — now beneath the banner */}
+      <section className="container-page py-24 md:py-32 grid md:grid-cols-12 gap-12">
+        <div className="md:col-span-5">
+          <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+            The difference
+          </div>
+          <h2 className="font-serif text-4xl md:text-5xl tracking-tight mt-4 leading-[1.05]">
+            What you'll notice
+            <br />
+            <span className="italic">in the first week.</span>
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Most of our clients come to us after a campaign elsewhere that felt rushed, generic, or
+            transactional. Here is what changes.
+          </p>
+        </div>
+        <div className="md:col-span-7 space-y-8">
+          {[
+            {
+              t: "Your agent answers the phone",
+              b: "Not a junior, not a call centre. The person whose name is on your listing.",
+            },
+            {
+              t: "We see the home before we price it",
+              b: "Often twice. We will not put a number to a property we have walked through once at dusk.",
+            },
+            {
+              t: "Photography is commissioned, not templated",
+              b: "We work with a small group of architectural photographers. Twilight shoots are standard, not extra.",
+            },
+            {
+              t: "We tell you what isn't working",
+              b: "Open homes, pricing, presentation — we feed back honestly each week, not only at the end.",
+            },
+          ].map((d) => (
+            <div key={d.t} className="flex gap-6 border-b border-border pb-8">
+              <div className="font-serif text-2xl text-[var(--ringgreen)] shrink-0 w-10">→</div>
+              <div>
+                <h3 className="font-serif text-xl">{d.t}</h3>
+                <p className="mt-2 text-muted-foreground leading-relaxed">{d.b}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Leadership */}
+      <section className="bg-background py-24 md:py-32 border-t border-border">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
+                <span className="ring-mark" /> &nbsp;Leadership
+              </div>
+              <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4 leading-[1.05]">
+                The principals
+                <br />
+                <span className="italic">behind every campaign.</span>
+              </h2>
+            </div>
+            <p className="max-w-md text-muted-foreground leading-relaxed">
+              Two senior agents lead every sale and every property under management. They are the
+              names on the listing, and the names you'll deal with from first appraisal to
+              settlement.
+            </p>
+          </div>
+
+          <div className="mt-16 grid md:grid-cols-2 gap-x-12 gap-y-20">
+            {agents
+              .filter((a) => ["stephen-ring", "luke-bull"].includes(a.id))
+              .map((a) => (
+                <article key={a.id} className="group">
+                  <Link to="/team/$agentId" params={{ agentId: a.id }} className="block">
+                    <div className="aspect-[4/5] img-zoom bg-muted overflow-hidden">
+                      <TeamMemberImage
+                        agent={a}
+                        size="lg"
+                        className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                      />
+                    </div>
+                    <div className="mt-6 flex items-baseline justify-between gap-4">
+                      <h3 className="font-serif text-3xl group-hover:text-[var(--ringgreen)] transition-colors">
+                        {a.name}
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground shrink-0">
+                        {a.role}
+                      </span>
+                    </div>
+                  </Link>
+
+                  <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+                    {(a.bio.length ? a.bio : [a.shortBio ?? ""]).slice(0, 2).map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                    <a href={`tel:${a.phone}`} className="hover:text-[var(--ringgreen)]">
+                      {a.phone}
+                    </a>
+                    <a
+                      href={`mailto:${a.email}`}
+                      className="text-muted-foreground hover:text-[var(--ringgreen)]"
+                    >
+                      {a.email}
+                    </a>
+                  </div>
+
+                  <Link
+                    to="/team/$agentId"
+                    params={{ agentId: a.id }}
+                    className="mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] hover:gap-3 transition-all hover:text-[var(--ringgreen)]"
+                  >
+                    Read full profile <ArrowRight size={12} />
+                  </Link>
+                </article>
+              ))}
+          </div>
+        </div>
+      </section>
 
       {/* Full team */}
       <section className="bg-secondary/50 py-24 md:py-32">
@@ -456,46 +493,56 @@ function AboutPage() {
           <h2 className="font-serif text-4xl md:text-6xl tracking-tight mt-4">
             The people you'll work with.
           </h2>
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
             {agents.map((a) => (
-              <div key={a.id} className="group flex flex-col">
-                <Link to="/team/$agentId" params={{ agentId: a.id }} className="block">
-                  <div className="aspect-[3/4] overflow-hidden bg-muted">
-                    <TeamMemberImage
-                      agent={a}
-                      size="xl"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="mt-5 font-serif text-2xl group-hover:text-[var(--ringgreen)] transition-colors">
+              <Link
+                key={a.id}
+                to="/team/$agentId"
+                params={{ agentId: a.id }}
+                className="grid grid-cols-[140px_1fr] md:grid-cols-[180px_1fr] gap-6 group"
+              >
+                <div className="aspect-[3/4] img-zoom bg-muted">
+                  <TeamMemberImage
+                    agent={a}
+                    size="lg"
+                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </div>
+                <div>
+                  <div className="font-serif text-2xl group-hover:text-[var(--ringgreen)] transition-colors">
                     {a.name}
                   </div>
-                  <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mt-2">
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">
                     {a.role}
                   </div>
-                </Link>
-                <div className="mt-4 pt-4 border-t border-border text-sm space-y-2">
-                  <a
-                    href={`tel:${a.phone}`}
-                    className="flex items-center gap-2 hover:text-[var(--ringgreen)]"
-                  >
-                    <Phone size={14} className="text-muted-foreground" /> {a.phone}
-                  </a>
-                  <a
-                    href={`mailto:${a.email}`}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-[var(--ringgreen)]"
-                  >
-                    <Mail size={14} /> {a.email}
-                  </a>
+                  <p className="mt-4 text-muted-foreground leading-relaxed">
+                    {a.shortBio ?? a.bio[0]}
+                  </p>
+                  <div className="mt-5 text-sm space-y-1">
+                    <div>
+                      <a
+                        onClick={(e) => e.stopPropagation()}
+                        href={`tel:${a.phone}`}
+                        className="hover:text-[var(--ringgreen)]"
+                      >
+                        {a.phone}
+                      </a>
+                    </div>
+                    <div>
+                      <a
+                        onClick={(e) => e.stopPropagation()}
+                        href={`mailto:${a.email}`}
+                        className="text-muted-foreground hover:text-[var(--ringgreen)]"
+                      >
+                        {a.email}
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-5 text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                    View profile <ArrowRight size={12} />
+                  </div>
                 </div>
-                <Link
-                  to="/team/$agentId"
-                  params={{ agentId: a.id }}
-                  className="mt-5 text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 hover:gap-3 transition-all w-fit"
-                >
-                  View profile <ArrowRight size={12} />
-                </Link>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -522,7 +569,7 @@ function AboutPage() {
             </div>
             <div className="md:col-span-5 grid gap-3">
               <a
-                href="tel:+61883703211"
+                href="tel:0883703211"
                 className="group flex items-center justify-between gap-4 px-7 py-5 bg-[var(--ringgreen)] text-[var(--ink)] text-xs uppercase tracking-[0.22em] hover:opacity-90"
               >
                 <span className="flex items-center gap-3">
@@ -592,38 +639,47 @@ function FaqSection() {
           <div className="md:col-span-8 space-y-12">
             {groups.map((group) => (
               <div key={group}>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">
+                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[var(--ringgreen)] mb-4">
                   {group}
-                </div>
-                <div className="border-t border-border">
+                </h3>
+                <div
+                  className="border-t border-border"
+                  role="region"
+                  aria-label={`${group} questions`}
+                >
                   {FAQS.filter((f) => f.group === group).map((f) => {
                     const isOpen = open === f.q;
+                    const slug = f.q
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, "-")
+                      .replace(/^-|-$/g, "");
+                    const buttonId = `faq-button-${slug}`;
+                    const panelId = `faq-panel-${slug}`;
                     return (
                       <div key={f.q} className="border-b border-border">
                         <button
                           type="button"
+                          id={buttonId}
                           onClick={() => setOpen(isOpen ? null : f.q)}
-                          className="w-full flex items-start justify-between gap-6 py-6 text-left group"
+                          className="w-full flex items-start justify-between gap-6 py-6 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2"
                           aria-expanded={isOpen}
+                          aria-controls={panelId}
                         >
                           <span className="font-serif text-xl md:text-2xl leading-snug pr-4 group-hover:text-[var(--ringgreen)] transition-colors">
                             {f.q}
                           </span>
-                          <span className="mt-2 shrink-0 text-muted-foreground">
+                          <span className="mt-2 shrink-0 text-muted-foreground" aria-hidden="true">
                             {isOpen ? <Minus size={18} /> : <Plus size={18} />}
                           </span>
                         </button>
                         <div
-                          aria-hidden={!isOpen}
-                          className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                            isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                          }`}
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
+                          hidden={!isOpen}
+                          className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl"
                         >
-                          <div className="overflow-hidden">
-                            <div className="pb-7 pr-12 text-muted-foreground leading-relaxed max-w-2xl">
-                              {f.a}
-                            </div>
-                          </div>
+                          {f.a}
                         </div>
                       </div>
                     );
@@ -680,14 +736,14 @@ function TestimonialsCarousel() {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const total = STORIES.length;
-  const next = React.useCallback(() => setI((p) => (p + 1) % total), [total]);
-  const prev = React.useCallback(() => setI((p) => (p - 1 + total) % total), [total]);
+  const next = () => setI((p) => (p + 1) % total);
+  const prev = () => setI((p) => (p - 1 + total) % total);
 
   useEffect(() => {
     if (paused) return;
     const t = setInterval(next, 7000);
     return () => clearInterval(t);
-  }, [paused, next]);
+  }, [paused, total]);
 
   const story = STORIES[i];
 

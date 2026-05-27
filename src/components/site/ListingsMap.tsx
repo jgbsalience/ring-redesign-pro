@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
-import { SpecLine } from "@/components/site/SpecLine";
+import { Bed, Bath, Car, MapPin } from "lucide-react";
 
 type MapRow = {
   id: string;
@@ -210,16 +209,22 @@ export function ListingsMap({ rows }: { rows: MapRow[] }) {
                         {r.suburb} · {r.state}
                       </div>
                       <div className="font-serif text-sm leading-snug truncate">{r.address}</div>
-                      <div className="mt-1">
-                        <SpecLine
-                          price={r.price}
-                          beds={r.beds}
-                          baths={r.baths}
-                          cars={r.cars}
-                          tone="light"
-                          size="sm"
-                          priceClassName="font-medium text-foreground tabular-nums leading-tight truncate"
-                        />
+                      <div className="mt-1 flex items-center justify-between gap-2 text-xs">
+                        <span className="font-medium truncate">{r.price}</span>
+                        <span className="flex items-center gap-2 text-muted-foreground shrink-0">
+                          <span className="flex items-center gap-0.5">
+                            <Bed size={12} />
+                            {r.beds}
+                          </span>
+                          <span className="flex items-center gap-0.5">
+                            <Bath size={12} />
+                            {r.baths}
+                          </span>
+                          <span className="flex items-center gap-0.5">
+                            <Car size={12} />
+                            {r.cars}
+                          </span>
+                        </span>
                       </div>
                     </div>
                   </button>

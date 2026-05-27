@@ -6,9 +6,6 @@ import {
   type WheelEvent as RWheelEvent,
 } from "react";
 import { Link } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ListingCard } from "@/components/site/ListingCard";
@@ -29,7 +26,6 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
-  Loader2,
 } from "lucide-react";
 
 function downloadBrochure(
@@ -66,15 +62,6 @@ ${listing.features.length ? `<h2>Features</h2><ul>${listing.features.map((f) => 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-const enquirySchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Enter a valid email"),
-  phone: z.string().optional(),
-  message: z.string().min(1, "Message is required"),
-  website: z.literal("").optional(),
-});
-type EnquiryFormValues = z.infer<typeof enquirySchema>;
-
 export function ListingDetailView({ listing }: { listing: Listing }) {
   const agents = listing.agentIds.map(getAgent);
   const similar = listings
@@ -85,7 +72,7 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
     listing.status === "for-rent" || listing.status === "leased"
       ? { to: "/rent" as const, label: "For rent" }
       : listing.status === "sold"
-        ? { to: "/sold" as const, label: "Recent sales" }
+        ? { to: "/buy" as const, label: "Recent sales" }
         : { to: "/buy" as const, label: "For sale" };
 
   const enquireLabel =
@@ -96,52 +83,6 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
         : "Enquire about this home";
 
   const [floorplanOpen, setFloorplanOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<EnquiryFormValues>({
-    resolver: zodResolver(enquirySchema),
-    defaultValues: {
-      message: `Please send me more information about ${listing.address}, ${listing.suburb}.`,
-      website: "",
-    },
-  });
-
-  const onEnquirySubmit = async (data: EnquiryFormValues) => {
-    setServerError(null);
-    const [firstName, ...rest] = data.name.trim().split(/\s+/);
-    const lastName = rest.join(" ") || "—";
-    const enquiryType = `Listing enquiry — ${listing.address}, ${listing.suburb}`;
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email: data.email,
-          phone: data.phone,
-          enquiryType,
-          message: data.message,
-          website: data.website ?? "",
-        }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error((body as { error?: string }).error ?? "Something went wrong");
-      }
-      setSubmitted(true);
-    } catch (err) {
-      setServerError(
-        err instanceof Error ? err.message : "Something went wrong. Please try again.",
-      );
-    }
-  };
-
   useEffect(() => {
     if (!floorplanOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -158,8 +99,9 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
   return (
     <div className="bg-background text-foreground">
       <Header />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
 
-      <section id="main-content" tabIndex={-1} className="pt-20 md:pt-24 focus:outline-none">
+      <section className="pt-20 md:pt-24">
         <div className="container-page py-10 md:py-14">
           <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground flex items-center gap-2">
             <Link to={crumb.to} className="hover:text-foreground">
@@ -236,7 +178,7 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
                 </div>
                 <button
                   onClick={() => setFloorplanOpen(true)}
-                  className="text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 border-b border-foreground pb-1 hover:gap-3 transition-[gap]"
+                  className="text-xs uppercase tracking-[0.2em] inline-flex items-center gap-2 border-b border-foreground pb-1 hover:gap-3 transition-all"
                 >
                   <Ruler size={14} /> Open full size
                 </button>
@@ -327,114 +269,35 @@ export function ListingDetailView({ listing }: { listing: Listing }) {
               </div>
             </div>
 
-            {submitted ? (
-              <div
-                id="enquire"
-                className="bg-background border border-border p-8 space-y-3 scroll-mt-28 text-center"
+            <form
+              id="enquire"
+              className="bg-background border border-border p-8 space-y-4 scroll-mt-28"
+            >
+              <div className="font-serif text-2xl">{enquireLabel}</div>
+              <input
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Full name"
+              />
+              <input
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Email"
+                type="email"
+              />
+              <input
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none"
+                placeholder="Phone"
+              />
+              <textarea
+                className="w-full bg-secondary px-4 py-3 text-sm outline-none min-h-32"
+                defaultValue={`Please send me more information about ${listing.address}, ${listing.suburb}.`}
+              />
+              <button
+                type="button"
+                className="w-full bg-foreground text-background py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90"
               >
-                <div className="text-[10px] uppercase tracking-[0.32em] text-[var(--ringgreen-deep)]">
-                  Received
-                </div>
-                <div className="font-serif text-2xl">Thank you. We'll be in touch.</div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  A senior agent will respond within one business day. Or call us on{" "}
-                  <a href="tel:+61883703211" className="underline underline-offset-2">
-                    (08) 8370 3211
-                  </a>
-                  .
-                </p>
-              </div>
-            ) : (
-              <form
-                id="enquire"
-                onSubmit={handleSubmit(onEnquirySubmit)}
-                noValidate
-                className="bg-background border border-border p-8 space-y-4 scroll-mt-28"
-              >
-                <input
-                  type="text"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                  autoComplete="off"
-                  className="hidden"
-                  {...register("website")}
-                />
-                <div className="font-serif text-2xl">{enquireLabel}</div>
-                <div>
-                  <label htmlFor="enquiry-name" className="sr-only">
-                    Full name
-                  </label>
-                  <input
-                    id="enquiry-name"
-                    autoComplete="name"
-                    className={`w-full bg-secondary border px-4 py-3 text-sm outline-none transition-colors ${errors.name ? "border-red-500" : "border-transparent focus:border-[var(--ringgreen-deep)]"}`}
-                    placeholder="Full name"
-                    {...register("name")}
-                  />
-                  {errors.name && (
-                    <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="enquiry-email" className="sr-only">
-                    Email
-                  </label>
-                  <input
-                    id="enquiry-email"
-                    type="email"
-                    autoComplete="email"
-                    className={`w-full bg-secondary border px-4 py-3 text-sm outline-none transition-colors ${errors.email ? "border-red-500" : "border-transparent focus:border-[var(--ringgreen-deep)]"}`}
-                    placeholder="Email"
-                    {...register("email")}
-                  />
-                  {errors.email && (
-                    <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-                  )}
-                </div>
-                <div>
-                  <label htmlFor="enquiry-phone" className="sr-only">
-                    Phone
-                  </label>
-                  <input
-                    id="enquiry-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    className="w-full bg-secondary border border-transparent px-4 py-3 text-sm outline-none focus:border-[var(--ringgreen-deep)] transition-colors"
-                    placeholder="Phone (optional)"
-                    {...register("phone")}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="enquiry-message" className="sr-only">
-                    Message
-                  </label>
-                  <textarea
-                    id="enquiry-message"
-                    className={`w-full bg-secondary border px-4 py-3 text-sm outline-none min-h-32 resize-y transition-colors ${errors.message ? "border-red-500" : "border-transparent focus:border-[var(--ringgreen-deep)]"}`}
-                    {...register("message")}
-                  />
-                  {errors.message && (
-                    <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>
-                  )}
-                </div>
-                {serverError && <p className="text-sm text-red-600">{serverError}</p>}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-foreground text-background py-3.5 text-xs uppercase tracking-[0.2em] inline-flex items-center justify-center gap-2 hover:bg-foreground/90 disabled:opacity-50 transition-opacity"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 size={14} className="animate-spin" /> Sending…
-                    </>
-                  ) : (
-                    <>
-                      Send enquiry <ArrowRight size={14} />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+                Send enquiry <ArrowRight size={14} />
+              </button>
+            </form>
 
             <div className="border border-border p-8 space-y-6">
               <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
@@ -508,7 +371,6 @@ function FloorplanLightbox({
   const dragging = useRef(false);
   const last = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const MIN = 1;
   const MAX = 6;
@@ -531,10 +393,6 @@ function FloorplanLightbox({
       document.body.style.overflow = "";
     };
   }, [onClose]);
-
-  useEffect(() => {
-    closeButtonRef.current?.focus();
-  }, []);
 
   const clampPan = (nx: number, ny: number, s: number) => {
     const el = containerRef.current;
@@ -606,13 +464,8 @@ function FloorplanLightbox({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] bg-black/95 animate-fade-in select-none"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Floorplan image viewer"
-    >
-      <div className="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 text-white/80 text-xs uppercase tracking-[0.25em] z-10">
+    <div className="fixed inset-0 z-[100] bg-black/95 animate-fade-in select-none">
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white/80 text-xs uppercase tracking-[0.25em] z-10">
         <div className="hidden md:block">Drag to pan · Scroll or pinch to zoom · 0 to reset</div>
         <div className="flex items-center gap-2 ml-auto">
           <button
@@ -645,7 +498,6 @@ function FloorplanLightbox({
           <button
             type="button"
             onClick={onClose}
-            ref={closeButtonRef}
             className="ml-3 px-3 h-9 inline-flex items-center bg-white/10 hover:bg-white/20 transition-colors"
           >
             Close ✕

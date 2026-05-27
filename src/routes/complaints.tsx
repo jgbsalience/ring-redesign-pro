@@ -18,6 +18,7 @@ function ComplaintsPage() {
   return (
     <div className="bg-background text-foreground">
       <Header />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <section className="pt-28 md:pt-36 container-page pb-24 md:pb-32 max-w-3xl">
         <div className="text-[10px] uppercase tracking-[0.32em] text-muted-foreground mb-5">
           Legal

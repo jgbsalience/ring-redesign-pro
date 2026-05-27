@@ -11,7 +11,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --font-serif: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -45,8 +45,6 @@
 }
 
 :root {
-  color-scheme: light;
-
   --radius: 0.25rem;
 
   /* Editorial palette */
@@ -82,8 +80,6 @@
 }
 
 .dark {
-  color-scheme: dark;
-
   --background: var(--ink);
   --foreground: var(--bone);
   --card: oklch(0.22 0.01 250);
@@ -169,23 +165,6 @@
     .kenburns-base {
       transform: none;
     }
-    .reveal {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-    .hover-lift,
-    .hover-lift-green,
-    .img-zoom > img {
-      transition: none;
-      transform: none;
-    }
-    .text-gradient-green-animate {
-      animation: none;
-    }
-    .featured-scroll {
-      scroll-behavior: auto;
-    }
   }
 
   /* Editorial dark scrim for image overlays (listing cards, hero captions) */
@@ -259,12 +238,10 @@
   /* ---------------------------------------------------------------- */
   .card-interactive {
     position: relative;
-    /* Identity base prevents stacking context from forming only on hover */
-    translate: 0;
     transition:
       border-color 0.2s ease,
       box-shadow 0.25s ease,
-      translate 0.25s cubic-bezier(0.2, 0.65, 0.2, 1),
+      transform 0.25s cubic-bezier(0.2, 0.65, 0.2, 1),
       background-color 0.2s ease;
     border: 1px solid var(--color-border);
   }
@@ -273,7 +250,7 @@
     box-shadow:
       0 1px 0 0 var(--ringgreen-line),
       0 12px 28px -18px color-mix(in oklab, var(--ringgreen-deep) 45%, transparent);
-    translate: 0 -2px;
+    transform: translateY(-2px);
   }
   .card-interactive:focus-within {
     border-color: var(--ringgreen-deep);
@@ -281,7 +258,7 @@
     outline: none;
   }
   .card-interactive:active {
-    translate: 0;
+    transform: translateY(0);
     background-color: var(--ringgreen-tint);
   }
 
@@ -357,7 +334,7 @@
 
   .reveal {
     opacity: 0;
-    translate: 0 16px;
+    transform: translateY(16px);
     animation: reveal 0.9s cubic-bezier(0.2, 0.65, 0.2, 1) forwards;
   }
   .reveal-2 {
@@ -373,31 +350,27 @@
   @keyframes reveal {
     to {
       opacity: 1;
-      translate: 0 0;
+      transform: translateY(0);
     }
   }
 
   .hover-lift {
-    /* Identity base prevents stacking context from forming only on hover */
-    translate: 0;
     transition:
-      translate 0.5s cubic-bezier(0.2, 0.65, 0.2, 1),
+      transform 0.5s cubic-bezier(0.2, 0.65, 0.2, 1),
       box-shadow 0.5s;
   }
   .hover-lift:hover {
-    translate: 0 -4px;
+    transform: translateY(-4px);
   }
 
   .img-zoom {
     overflow: hidden;
   }
   .img-zoom > img {
-    /* Identity base prevents stacking context from forming only on hover */
-    scale: 1;
-    transition: scale 0.9s cubic-bezier(0.2, 0.65, 0.2, 1);
+    transition: transform 0.9s cubic-bezier(0.2, 0.65, 0.2, 1);
   }
   .img-zoom:hover > img {
-    scale: 1.05;
+    transform: scale(1.05);
   }
 
   .ring-mark {
@@ -503,6 +476,88 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /* Header — nav active underline                                     */
+  /* ---------------------------------------------------------------- */
+  .nav-link-active {
+    position: relative;
+  }
+  .nav-link-active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--ringgreen);
+    border-radius: 1px;
+  }
+
+  /* Header — mobile nav stagger */
+  @keyframes mobile-nav-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Contact — info items stagger fade-in from left */
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .contact-info-stagger {
+    opacity: 0;
+    animation: slide-in-left 0.5s cubic-bezier(0.2, 0.65, 0.2, 1) both;
+  }
+
+  /* Contact — success checkmark draw-in */
+  @keyframes check-pop {
+    0% {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .check-pop {
+    animation: check-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* Header — CTA pulse (shadow ripple every 8s) */
+  @keyframes cta-pulse {
+    0%,
+    72%,
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--ringgreen) 0%, transparent);
+    }
+    76% {
+      box-shadow: 0 0 0 5px color-mix(in oklab, var(--ringgreen) 45%, transparent);
+    }
+    84% {
+      box-shadow: 0 0 0 10px color-mix(in oklab, var(--ringgreen) 0%, transparent);
+    }
+  }
+  .btn-cta-pulse {
+    animation: cta-pulse 8s ease-in-out infinite;
+  }
+
+  /* ---------------------------------------------------------------- */
   /* Shadows + rings                                                   */
   /* ---------------------------------------------------------------- */
   .shadow-green {
@@ -574,114 +629,13 @@
 
   /* Hover-lift with green-tinted shadow */
   .hover-lift-green {
-    /* Identity base prevents stacking context from forming only on hover */
-    translate: 0;
     transition:
-      translate 0.35s cubic-bezier(0.2, 0.65, 0.2, 1),
+      transform 0.35s cubic-bezier(0.2, 0.65, 0.2, 1),
       box-shadow 0.35s ease,
       border-color 0.2s ease;
   }
   .hover-lift-green:hover {
-    translate: 0 -3px;
+    transform: translateY(-3px);
     box-shadow: 0 18px 40px -22px color-mix(in oklab, var(--ringgreen-deep) 55%, transparent);
-  }
-
-  /* Custom scroll for the featured residences strip.
-     scrollbar-width: thin is REQUIRED on macOS to force overlay scrollbars
-     to actually render — without it, scrollbar-color is ignored. */
-  .featured-scroll {
-    --scrollbar-thumb: var(--ringgreen);
-    --scrollbar-track: transparent;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-    scroll-behavior: smooth;
-    scroll-snap-type: y proximity;
-  }
-
-  /* Legacy fallback — only activates in browsers without standard scrollbar-color.
-     Custom properties cascade here automatically, no color duplication needed. */
-  @supports not (scrollbar-color: auto) {
-    .featured-scroll::-webkit-scrollbar {
-      width: 8px;
-    }
-    .featured-scroll::-webkit-scrollbar-track {
-      background: var(--scrollbar-track);
-    }
-    .featured-scroll::-webkit-scrollbar-thumb {
-      background: color-mix(in oklab, var(--scrollbar-thumb) 70%, transparent);
-      border-radius: 9999px;
-    }
-    .featured-scroll::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-thumb);
-    }
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Hero Parallax Layers (Variation C)                                */
-  /* ---------------------------------------------------------------- */
-  .hero-parallax-container {
-    view-timeline-name: --hero-view;
-  }
-  .hero-layer-3 {
-    position: absolute;
-    inset-inline: 0;
-    top: -75vh;
-    height: 175vh;
-    animation: parallax-layer-3 linear both;
-    animation-timeline: --hero-view;
-    animation-range: exit 0% exit 100%;
-  }
-  .hero-layer-2 {
-    position: absolute;
-    inset-inline: 0;
-    top: -45vh;
-    height: 145vh;
-    animation: parallax-layer-2 linear both;
-    animation-timeline: --hero-view;
-    animation-range: exit 0% exit 100%;
-    mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
-  }
-  .hero-layer-1 {
-    /* Front text moves down slightly for depth compression */
-    animation: parallax-layer-1 linear both;
-    animation-timeline: --hero-view;
-    animation-range: exit 0% exit 100%;
-  }
-  @keyframes parallax-layer-3 {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(75vh);
-    }
-  }
-  @keyframes parallax-layer-2 {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(45vh);
-    }
-  }
-  @keyframes parallax-layer-1 {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(20vh);
-      opacity: 0;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-layer-3,
-    .hero-layer-2,
-    .hero-layer-1 {
-      animation: none;
-      top: 0;
-      height: 100%;
-    }
-    .hero-layer-2 {
-      mask-image: none;
-    }
   }
 }

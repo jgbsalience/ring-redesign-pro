@@ -3,7 +3,7 @@ import logo from "@/assets/ring-logo-rev.png";
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--ink)] text-[var(--bone)]">
+    <footer className="bg-[var(--ink)] text-[var(--bone)] mt-32">
       <div className="container-page py-20 md:py-28 grid grid-cols-1 md:grid-cols-12 gap-12">
         <div className="md:col-span-5">
           <img src={logo} alt="Ring Real Estate" className="h-20 w-auto" />
@@ -23,42 +23,27 @@ export function Footer() {
           <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-5">Sitemap</h4>
           <ul className="space-y-3 text-sm">
             <li>
-              <Link
-                to="/buy"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/buy" className="hover:text-[var(--ringgreen)]">
                 Buy
               </Link>
             </li>
             <li>
-              <Link
-                to="/rent"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/rent" className="hover:text-[var(--ringgreen)]">
                 Rent
               </Link>
             </li>
             <li>
-              <Link
-                to="/sell"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/sell" className="hover:text-[var(--ringgreen)]">
                 Sell
               </Link>
             </li>
             <li>
-              <Link
-                to="/about"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/about" className="hover:text-[var(--ringgreen)]">
                 About
               </Link>
             </li>
             <li>
-              <Link
-                to="/contact"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/contact" className="hover:text-[var(--ringgreen)]">
                 Contact
               </Link>
             </li>
@@ -69,26 +54,20 @@ export function Footer() {
           <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-5">Owners</h4>
           <ul className="space-y-3 text-sm">
             <li>
-              <Link
-                to="/sell/appraisal"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/sell/appraisal" className="hover:text-[var(--ringgreen)]">
                 Request appraisal
               </Link>
             </li>
             <li>
               <a
                 href="https://www.landlords.com.au/auth/login/1274"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
+                className="hover:text-[var(--ringgreen)]"
               >
                 Landlord login
               </a>
             </li>
             <li>
-              <Link
-                to="/sell"
-                className="hover:text-[var(--ringgreen)] focus-visible:outline-none focus-visible:text-[var(--ringgreen)] transition-colors"
-              >
+              <Link to="/sell" className="hover:text-[var(--ringgreen)]">
                 Methods of sale
               </Link>
             </li>
@@ -117,22 +96,13 @@ export function Footer() {
           {/* TODO: Replace RLA 12345 with the real licence number before going live */}
           <div>© {new Date().getFullYear()} Ring Real Estate Pty Ltd · RLA 12345</div>
           <div className="flex gap-6">
-            <Link
-              to="/privacy"
-              className="hover:opacity-100 focus-visible:outline-none focus-visible:opacity-100 transition-opacity"
-            >
+            <Link to="/privacy" className="hover:opacity-100 transition-opacity">
               Privacy
             </Link>
-            <Link
-              to="/complaints"
-              className="hover:opacity-100 focus-visible:outline-none focus-visible:opacity-100 transition-opacity"
-            >
+            <Link to="/complaints" className="hover:opacity-100 transition-opacity">
               Complaints
             </Link>
-            <Link
-              to="/trust-account"
-              className="hover:opacity-100 focus-visible:outline-none focus-visible:opacity-100 transition-opacity"
-            >
+            <Link to="/trust-account" className="hover:opacity-100 transition-opacity">
               Trust account
             </Link>
           </div>

@@ -4,24 +4,6 @@ import { ListingDetailView } from "@/components/site/ListingDetail";
 import { JsonLd } from "@/components/site/JsonLd";
 import { canonical, listingSchema, breadcrumbSchema, SITE_URL } from "@/lib/seo";
 
-function SoldListingRouteComponent() {
-  const { listing } = Route.useLoaderData() as { listing: Listing };
-  const path = `/sold/${listing.id}`;
-  return (
-    <>
-      <JsonLd schema={listingSchema(listing, path)} />
-      <JsonLd
-        schema={breadcrumbSchema([
-          { name: "Home", url: SITE_URL },
-          { name: "Sold", url: `${SITE_URL}/sold` },
-          { name: `${listing.address}, ${listing.suburb}`, url: `${SITE_URL}${path}` },
-        ])}
-      />
-      <ListingDetailView listing={listing} />
-    </>
-  );
-}
-
 export const Route = createFileRoute("/sold/$listingId")({
   loader: ({ params }) => {
     const l = getListing(params.listingId);
@@ -55,5 +37,26 @@ export const Route = createFileRoute("/sold/$listingId")({
       </div>
     </div>
   ),
-  component: SoldListingRouteComponent,
+  errorComponent: ({ error }) => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div>{error.message}</div>
+    </div>
+  ),
+  component: () => {
+    const { listing } = Route.useLoaderData() as { listing: Listing };
+    const path = `/sold/${listing.id}`;
+    return (
+      <>
+        <JsonLd schema={listingSchema(listing, path)} />
+        <JsonLd
+          schema={breadcrumbSchema([
+            { name: "Home", url: SITE_URL },
+            { name: "Sold", url: `${SITE_URL}/sold` },
+            { name: `${listing.address}, ${listing.suburb}`, url: `${SITE_URL}${path}` },
+          ])}
+        />
+        <ListingDetailView listing={listing} />
+      </>
+    );
+  },
 });

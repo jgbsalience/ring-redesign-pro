@@ -34,15 +34,18 @@ function SellPage() {
   return (
     <div className="bg-background text-foreground">
       <Header overlay />
+      <span id="main-content" tabIndex={-1} className="sr-only" aria-hidden="true" />
       <BannerHero
         slides={SELL_SLIDES}
         kicker="Selling with Ring"
         title={
           <>
-            Welcome to <span className="italic font-light">Ring Real Estate</span>
+            A campaign as
+            <br />
+            <span className="italic font-light">considered</span> as the home.
           </>
         }
-        subtitle="The team at RING are proud of our trusted brand and reputation. We offer professional real estate services that are unique to us and where integrity is at the heart of everything we do. We are specialists in the Mitcham Metro-Hills and surrounds, and you may be surprised to know that our skills and knowledge extend to greater Adelaide too."
+        subtitle="Photography by the people the architects use. Copy that reads like a magazine, not a brochure. Negotiation by a senior agent who has done this for two decades."
         cta={{ label: "Request an appraisal", to: "/contact" }}
       />
 
@@ -98,7 +101,7 @@ function SellPage() {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {sold.slice(0, 6).map((l) => (
+            {sold.map((l) => (
               <ListingCard key={l.id} l={l} size="md" />
             ))}
           </div>

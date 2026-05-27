@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { Listing } from "@/data/site";
-import { SpecLine } from "@/components/site/SpecLine";
+import { Bed, Bath, Car } from "lucide-react";
 
 export type ListingCardData = {
   id: string;
@@ -26,7 +26,7 @@ const SIZE = {
     rule: "w-5",
     suburb: "text-[10px] tracking-[0.24em]",
     price: "text-sm",
-    showSpecs: true,
+    showSpecs: false,
     pill: "text-[9px] px-2 py-0.5",
   },
   md: {
@@ -52,20 +52,14 @@ const SIZE = {
 } as const;
 
 function srcSetFor(hero: string) {
-  // multiarray CDN paths look like .../cp-rect-1920x1440.jpg — swap variants for crispness
-  const m = hero.match(/cp-rect-\d+x\d+\.([a-z]+)$/i);
-  if (!m) return undefined;
-  const ext = m[1];
-  const v = (w: number, h: number) =>
-    hero.replace(/cp-rect-\d+x\d+\.[a-z]+$/i, `cp-rect-${w}x${h}.${ext}`);
+  // multiarray CDN paths look like .../cp-rect-1920x1440.pg — swap variants for crispness
+  if (!/cp-rect-\d+x\d+\.pg$/.test(hero)) return undefined;
+  const v = (w: number, h: number) => hero.replace(/cp-rect-\d+x\d+\.pg$/, `cp-rect-${w}x${h}.pg`);
   return [
     `${v(640, 800)} 640w`,
     `${v(960, 1200)} 960w`,
     `${v(1280, 1600)} 1280w`,
     `${v(1600, 2000)} 1600w`,
-    `${v(1920, 2400)} 1920w`,
-    `${v(2400, 3000)} 2400w`,
-    `${v(3200, 4000)} 3200w`,
   ].join(", ");
 }
 
@@ -98,14 +92,15 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
     <Link
       to={to}
       params={{ listingId: l.id }}
-      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform aspect-[4/5]"
+      className="group relative block overflow-hidden bg-muted hover-lift cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ringgreen)] focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
+      style={{ aspectRatio: "4 / 5" }}
       aria-label={`${l.address}, ${l.suburb} — ${l.price}`}
     >
       {l.hero ? (
         <img
           src={l.hero}
           srcSet={srcSetFor(l.hero)}
-          sizes="(min-width: 1280px) 800px, (min-width: 768px) 50vw, 95vw"
+          sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 90vw"
           alt={l.address}
           loading="lazy"
           referrerPolicy="no-referrer"
@@ -139,20 +134,22 @@ export function ListingCard({ l, size = "md" }: { l: ListingCardData; size?: Siz
           {l.state ? ` · ${l.state}` : ""}
         </div>
         <div className={`font-serif leading-tight mt-1.5 ${s.title}`}>{l.address}</div>
-        <div className="mt-2">
-          {s.showSpecs ? (
-            <SpecLine
-              price={l.price}
-              beds={l.beds}
-              baths={l.baths}
-              cars={l.cars}
-              tone="dark"
-              size="sm"
-              priceClassName={`font-medium text-[var(--ringgreen)] tabular-nums leading-tight ${s.price}`}
-            />
-          ) : (
-            <div className={`font-medium text-[var(--ringgreen)] tabular-nums ${s.price}`}>
-              {l.price}
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <div className={`font-medium text-[var(--ringgreen)] ${s.price}`}>{l.price}</div>
+          {s.showSpecs && (
+            <div className="flex items-center gap-3 text-xs text-white/80">
+              <span className="flex items-center gap-1">
+                <Bed size={14} />
+                {l.beds}
+              </span>
+              <span className="flex items-center gap-1">
+                <Bath size={14} />
+                {l.baths}
+              </span>
+              <span className="flex items-center gap-1">
+                <Car size={14} />
+                {l.cars}
+              </span>
             </div>
           )}
         </div>
