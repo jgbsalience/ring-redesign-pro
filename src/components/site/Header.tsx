@@ -34,6 +34,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
 
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const sheet = sheetRef.current;
+    const toggle = toggleRef.current;
     const firstLink = sheet?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
     firstLink?.focus();
 
@@ -67,7 +68,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
-      (toggleRef.current ?? previouslyFocused)?.focus?.();
+      (toggle ?? previouslyFocused)?.focus?.();
     };
   }, [open]);
 

@@ -42,7 +42,7 @@ export const Route = createFileRoute("/rent/$listingId")({
       <div>{error.message}</div>
     </div>
   ),
-  component: () => {
+  component: function RentListingPage() {
     const { listing } = Route.useLoaderData() as { listing: Listing };
     const path = `/rent/${listing.id}`;
     return (

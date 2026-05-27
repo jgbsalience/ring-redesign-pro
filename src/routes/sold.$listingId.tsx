@@ -42,7 +42,7 @@ export const Route = createFileRoute("/sold/$listingId")({
       <div>{error.message}</div>
     </div>
   ),
-  component: () => {
+  component: function SoldListingPage() {
     const { listing } = Route.useLoaderData() as { listing: Listing };
     const path = `/sold/${listing.id}`;
     return (
